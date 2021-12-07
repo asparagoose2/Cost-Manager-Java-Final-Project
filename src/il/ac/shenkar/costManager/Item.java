@@ -15,6 +15,12 @@ public class Item {
         this.setAmount(amount);
     }
 
+    public Item(String name, double amount, int id) {
+        this.setName(name);
+        this.setAmount(amount);
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
@@ -39,11 +45,11 @@ public class Item {
     }
 
     public void delete() {
-        this.owner.deleteItem(this);
+        //this.owner.deleteItem(this);
     }
 
     // a way to update the DB
     private void update(){
-        this.owner.updateItem(this);
+        //this.owner.updateItem(this);
     }
 }
