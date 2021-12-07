@@ -1,8 +1,13 @@
 package il.ac.shenkar.costManager;
 
 public class CostAmount {
-    private int amount;
-    private Currency currency;
+    private double amount;
+    private CurrencyConverter currencyConverter;
+
+    public CostAmount(double amount) {
+        this.amount = amount;
+        this.currencyConverter = null;
+    }
 
     public double getAmount() {
         return amount;
@@ -12,15 +17,15 @@ public class CostAmount {
         this.amount = amount;
     }
 
-    public Currency getCurrency() {
-        return currency;
+    public CurrencyConverter getCurrency() {
+        return currencyConverter;
     }
 
-    public void setCurrency(Currency currency) {
-        this.currency = currency;
+    public void setCurrency(CurrencyConverter currencyConverter) {
+        this.currencyConverter = currencyConverter;
     }
 
-    public double convertAmoutTo(Currency curr) {
-
+    public double convertAmoutTo(CurrencyConverter curr) {
+        return 2.0;
     }
 }
