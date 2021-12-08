@@ -12,7 +12,7 @@ class ItemTest {
 
     @BeforeEach
     void setUp() {
-        item = new Item("test", 200);
+        item = new Item(1,1,"test",12.2,"bla");
     }
 
     @AfterEach
@@ -37,16 +37,16 @@ class ItemTest {
 
     @Test
     void getAmount() {
-        double expected = 200;
-        double actual = item.getAmount();
+        double expected = 12.2;
+        double actual = item.getCost();
         assertEquals(expected,actual,0.0);
     }
 
     @Test
     void setAmount() {
-        item.setAmount(100);
+        item.setCost(100);
         double expected = 100;
-        double actual = item.getAmount();
+        double actual = item.getCost();
         assertEquals(expected,actual,0.0);
     }
 }

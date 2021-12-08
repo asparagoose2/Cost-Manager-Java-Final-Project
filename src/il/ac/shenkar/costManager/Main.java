@@ -6,7 +6,7 @@ public class Main {
         try {
             SimpleDBModel m = new SimpleDBModel();
             m.getItems();
-            m.addItem(new Item("aa",2));
+//            m.addItem(new Item("aa",2));
             m.getItems();
         } catch (CostItemException e) {
             e.printStackTrace();

@@ -38,7 +38,7 @@ public class SimpleDBModel implements IModel {
             {
                 String temp = rs.getString("name");
                 double amount = rs.getDouble("cost");
-                items.add(new Item(temp,amount));
+                //items.add(new Item(temp,amount));
                 System.out.println("temp = " + temp + ' ' + amount);
 
             }
@@ -67,6 +67,41 @@ public class SimpleDBModel implements IModel {
         }catch (SQLException e){
             throw new CostItemException("getItems error!",e);
         }
+    }
+
+    @Override
+    public void updateItem(Item item) throws CostItemException {
+
+    }
+
+    @Override
+    public void addCategory(Category category) throws CostItemException {
+
+    }
+
+    @Override
+    public Collection<Category> getCategories(User user) throws CostItemException {
+        return null;
+    }
+
+    @Override
+    public void deleteCategory(Category category) throws CostItemException {
+
+    }
+
+    @Override
+    public void updateCategory(Category category) throws CostItemException {
+
+    }
+
+    @Override
+    public void addUser(User user) throws CostItemException {
+
+    }
+
+    @Override
+    public User login(String email, String password) throws CostItemException {
+        return null;
     }
 
     @Override
