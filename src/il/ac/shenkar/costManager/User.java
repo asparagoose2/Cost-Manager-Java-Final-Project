@@ -8,6 +8,14 @@ public class User {
     private int userId;
     private ArrayList<Item> items;
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                ", userId=" + userId +
+                '}';
+    }
+
     public User(String name, int userId) {
         this.name = name;
         this.userId = userId;

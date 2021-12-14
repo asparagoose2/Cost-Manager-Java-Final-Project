@@ -5,6 +5,15 @@ public class Category {
     private String name;
     private int id;
 
+    @Override
+    public String toString() {
+        return "Category{" +
+                "owner=" + owner +
+                ", name='" + name + '\'' +
+                ", id=" + id +
+                '}';
+    }
+
     public Category(User owner, String name, int id) {
         this.owner = owner;
         this.name = name;

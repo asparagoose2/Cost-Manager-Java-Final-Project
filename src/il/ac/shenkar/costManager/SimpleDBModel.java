@@ -8,6 +8,8 @@ import java.util.List;
 public class SimpleDBModel implements IModel {
     String driverFullQualifieldName = "com.mysql.jdbc.Driver";
     String connectionString = "jdbc:mysql://172.19.0.3:3306/CostManager";
+    final String USER_NAME = "root";
+    final String PASSWORD = "1";
 
     public SimpleDBModel() throws CostItemException {
         try {
@@ -32,7 +34,7 @@ public class SimpleDBModel implements IModel {
 
 
             // simple query
-            ResultSet rs = statement.executeQuery("SELECT  * FROM  items i inner join category c on i.category = c.category_id where ownerId="+user.getUserId());
+            ResultSet rs = statement.executeQuery("SELECT  * FROM  items i inner join categories c on i.category = c.category_id where i.ownerId="+user.getUserId());
             List<Item> items = new LinkedList<>();
             while (rs.next())
             {
@@ -77,7 +79,24 @@ public class SimpleDBModel implements IModel {
 
     @Override
     public void updateItem(Item item) throws CostItemException {
+        Connection connection = null ;
+        try {
+            //creating a connection object
+            connection = DriverManager.getConnection(connectionString, "root", "1");
 
+            PreparedStatement addItemStatment = connection.prepareStatement("UPDATE items WHERE id = ? values (name, cost, category, currency, description, date) VALUES (?,?,?,?,?,?)");
+            addItemStatment.setInt(1,item.getId());
+            addItemStatment.setString(2, item.getName());
+            addItemStatment.setDouble(3,item.getCost());
+            addItemStatment.setInt(4,item.getCategory().getId());
+            addItemStatment.setInt(5,item.getCurrency());
+            addItemStatment.setString(6,item.getDescription());
+            addItemStatment.setDate(7, new java.sql.Date(item.getDate().getTime()));
+            addItemStatment.executeUpdate();
+
+        }catch (SQLException e){
+            throw new CostItemException("updateItem error!",e);
+        }
     }
 
     @Override
@@ -93,7 +112,7 @@ public class SimpleDBModel implements IModel {
 
 
             // simple query
-            int rs = statement.executeUpdate("INSERT INTO  categories (ownerId,category_name) VALUES (" + category.getOwner() +", " + category.getName() + ")");
+            int rs = statement.executeUpdate("INSERT INTO  categories (ownerId,category_name) VALUES (" + category.getOwner().getUserId() +", " +'"' + category.getName() +'"' + ")");
 
         }catch (SQLException e){
             throw new CostItemException("add category error!",e);
@@ -118,9 +137,8 @@ public class SimpleDBModel implements IModel {
             while (rs.next())
             {
                 String temp = rs.getString("category_name");
-                int id = rs.getInt("id");
+                int id = rs.getInt("category_id");
                 categories.add(new Category(user,temp,id));
-                System.out.println("temp = " + temp );
             }
             return categories;
         }catch (SQLException e){
@@ -206,8 +224,15 @@ public class SimpleDBModel implements IModel {
             statement = connection.createStatement();
 
 
-            // simple query
-            int rs = statement.executeUpdate("INSERT INTO  items (ownerId,name,cost) VALUES (1,"+'"'+"koral"+'"'+",14)");
+            PreparedStatement addItemStatment = connection.prepareStatement("INSERT INTO items (ownerId, name, cost, category, currency, description, date) VALUES (?,?,?,?,?,?,?)");
+            addItemStatment.setInt(1,item.getOwner());
+            addItemStatment.setString(2, item.getName());
+            addItemStatment.setDouble(3,item.getCost());
+            addItemStatment.setInt(4,item.getCategory().getId());
+            addItemStatment.setInt(5,item.getCurrency());
+            addItemStatment.setString(6,item.getDescription());
+            addItemStatment.setDate(7, new java.sql.Date(item.getDate().getTime()));
+            addItemStatment.executeUpdate();
 
         }catch (SQLException e){
             throw new CostItemException("getItems error!",e);

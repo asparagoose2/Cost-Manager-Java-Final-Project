@@ -15,6 +15,20 @@ public class Item {
     private Date date;
     private Category category;
 
+    @Override
+    public String toString() {
+        return "Item{" +
+                "id=" + id +
+                ", owner=" + owner +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", currency=" + currency +
+                ", cost=" + cost +
+                ", date=" + date +
+                ", category=" + category +
+                '}';
+    }
+
     public Item(int id, int owner, String name, String description, int currency, double cost, Date date, Category category) {
         this.id = id;
         this.owner = owner;
