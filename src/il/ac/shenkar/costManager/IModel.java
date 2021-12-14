@@ -4,7 +4,7 @@ import java.util.Collection;
 
 public interface IModel {
     public void addItem(Item item) throws CostItemException;
-    public Collection<Item> getItems() throws CostItemException;
+    public Collection<Item> getItems(User user) throws CostItemException;
     public void deleteItems(Item item) throws CostItemException;
     public void updateItem(Item item) throws  CostItemException;
 
@@ -13,8 +13,10 @@ public interface IModel {
     public void deleteCategory(Category category) throws CostItemException;
     public void updateCategory(Category category) throws CostItemException;
 
-    public void addUser(User user) throws CostItemException;
+    // will be included in the future
+    //public void addUser(User user) throws CostItemException;
 
-    public User login(String email, String password) throws CostItemException;
+    // will be included in the future
+     public User login(String email, String password) throws CostItemException;
 
 }

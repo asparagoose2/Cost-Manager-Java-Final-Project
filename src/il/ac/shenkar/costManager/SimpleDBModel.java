@@ -7,7 +7,7 @@ import java.util.List;
 
 public class SimpleDBModel implements IModel {
     String driverFullQualifieldName = "com.mysql.jdbc.Driver";
-    String connectionString = "jdbc:mysql://172.19.0.2:3306/CostManager";
+    String connectionString = "jdbc:mysql://172.19.0.3:3306/CostManager";
 
     public SimpleDBModel() throws CostItemException {
         try {
@@ -20,7 +20,7 @@ public class SimpleDBModel implements IModel {
 
 
     @Override
-    public Collection<Item> getItems() throws CostItemException{
+    public Collection<Item> getItems(User user) throws CostItemException{
         Connection connection = null ;
         try {
             //creating a connection object
@@ -32,14 +32,20 @@ public class SimpleDBModel implements IModel {
 
 
             // simple query
-            ResultSet rs = statement.executeQuery("SELECT  * FROM  items where ownerId=1");
+            ResultSet rs = statement.executeQuery("SELECT  * FROM  items i inner join category c on i.category = c.category_id where ownerId="+user.getUserId());
             List<Item> items = new LinkedList<>();
             while (rs.next())
             {
-                String temp = rs.getString("name");
-                double amount = rs.getDouble("cost");
-                //items.add(new Item(temp,amount));
-                System.out.println("temp = " + temp + ' ' + amount);
+                String name = rs.getString("name");
+                String description = rs.getString("description");
+                int categoryId = rs.getInt("category_id");
+                String categoryName = rs.getString("category_name");
+                int ownerId = rs.getInt("ownerId");
+                int id = rs.getInt("id");
+                double cost = rs.getDouble("cost");
+                int currency = rs.getInt("currency");
+                Date date = rs.getDate("date");
+                items.add(new Item(id,ownerId,name,description,currency,cost,date,new Category(user,categoryName,categoryId)));
 
             }
             return items;
@@ -76,32 +82,116 @@ public class SimpleDBModel implements IModel {
 
     @Override
     public void addCategory(Category category) throws CostItemException {
+        Connection connection = null ;
+        try {
+            //creating a connection object
+            connection = DriverManager.getConnection(connectionString, "root", "1");
 
+            // getting a statment object
+            Statement statement = null;
+            statement = connection.createStatement();
+
+
+            // simple query
+            int rs = statement.executeUpdate("INSERT INTO  categories (ownerId,category_name) VALUES (" + category.getOwner() +", " + category.getName() + ")");
+
+        }catch (SQLException e){
+            throw new CostItemException("add category error!",e);
+        }
     }
 
     @Override
     public Collection<Category> getCategories(User user) throws CostItemException {
-        return null;
+        Connection connection = null ;
+        try {
+            //creating a connection object
+            connection = DriverManager.getConnection(connectionString, "root", "1");
+
+            // getting a statment object
+            Statement statement = null;
+            statement = connection.createStatement();
+
+
+            // simple query
+            ResultSet rs = statement.executeQuery("SELECT  * FROM  categories where ownerId="+user.getUserId());
+            List<Category> categories = new LinkedList<>();
+            while (rs.next())
+            {
+                String temp = rs.getString("category_name");
+                int id = rs.getInt("id");
+                categories.add(new Category(user,temp,id));
+                System.out.println("temp = " + temp );
+            }
+            return categories;
+        }catch (SQLException e){
+            throw new CostItemException("getCategories error!",e);
+
+        }
     }
 
     @Override
     public void deleteCategory(Category category) throws CostItemException {
+        Connection connection = null ;
+        try {
+            //creating a connection object
+            connection = DriverManager.getConnection(connectionString, "root", "1");
 
+            // getting a statment object
+            Statement statement = null;
+            statement = connection.createStatement();
+
+
+            // simple query
+            int rs = statement.executeUpdate("DELETE from categories where category_id="+ category.getId());
+
+        }catch (SQLException e){
+            throw new CostItemException("delete category error!",e);
+        }
     }
 
     @Override
     public void updateCategory(Category category) throws CostItemException {
+        Connection connection = null ;
+        try {
+            //creating a connection object
+            connection = DriverManager.getConnection(connectionString, "root", "1");
 
-    }
+            // getting a statment object
+            Statement statement = null;
+            statement = connection.createStatement();
 
-    @Override
-    public void addUser(User user) throws CostItemException {
+
+            // simple query
+            int rs = statement.executeUpdate("UPDATE categories SET ownerId=" + category.getOwner() +", category_name=" + category.getName() + "where category_id="+category.getId());
+
+        }catch (SQLException e){
+            throw new CostItemException("update category error!",e);
+        }
 
     }
 
     @Override
     public User login(String email, String password) throws CostItemException {
-        return null;
+        Connection connection = null ;
+        try {
+            //creating a connection object
+            connection = DriverManager.getConnection(connectionString, "root", "1");
+
+            // getting a statment object
+            Statement statement = null;
+            statement = connection.createStatement();
+
+
+            // simple query
+            ResultSet rs = statement.executeQuery("SELECT  * FROM  users where email="+'"'+email+'"'+"and password="+'"'+password+'"');
+            if(rs.next()) {
+                return new User(rs.getString("firstName") + " " + rs.getString("lastName"), rs.getInt("id"));
+            }
+            return null;
+        }catch (SQLException e){
+            throw new CostItemException("login error!",e);
+
+        }
     }
 
     @Override

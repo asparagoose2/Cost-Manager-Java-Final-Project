@@ -13,21 +13,9 @@ public class Item {
     private int currency;
     private double cost;
     private Date date;
-    private String category;
+    private Category category;
 
-    public Item(int id, int owner, String name, double cost, String category) {
-        this.id = id;
-        this.owner = owner;
-        this.name = name;
-        this.cost = cost;
-        this.category = category;
-
-        this.currency = 1;
-        this.description = "";
-        this.date = new Date();
-    }
-
-    public Item(int id, int owner, String name, String description, int currency, double cost, Date date, String category) {
+    public Item(int id, int owner, String name, String description, int currency, double cost, Date date, Category category) {
         this.id = id;
         this.owner = owner;
         this.name = name;
@@ -90,11 +78,11 @@ public class Item {
         this.date = date;
     }
 
-    public String getCategory() {
+    public Category getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
 }
