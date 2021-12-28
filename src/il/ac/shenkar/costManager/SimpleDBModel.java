@@ -5,6 +5,12 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Implements the IModel interface.
+ * This class is responsible for connecting to the database and performing all the operations on the database.
+ * This class uses MySQL JDBC driver.
+ * @see IModel
+ */
 public class SimpleDBModel implements IModel {
     String driverFullQualifieldName = "com.mysql.jdbc.Driver";
     String connectionString = "jdbc:mysql://172.19.0.3:3306/CostManager";
@@ -21,6 +27,12 @@ public class SimpleDBModel implements IModel {
     }
 
 
+    /**
+     * This method is responsible for getting all the items from the database.
+     * @param user the user whose items will be returned
+     * @return
+     * @throws CostItemException
+     */
     @Override
     public Collection<Item> getItems(User user) throws CostItemException{
         Connection connection = null ;
@@ -57,6 +69,11 @@ public class SimpleDBModel implements IModel {
         }
     }
 
+    /**
+     * This method is responsible for deleting an item from the database.
+     * @param item the item to be deleted from the user's list of items
+     * @throws CostItemException
+     */
     @Override
     public void deleteItems(Item item) throws CostItemException {
         Connection connection = null ;
@@ -77,6 +94,11 @@ public class SimpleDBModel implements IModel {
         }
     }
 
+    /**
+     * This method is responsible for updating an item to the database.
+     * @param item the item to be updated in the user's list of items
+     * @throws CostItemException
+     */
     @Override
     public void updateItem(Item item) throws CostItemException {
         Connection connection = null ;
@@ -99,6 +121,11 @@ public class SimpleDBModel implements IModel {
         }
     }
 
+    /**
+     * This method is responsible for adding a category to the database.
+     * @param category
+     * @throws CostItemException
+     */
     @Override
     public void addCategory(Category category) throws CostItemException {
         Connection connection = null ;
@@ -119,6 +146,12 @@ public class SimpleDBModel implements IModel {
         }
     }
 
+    /**
+     * This method is responsible for getting a list of categories from the database.
+     * @param user the user whose categories will be returned
+     * @return
+     * @throws CostItemException
+     */
     @Override
     public Collection<Category> getCategories(User user) throws CostItemException {
         Connection connection = null ;
@@ -147,6 +180,11 @@ public class SimpleDBModel implements IModel {
         }
     }
 
+    /**
+     * This method is responsible for deleting a category from the database.
+     * @param category the category to be deleted from the user's list of categories
+     * @throws CostItemException
+     */
     @Override
     public void deleteCategory(Category category) throws CostItemException {
         Connection connection = null ;
@@ -167,6 +205,11 @@ public class SimpleDBModel implements IModel {
         }
     }
 
+    /**
+     * This method is responsible for updating a category in the database.
+     * @param category the category to be updated in the user's list of categories
+     * @throws CostItemException
+     */
     @Override
     public void updateCategory(Category category) throws CostItemException {
         Connection connection = null ;
@@ -188,6 +231,14 @@ public class SimpleDBModel implements IModel {
 
     }
 
+    /**
+     * This method is responsible for logging in a user. It checks if the user exists in the database and if the password is correct.
+     *
+     * @param email the email of the user to be logged in
+     * @param password the password of the user to be logged in
+     * @return
+     * @throws CostItemException
+     */
     @Override
     public User login(String email, String password) throws CostItemException {
         Connection connection = null ;
@@ -212,6 +263,12 @@ public class SimpleDBModel implements IModel {
         }
     }
 
+    /**
+     * This method is responsible for adding an item to the database.
+     *
+     * @param item the Item to be added to the database
+     * @throws CostItemException
+     */
     @Override
     public void addItem(Item item) throws CostItemException{
         Connection connection = null ;

@@ -5,6 +5,12 @@ import java.util.Date;
 /*
     We can use currency as ENUM, save all amounts in USD and when printing make the conversion.
  */
+
+/**
+ *  Item class
+ *  @see     SimpleDBModel
+ *
+ */
 public class Item {
     private int id;
     private int owner;
