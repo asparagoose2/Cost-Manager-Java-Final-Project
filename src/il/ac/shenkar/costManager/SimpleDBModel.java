@@ -17,12 +17,12 @@ public class SimpleDBModel implements IModel {
     final String USER_NAME = "root";
     final String PASSWORD = "1";
 
-    public SimpleDBModel() throws CostItemException {
+    public SimpleDBModel() throws CostManagerException {
         try {
             Class.forName(driverFullQualifieldName);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-            throw new CostItemException("problem with registing driver to the driver manager", e);
+            throw new CostManagerException("problem with registering driver to the driver manager", e);
         }
     }
 
@@ -30,11 +30,11 @@ public class SimpleDBModel implements IModel {
     /**
      * This method is responsible for getting all the items from the database.
      * @param user the user whose items will be returned
-     * @return
-     * @throws CostItemException
+     * @return a list of items
+     * @throws CostManagerException if there is a problem with the database. @link CostManagerException
      */
     @Override
-    public Collection<Item> getItems(User user) throws CostItemException{
+    public Collection<Item> getItems(User user) throws CostManagerException {
         Connection connection = null ;
         try {
             //creating a connection object
@@ -64,7 +64,7 @@ public class SimpleDBModel implements IModel {
             }
             return items;
         }catch (SQLException e){
-            throw new CostItemException("getItems error!",e);
+            throw new CostManagerException("getItems error!",e);
 
         }
     }
@@ -72,10 +72,10 @@ public class SimpleDBModel implements IModel {
     /**
      * This method is responsible for deleting an item from the database.
      * @param item the item to be deleted from the user's list of items
-     * @throws CostItemException
+     * @throws CostManagerException if there is a problem with the database. @link CostManagerException
      */
     @Override
-    public void deleteItems(Item item) throws CostItemException {
+    public void deleteItems(Item item) throws CostManagerException {
         Connection connection = null ;
         try {
             //creating a connection object
@@ -90,17 +90,17 @@ public class SimpleDBModel implements IModel {
             int rs = statement.executeUpdate("DELETE FROM  items where id="+item.getId());
 
         }catch (SQLException e){
-            throw new CostItemException("getItems error!",e);
+            throw new CostManagerException("getItems error!",e);
         }
     }
 
     /**
      * This method is responsible for updating an item to the database.
      * @param item the item to be updated in the user's list of items
-     * @throws CostItemException
+     * @throws CostManagerException if there is a problem with the database. @link CostManagerException
      */
     @Override
-    public void updateItem(Item item) throws CostItemException {
+    public void updateItem(Item item) throws CostManagerException {
         Connection connection = null ;
         try {
             //creating a connection object
@@ -117,17 +117,17 @@ public class SimpleDBModel implements IModel {
             addItemStatment.executeUpdate();
 
         }catch (SQLException e){
-            throw new CostItemException("updateItem error!",e);
+            throw new CostManagerException("updateItem error!",e);
         }
     }
 
     /**
      * This method is responsible for adding a category to the database.
-     * @param category
-     * @throws CostItemException
+     * @param category the category to be added to the database
+     * @throws CostManagerException if there is a problem with the database. @link CostManagerException
      */
     @Override
-    public void addCategory(Category category) throws CostItemException {
+    public void addCategory(Category category) throws CostManagerException {
         Connection connection = null ;
         try {
             //creating a connection object
@@ -142,18 +142,18 @@ public class SimpleDBModel implements IModel {
             int rs = statement.executeUpdate("INSERT INTO  categories (ownerId,category_name) VALUES (" + category.getOwner().getUserId() +", " +'"' + category.getName() +'"' + ")");
 
         }catch (SQLException e){
-            throw new CostItemException("add category error!",e);
+            throw new CostManagerException("add category error!",e);
         }
     }
 
     /**
      * This method is responsible for getting a list of categories from the database.
      * @param user the user whose categories will be returned
-     * @return
-     * @throws CostItemException
+     * @return a list of categories
+     * @throws CostManagerException if there is a problem with the database. @link CostManagerException
      */
     @Override
-    public Collection<Category> getCategories(User user) throws CostItemException {
+    public Collection<Category> getCategories(User user) throws CostManagerException {
         Connection connection = null ;
         try {
             //creating a connection object
@@ -175,7 +175,7 @@ public class SimpleDBModel implements IModel {
             }
             return categories;
         }catch (SQLException e){
-            throw new CostItemException("getCategories error!",e);
+            throw new CostManagerException("getCategories error!",e);
 
         }
     }
@@ -183,10 +183,10 @@ public class SimpleDBModel implements IModel {
     /**
      * This method is responsible for deleting a category from the database.
      * @param category the category to be deleted from the user's list of categories
-     * @throws CostItemException
+     * @throws CostManagerException if there is a problem with the database. @link CostManagerException
      */
     @Override
-    public void deleteCategory(Category category) throws CostItemException {
+    public void deleteCategory(Category category) throws CostManagerException {
         Connection connection = null ;
         try {
             //creating a connection object
@@ -201,17 +201,17 @@ public class SimpleDBModel implements IModel {
             int rs = statement.executeUpdate("DELETE from categories where category_id="+ category.getId());
 
         }catch (SQLException e){
-            throw new CostItemException("delete category error!",e);
+            throw new CostManagerException("delete category error!",e);
         }
     }
 
     /**
      * This method is responsible for updating a category in the database.
      * @param category the category to be updated in the user's list of categories
-     * @throws CostItemException
+     * @throws CostManagerException if there is a problem with the database. @link CostManagerException
      */
     @Override
-    public void updateCategory(Category category) throws CostItemException {
+    public void updateCategory(Category category) throws CostManagerException {
         Connection connection = null ;
         try {
             //creating a connection object
@@ -226,7 +226,7 @@ public class SimpleDBModel implements IModel {
             int rs = statement.executeUpdate("UPDATE categories SET ownerId=" + category.getOwner() +", category_name=" + category.getName() + "where category_id="+category.getId());
 
         }catch (SQLException e){
-            throw new CostItemException("update category error!",e);
+            throw new CostManagerException("update category error!",e);
         }
 
     }
@@ -236,11 +236,11 @@ public class SimpleDBModel implements IModel {
      *
      * @param email the email of the user to be logged in
      * @param password the password of the user to be logged in
-     * @return
-     * @throws CostItemException
+     * @return the user if the login is successful, null otherwise
+     * @throws CostManagerException if there is a problem with the database. @link CostManagerException
      */
     @Override
-    public User login(String email, String password) throws CostItemException {
+    public User login(String email, String password) throws CostManagerException {
         Connection connection = null ;
         try {
             //creating a connection object
@@ -258,7 +258,7 @@ public class SimpleDBModel implements IModel {
             }
             return null;
         }catch (SQLException e){
-            throw new CostItemException("login error!",e);
+            throw new CostManagerException("login error!",e);
 
         }
     }
@@ -267,10 +267,10 @@ public class SimpleDBModel implements IModel {
      * This method is responsible for adding an item to the database.
      *
      * @param item the Item to be added to the database
-     * @throws CostItemException
+     * @throws CostManagerException if there is a problem with the database. @link CostManagerException
      */
     @Override
-    public void addItem(Item item) throws CostItemException{
+    public void addItem(Item item) throws CostManagerException {
         Connection connection = null ;
         try {
             //creating a connection object
@@ -292,7 +292,7 @@ public class SimpleDBModel implements IModel {
             addItemStatment.executeUpdate();
 
         }catch (SQLException e){
-            throw new CostItemException("getItems error!",e);
+            throw new CostManagerException("getItems error!",e);
         }
     }
 

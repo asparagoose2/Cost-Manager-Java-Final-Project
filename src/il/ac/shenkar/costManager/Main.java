@@ -1,11 +1,5 @@
 package il.ac.shenkar.costManager;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Date;
-import java.util.LinkedList;
 import java.util.Properties;
 
 public class Main {
@@ -25,7 +19,7 @@ public class Main {
 //            LinkedList<Item> items = (LinkedList<Item>) m.getItems(user);
 //            m.deleteItems(items.pop());
 //            System.out.println(items);
-        } catch (CostItemException e) {
+        } catch (CostManagerException e) {
             e.printStackTrace();
         }
 
