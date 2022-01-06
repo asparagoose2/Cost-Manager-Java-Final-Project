@@ -16,13 +16,13 @@ public interface IView {
      * The method is used to display the error in the view.
      * @param error the error to display.
      */
-    public void displayError(String error);
+    public void displayError(String error, Boolean shouldExit);
 
     /**
      * The method is used to display the message in the view.
      * @param message the message to display.
      */
-    public void displayMessage(String message);
+    public void displayMessage(String message, String title);
 
     /**
      * The method is used to set the ViewModel.
