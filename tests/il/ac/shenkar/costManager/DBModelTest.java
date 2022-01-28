@@ -19,7 +19,7 @@ public class DBModelTest {
     static String connectionString = "jdbc:mysql://172.19.0.2:3306/CostManager";
     static final String USER_NAME = "root";
     static final String PASSWORD = "1";
-    static User u   ser;
+    static User user;
     static Category category;
     static Item item;
 
@@ -32,7 +32,7 @@ public class DBModelTest {
 
     @Test
     @Order(1)
-    void testAddUser() throws CostManagerException, SQLException {
+    void testAddUser() throws CostManagerException {
         User user = model.register("test_first_name", "test_last_name", "test_email", "test_password");
         assert (user.getUserId() != 0);
         assert (user.getName().equals("test_first_name test_last_name"));
@@ -48,7 +48,7 @@ public class DBModelTest {
     }
     @Test
     @Order(3)
-    void testFailedLoginWrongPassword() throws CostManagerException {
+    void testFailedLoginWrongPassword() {
         CostManagerException thrown = assertThrows(CostManagerException.class, () ->{
             model.login("test_email", "wrong_password");
         });
@@ -56,7 +56,7 @@ public class DBModelTest {
     }
     @Test
     @Order(2)
-    void testFailedLoginWrongEmail() throws CostManagerException {
+    void testFailedLoginWrongEmail() {
         CostManagerException thrown = assertThrows(CostManagerException.class, () ->{
             model.login("wrong_email", "test_password");
         });
@@ -118,7 +118,7 @@ public class DBModelTest {
         assert (items.get(0).getCategory().getId() == category.getId());
     }
     @AfterAll
-    public static void close() throws CostManagerException, SQLException {
+    public static void close() throws SQLException {
         // sql query to delete user with email test_email
         Connection connection = DriverManager.getConnection(connectionString, USER_NAME, PASSWORD);
         connection.createStatement().executeUpdate("DELETE FROM items WHERE id = " + item.getId());
