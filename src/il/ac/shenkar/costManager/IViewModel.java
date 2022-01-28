@@ -27,6 +27,26 @@ public interface IViewModel {
     public void addItem(String itemName, double itemValue, Date itemDate);
 
     /**
+     * Adds a new expense to the model.
+     * @param itemName the name of the item
+     * @param itemValue the value of the item
+     * @param itemDate the date of the item
+     */
+    public void addItem(String itemName, double itemValue, Date itemDate, Category itemCategory);
+
+    /**
+     * Adds a new item to the user items in the model.
+     * @param name the name of the item
+     * @param amount the amount of the item
+     * @param category the category of the item
+     * @param description the description of the item
+     * @param currency the currency of the item - should be an ENUM
+     * @param date the date of the item
+     */
+    public void addItem(String name, double amount, Category category, String description, int currency, java.sql.Date date);
+
+
+    /**
      * Add a new expense to the model.
      * @param item the expense
      */
@@ -59,6 +79,31 @@ public interface IViewModel {
      */
     public void addCategory(Category category);
 
+
+    /**
+     * Adds a new category to the model.
+     * @param categoryName the name of the category
+     */
+    public void addCategory(String categoryName);
+
+    /**
+     * login the user to the system
+     * @param email the email of the user
+     * @param password the password of the user
+     */
+    public void login(String email, String password);
+
+    /**
+     * Creates a new user and logs him in the system.
+     * @param firstName the first name of the user
+     * @param lastName the last name of the user
+     * @param email the email of the user
+     * @param password the password of the user
+     */
+    public void register(String firstName, String lastName, String email, String password);
+
+
+
     /**
      * Removes a category from the model.
      * @param category the category to remove
@@ -79,4 +124,5 @@ public interface IViewModel {
      */
     public void getCategories();
 
+    void setUser(User user);
 }
