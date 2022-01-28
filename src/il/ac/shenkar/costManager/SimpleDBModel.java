@@ -1,7 +1,8 @@
 package il.ac.shenkar.costManager;
 
+import org.springframework.security.crypto.bcrypt.BCrypt;
+
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -266,21 +267,27 @@ public class SimpleDBModel implements IModel {
     public User login(String email, String password) throws CostManagerException {
         ResultSet rs = null;
         try (Connection connection = DriverManager.getConnection(connectionString, USER_NAME, PASSWORD);
-             PreparedStatement loginStatement = connection.prepareStatement("SELECT * FROM users WHERE email=? AND password=?")
+             PreparedStatement loginStatement = connection.prepareStatement("SELECT * FROM users WHERE email=?")
         ) {
+
             // setting the parameters
             loginStatement.setString(1, email);
-            loginStatement.setString(2, password);
 
             // execute the query
             rs = loginStatement.executeQuery();
 
             // check if the user exists
             if (rs.next()) {
-                // create the user
-               return new User(rs.getString("first_name") + " " + rs.getString("last_name"), rs.getInt("user_id"));
+                // check if the password is correct with hash
+                if (BCrypt.checkpw(password, rs.getString("password"))) {
+                    // create the user and return it
+                    return new User(rs.getString("first_name") + " " + rs.getString("last_name"), rs.getInt("user_id"));
+                } else {
+                    throw new CostManagerException("Wrong password");
+                }
+            } else {
+                throw new CostManagerException("User not found");
             }
-            return null;
 
         }catch (SQLException e){
             throw new CostManagerException("login error!",e);
@@ -292,6 +299,115 @@ public class SimpleDBModel implements IModel {
                     System.out.println("Error closing result set " + e.getMessage());
                 }
             }
+        }
+    }
+
+    @Override
+    public User register(String firstName, String lastName, String email, String password) throws CostManagerException {
+        try (Connection connection = DriverManager.getConnection(connectionString, USER_NAME, PASSWORD);
+             PreparedStatement registerStatement = connection.prepareStatement("INSERT INTO users(first_name, last_name, email, password) VALUES(?,?,?,?)", Statement.RETURN_GENERATED_KEYS)
+        ) {
+
+            // hash the password
+            String hashedPassword =  BCrypt.hashpw(password, BCrypt.gensalt());
+
+
+            // setting the parameters
+            registerStatement.setString(1, firstName);
+            registerStatement.setString(2, lastName);
+            registerStatement.setString(3, email);
+            registerStatement.setString(4, hashedPassword);
+
+            // execute the update
+            int rs = registerStatement.executeUpdate();
+
+            // check if the update was successful
+            if (rs == 0) {
+                throw new CostManagerException("User not registered");
+            }
+
+            // get the generated user id
+            ResultSet generatedKeys = registerStatement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                return new User(firstName + " " + lastName, generatedKeys.getInt(1));
+            }
+
+        }catch (SQLException e){
+            throw new CostManagerException("register error!",e);
+        }
+        return null;
+    }
+
+    @Override
+    public Item createItem(String name, double amount, Category category, User owner, String description, int currency, Date date) throws CostManagerException {
+        try (Connection connection = DriverManager.getConnection(connectionString, USER_NAME, PASSWORD);
+             PreparedStatement addItemStatement = connection.prepareStatement("INSERT INTO items (ownerId, name, cost, category, currency, description, date) VALUES (?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS)
+        ) {
+            // setting the parameters
+            addItemStatement.setInt(1,owner.getUserId());
+            addItemStatement.setString(2, name);
+            addItemStatement.setDouble(3,amount);
+            addItemStatement.setInt(4,category.getId());
+            addItemStatement.setInt(5, currency);
+            addItemStatement.setString(6, description);
+            addItemStatement.setDate(7, new Date(date.getTime()));
+
+            // execute the query
+            int rs = addItemStatement.executeUpdate();
+
+            // check if the update was successful
+            if (rs == 0) {
+                throw new CostManagerException("Item not added");
+            }
+            int userId = -1;
+
+            try (ResultSet generatedKeys = addItemStatement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    userId = generatedKeys.getInt(1);
+                }
+                else {
+                    throw new SQLException("Creating user failed, no ID obtained.");
+                }
+            }
+
+            return new Item(userId,owner.getUserId(), name, description, currency, amount, date, category);
+
+        }catch (SQLException e){
+            throw new CostManagerException("create item error!",e);
+        }
+    }
+
+    @Override
+    public Category createCategory(String name, User owner) throws CostManagerException {
+        try (Connection connection = DriverManager.getConnection(connectionString, USER_NAME, PASSWORD);
+             PreparedStatement addCategory = connection.prepareStatement("INSERT INTO categories (category_name, owner_id) VALUES (?,?)", Statement.RETURN_GENERATED_KEYS)
+        ) {
+            // setting the parameters
+            addCategory.setString(1, name);
+            addCategory.setInt(2,owner.getUserId());
+
+            // execute the query
+            int rs = addCategory.executeUpdate();
+
+            // check if the update was successful
+            if (rs == 0) {
+                throw new CostManagerException("Category not added");
+            }
+            int categoryID = -1;
+
+            try (ResultSet generatedKeys = addCategory.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    categoryID = generatedKeys.getInt(1);
+                }
+                else {
+                    throw new SQLException("Creating category failed, no ID obtained.");
+                }
+            }
+
+            return new Category(owner, name, categoryID);
+
+        }catch (SQLException e){
+            throw new CostManagerException("category error!",e);
         }
     }
 
@@ -325,6 +441,46 @@ public class SimpleDBModel implements IModel {
 
         }catch (SQLException e){
             throw new CostManagerException("getItems error!",e);
+        }
+    }
+
+    @Override
+    public Item createItem(String name, double amount, Category category, User owner, String description, int currency, java.util.Date date) throws CostManagerException {
+        try (Connection connection = DriverManager.getConnection(connectionString, USER_NAME, PASSWORD);
+             PreparedStatement addItemStatement = connection.prepareStatement("INSERT INTO items (ownerId, name, cost, category, currency, description, date) VALUES (?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS)
+        ) {
+            // setting the parameters
+            addItemStatement.setInt(1,owner.getUserId());
+            addItemStatement.setString(2, name);
+            addItemStatement.setDouble(3,amount);
+            addItemStatement.setInt(4,category.getId());
+            addItemStatement.setInt(5, currency);
+            addItemStatement.setString(6, description);
+            addItemStatement.setDate(7, new Date(date.getTime()));
+
+            // execute the query
+            int rs = addItemStatement.executeUpdate();
+
+            // check if the update was successful
+            if (rs == 0) {
+                throw new CostManagerException("Item not added");
+            }
+            int userId = -1;
+
+            try (ResultSet generatedKeys = addItemStatement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    userId = generatedKeys.getInt(1);
+                }
+                else {
+                    throw new SQLException("Creating user failed, no ID obtained.");
+                }
+            }
+
+            return new Item(userId,owner.getUserId(), name, description, currency, amount, date, category);
+
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+            throw new CostManagerException("Create item error!",e);
         }
     }
 

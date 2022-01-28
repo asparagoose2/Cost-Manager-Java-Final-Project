@@ -41,4 +41,8 @@ public interface IView {
      * @param categories the categories to display.
      */
     public void setCategories(Collection<Category> categories);
+
+    public void setIsLoggedIn(Boolean isLoggedIn);
+
+    void start();
 }

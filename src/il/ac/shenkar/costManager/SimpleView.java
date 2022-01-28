@@ -5,7 +5,7 @@ import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 
-public class SimpleView implements IView{
+public class SimpleView implements IView  {
     private IViewModel viewModel;
 
     private String[] columnNames = {"Name", "Cost", "Date"};
@@ -193,6 +193,16 @@ public class SimpleView implements IView{
 
     @Override
     public void setCategories(Collection<Category> categories) {
+
+    }
+
+    @Override
+    public void setIsLoggedIn(Boolean isLoggedIn) {
+
+    }
+
+    @Override
+    public void start() {
 
     }
 }

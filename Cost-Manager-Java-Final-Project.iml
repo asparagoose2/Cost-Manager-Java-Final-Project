@@ -25,5 +25,6 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="mysql-connector-java-5.1.13-bin(1)" level="project" />
+    <orderEntry type="library" name="spring-security-crypto" level="project" />
   </component>
 </module>
