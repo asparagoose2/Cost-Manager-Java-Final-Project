@@ -1,11 +1,41 @@
 package il.ac.shenkar.costManager;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 
 public class Main {
+    static IView view;
+    static IModel model;
+    static IViewModel viewModel;
+
+
 
     public static void main(String[] args) {
+        try {
+            view = new ConsoleView();
+            model = new SimpleDBModel();
+            viewModel = new ViewModel();
+        } catch (CostManagerException e) {
+            e.printStackTrace();
+        }
+        view.setViewModel(viewModel);
+        viewModel.setModel(model);
+        viewModel.setView(view);
+//        User user;
+//        try {
+//            user = model.login("arthur.dent@email.com","12345");
+//            viewModel.setUser(user);
+//            viewModel.getCategories();
+//        } catch (CostManagerException e) {
+//            e.printStackTrace();
+//        }
+        view.start();
+
+
+
+
+        /*
         try {
             SimpleDBModel m = new SimpleDBModel();
             User user = m.login("arthur.dent@email.com","12345");
@@ -26,6 +56,8 @@ public class Main {
         } catch (CostManagerException e) {
             e.printStackTrace();
         }
+
+         */
 
     }
 }
