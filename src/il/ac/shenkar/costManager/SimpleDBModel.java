@@ -208,10 +208,11 @@ public class SimpleDBModel implements IModel {
             createCategory("Entertainment", newUser);
             createCategory("Other", newUser);
 
+            return newUser;
+
         }catch (SQLException e){
             throw new CostManagerException("register error!",e);
         }
-        return null;
     }
 
 
