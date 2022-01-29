@@ -14,14 +14,14 @@ import java.util.List;
  * @see IModel
  */
 public class SimpleDBModel implements IModel {
-    String driverFullQualifieldName = "com.mysql.jdbc.Driver";
+    String driverFullQualifiedName = "com.mysql.jdbc.Driver";
     String connectionString = "jdbc:mysql://172.19.0.2:3306/CostManager";
     final static String USER_NAME = "root";
     final static String PASSWORD = "1";
 
     public SimpleDBModel() throws CostManagerException {
         try {
-            Class.forName(driverFullQualifieldName);
+            Class.forName(driverFullQualifiedName);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             throw new CostManagerException("problem with registering driver to the driver manager", e);
@@ -82,86 +82,6 @@ public class SimpleDBModel implements IModel {
     }
 
     /**
-     * This method is responsible for deleting an item from the database.
-     * @param item the item to be deleted from the user's list of items
-     * @throws CostManagerException if there is a problem with the database. @link CostManagerException
-     */
-    @Override
-    public void deleteItems(Item item) throws CostManagerException {
-        try (Connection connection = DriverManager.getConnection(connectionString, USER_NAME, PASSWORD);
-             PreparedStatement deleteItemStatement = connection.prepareStatement("DELETE FROM items WHERE id=?")
-        ) {
-            // setting the parameters
-            deleteItemStatement.setInt(1, item.getId());
-            // executing the query
-            int rs = deleteItemStatement.executeUpdate();
-            // checking the result
-            if (rs == 0) {
-                throw new CostManagerException("Item not found");
-            }
-        }catch (SQLException e){
-            throw new CostManagerException("deleteItems error!",e);
-        }
-    }
-
-    /**
-     * This method is responsible for updating an item to the database.
-     * @param item the item to be updated in the user's list of items
-     * @throws CostManagerException if there is a problem with the database. @link CostManagerException
-     */
-    @Override
-    public void updateItem(Item item) throws CostManagerException {
-        try ( Connection connection = DriverManager.getConnection(connectionString, USER_NAME, PASSWORD);
-              PreparedStatement updateItemStatement = connection.prepareStatement("UPDATE items SET name=?, description=?, category=?, cost=?, currency=?, date=? WHERE id=?")
-        ) {
-            // setting the parameters
-            updateItemStatement.setString(1, item.getName());
-            updateItemStatement.setString(2, item.getDescription());
-            updateItemStatement.setInt(3, item.getCategory().getId());
-            updateItemStatement.setDouble(4, item.getCost());
-            updateItemStatement.setInt(5, item.getCurrency());
-            updateItemStatement.setDate(6, new java.sql.Date(item.getDate().getTime()));
-            updateItemStatement.setInt(7, item.getId());
-            // execute the update
-            int rs = updateItemStatement.executeUpdate();
-            // check if the update was successful
-            if (rs == 0) {
-                throw new CostManagerException("Item not found");
-            }
-
-        }catch (SQLException e){
-            throw new CostManagerException("updateItem error!",e);
-        }
-    }
-
-    /**
-     * This method is responsible for adding a category to the database.
-     * @param category the category to be added to the database
-     * @throws CostManagerException if there is a problem with the database. @link CostManagerException
-     */
-    @Override
-    public void addCategory(Category category) throws CostManagerException {
-        try (Connection connection = DriverManager.getConnection(connectionString, USER_NAME, PASSWORD);
-             PreparedStatement addCategoryStatement = connection.prepareStatement("INSERT INTO categories (owner_id, category_name) VALUES (?,?)")
-        ) {
-            // setting the parameters
-            addCategoryStatement.setInt(1, category.getOwner().getUserId());
-            addCategoryStatement.setString(2, category.getName());
-
-            // execute the update
-            int rs = addCategoryStatement.executeUpdate();
-
-            // check if the update was successful
-            if (rs == 0) {
-                throw new CostManagerException("Category not added");
-            }
-
-        } catch (SQLException e){
-            throw new CostManagerException("add category error!",e);
-        }
-    }
-
-    /**
      * This method is responsible for getting a list of categories from the database.
      * @param user the user whose categories will be returned
      * @return a list of categories
@@ -199,60 +119,6 @@ public class SimpleDBModel implements IModel {
                 }
             }
         }
-    }
-
-    /**
-     * This method is responsible for deleting a category from the database.
-     * @param category the category to be deleted from the user's list of categories
-     * @throws CostManagerException if there is a problem with the database. @link CostManagerException
-     */
-    @Override
-    public void deleteCategory(Category category) throws CostManagerException {
-        try (Connection connection = DriverManager.getConnection(connectionString, USER_NAME, PASSWORD);
-             PreparedStatement deleteCategoryStatement = connection.prepareStatement("DELETE FROM categories WHERE category_id=?")
-        ) {
-            // setting the parameters
-            deleteCategoryStatement.setInt(1, category.getId());
-
-            // execute the update
-            int rs = deleteCategoryStatement.executeUpdate();
-
-            // check if the update was successful
-            if (rs == 0) {
-                throw new CostManagerException("Category not deleted");
-            }
-
-        }catch (SQLException e){
-            throw new CostManagerException("delete category error!",e);
-        }
-    }
-
-    /**
-     * This method is responsible for updating a category in the database.
-     * @param category the category to be updated in the user's list of categories
-     * @throws CostManagerException if there is a problem with the database. @link CostManagerException
-     */
-    @Override
-    public void updateCategory(Category category) throws CostManagerException {
-        try (Connection connection = DriverManager.getConnection(connectionString, USER_NAME, PASSWORD);
-             PreparedStatement updateCategoryStatement = connection.prepareStatement("UPDATE categories SET category_name=? WHERE category_id=?")
-        ) {
-            // setting the parameters
-            updateCategoryStatement.setString(1, category.getName());
-            updateCategoryStatement.setInt(2, category.getId());
-
-            // execute the update
-            int rs = updateCategoryStatement.executeUpdate();
-
-            // check if the update was successful
-            if (rs == 0) {
-                throw new CostManagerException("Category not updated");
-            }
-
-        }catch (SQLException e){
-            throw new CostManagerException("update category error!",e);
-        }
-
     }
 
     /**
@@ -338,44 +204,6 @@ public class SimpleDBModel implements IModel {
         return null;
     }
 
-    @Override
-    public Item createItem(String name, double amount, Category category, User owner, String description, int currency, Date date) throws CostManagerException {
-        try (Connection connection = DriverManager.getConnection(connectionString, USER_NAME, PASSWORD);
-             PreparedStatement addItemStatement = connection.prepareStatement("INSERT INTO items (ownerId, name, cost, category, currency, description, date) VALUES (?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS)
-        ) {
-            // setting the parameters
-            addItemStatement.setInt(1,owner.getUserId());
-            addItemStatement.setString(2, name);
-            addItemStatement.setDouble(3,amount);
-            addItemStatement.setInt(4,category.getId());
-            addItemStatement.setInt(5, currency);
-            addItemStatement.setString(6, description);
-            addItemStatement.setDate(7, new Date(date.getTime()));
-
-            // execute the query
-            int rs = addItemStatement.executeUpdate();
-
-            // check if the update was successful
-            if (rs == 0) {
-                throw new CostManagerException("Item not added");
-            }
-            int userId = -1;
-
-            try (ResultSet generatedKeys = addItemStatement.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    userId = generatedKeys.getInt(1);
-                }
-                else {
-                    throw new SQLException("Creating user failed, no ID obtained.");
-                }
-            }
-
-            return new Item(userId,owner.getUserId(), name, description, currency, amount, date, category);
-
-        }catch (SQLException e){
-            throw new CostManagerException("create item error!",e);
-        }
-    }
 
     @Override
     public Category createCategory(String name, User owner) throws CostManagerException {
@@ -393,7 +221,7 @@ public class SimpleDBModel implements IModel {
             if (rs == 0) {
                 throw new CostManagerException("Category not added");
             }
-            int categoryID = -1;
+            int categoryID;
 
             try (ResultSet generatedKeys = addCategory.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
@@ -411,38 +239,6 @@ public class SimpleDBModel implements IModel {
         }
     }
 
-    /**
-     * This method is responsible for adding an item to the database.
-     *
-     * @param item the Item to be added to the database
-     * @throws CostManagerException if there is a problem with the database. @link CostManagerException
-     */
-    @Override
-    public void addItem(Item item) throws CostManagerException {
-        try (Connection connection = DriverManager.getConnection(connectionString, USER_NAME, PASSWORD);
-             PreparedStatement addItemStatement = connection.prepareStatement("INSERT INTO items (ownerId, name, cost, category, currency, description, date) VALUES (?,?,?,?,?,?,?)")
-        ) {
-            // setting the parameters
-            addItemStatement.setInt(1,item.getOwner());
-            addItemStatement.setString(2, item.getName());
-            addItemStatement.setDouble(3,item.getCost());
-            addItemStatement.setInt(4,item.getCategory().getId());
-            addItemStatement.setInt(5,item.getCurrency());
-            addItemStatement.setString(6,item.getDescription());
-            addItemStatement.setDate(7, new Date(item.getDate().getTime()));
-
-            // execute the query
-            int rs = addItemStatement.executeUpdate();
-
-            // check if the update was successful
-            if (rs == 0) {
-                throw new CostManagerException("Item not added");
-            }
-
-        }catch (SQLException e){
-            throw new CostManagerException("getItems error!",e);
-        }
-    }
 
     @Override
     public Item createItem(String name, double amount, Category category, User owner, String description, int currency, java.util.Date date) throws CostManagerException {
@@ -465,7 +261,7 @@ public class SimpleDBModel implements IModel {
             if (rs == 0) {
                 throw new CostManagerException("Item not added");
             }
-            int userId = -1;
+            int userId;
 
             try (ResultSet generatedKeys = addItemStatement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
