@@ -1,0 +1,18 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="il.ac.shenkar.costManager in Cost-Manager-Java-Final-Project" type="JUnit" factoryName="JUnit" nameIsGenerated="true">
+    <module name="Cost-Manager-Java-Final-Project" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="il.ac.shenkar.costManager.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <option name="PACKAGE_NAME" value="il.ac.shenkar.costManager" />
+    <option name="MAIN_CLASS_NAME" value="" />
+    <option name="METHOD_NAME" value="" />
+    <option name="TEST_OBJECT" value="package" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
