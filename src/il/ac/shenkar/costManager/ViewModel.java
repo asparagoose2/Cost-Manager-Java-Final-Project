@@ -3,12 +3,19 @@ package il.ac.shenkar.costManager;
 import com.sun.xml.internal.bind.annotation.XmlLocation;
 
 import java.util.Date;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ViewModel implements IViewModel{
 
     private IView view;
     private IModel model;
     private User user;
+    private final ExecutorService service;
+
+    ViewModel() {
+        this.service = Executors.newFixedThreadPool(3);
+    }
 
 
     public void setUser(User user) {
@@ -27,68 +34,81 @@ public class ViewModel implements IViewModel{
 
     @Override
     public void addItem(String name, double amount, Category category, String description, int currency, java.sql.Date date) {
-        try {
-            model.createItem(name,amount,category,user,description,currency,date);
-        } catch (CostManagerException e) {
-            view.displayError(e.getMessage(),false);
-        }
+        service.submit(() -> {
+            try {
+                model.createItem(name,amount,category,user,description,currency,date);
+                view.setItems(model.getItems(user));
+                view.displayData("Items");
+            } catch (CostManagerException e) {
+                view.displayError(e.getMessage(),false);
+            }
+        });
     }
 
     @Override
     public void getItems() {
-        try {
-            this.view.setItems(this.model.getItems(user));
-            this.view.displayData("Items");
-        } catch (CostManagerException e) {
-            view.displayError(e.getMessage(),true);
-        }
+        service.submit(() -> {
+            try {
+                view.setItems(model.getItems(user));
+                view.displayData("Items");
+            } catch (CostManagerException e) {
+                view.displayError(e.getMessage(),false);
+            }
+        });
     }
 
     @Override
     public void addCategory(String categoryName) {
-        try {
-            this.model.createCategory(categoryName,user);
-            this.view.setCategories(this.model.getCategories(user));
-
-        } catch (CostManagerException e) {
-            view.displayError(e.getMessage(),false);
-        }
+        service.submit(() -> {
+            try {
+                model.createCategory(categoryName, user);
+                view.setCategories(model.getCategories(user));
+            } catch (CostManagerException e) {
+                view.displayError(e.getMessage(), false);
+            }
+        });
     }
 
     @Override
     public void login(String email, String password) {
-        try {
-            this.setUser(this.model.login(email,password));
-            this.view.displayMessage("Login Successful","Login");
-            this.view.setCategories(this.model.getCategories(user));
-            this.view.setItems(this.model.getItems(user));
-            this.view.setIsLoggedIn(true);
+        service.submit(() -> {
+            try {
+                setUser(model.login(email,password));
+                view.displayMessage("Login Successful","Login");
+                view.setCategories(model.getCategories(user));
+                view.setItems(model.getItems(user));
+                view.setIsLoggedIn(true);
 
-        } catch (CostManagerException e) {
-            view.displayError(e.getMessage(),false);
-        }
+            } catch (CostManagerException e) {
+                view.displayError(e.getMessage(),false);
+            }
+        });
     }
 
     @Override
     public void register(String firstName, String lastName, String email, String password) {
-        try {
-            this.setUser(this.model.register(firstName,lastName,email,password));
-            this.view.displayMessage("Registration Successful","Registration");
-            this.view.setCategories(this.model.getCategories(user));
-            this.view.setItems(this.model.getItems(user));
-            this.view.setIsLoggedIn(true);
-        } catch (CostManagerException e) {
-            view.displayError(e.getMessage(),false);
-        }
+        service.submit(() -> {
+            try {
+                setUser(model.register(firstName,lastName,email,password));
+                view.displayMessage("Registration Successful","Registration");
+                view.setCategories(model.getCategories(user));
+                view.setItems(model.getItems(user));
+                view.setIsLoggedIn(true);
+            } catch (CostManagerException e) {
+                view.displayError(e.getMessage(),false);
+            }
+        });
+
     }
 
     @Override
     public void getCategories() {
-        try {
-            this.view.setCategories(this.model.getCategories(user));
-        } catch (CostManagerException e) {
-            view.displayError(e.getMessage(),true);
-        }
+        service.submit(() -> {
+            try {
+                view.setCategories(model.getCategories(user));
+            } catch (CostManagerException e) {
+                view.displayError(e.getMessage(),true);
+            }
+        });
     }
-
 }

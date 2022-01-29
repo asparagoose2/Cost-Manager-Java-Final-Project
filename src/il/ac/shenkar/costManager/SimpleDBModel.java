@@ -173,10 +173,9 @@ public class SimpleDBModel implements IModel {
         try (Connection connection = DriverManager.getConnection(connectionString, USER_NAME, PASSWORD);
              PreparedStatement registerStatement = connection.prepareStatement("INSERT INTO users(first_name, last_name, email, password) VALUES(?,?,?,?)", Statement.RETURN_GENERATED_KEYS)
         ) {
-
+            User newUser = null;
             // hash the password
             String hashedPassword =  BCrypt.hashpw(password, BCrypt.gensalt());
-
 
             // setting the parameters
             registerStatement.setString(1, firstName);
@@ -192,11 +191,22 @@ public class SimpleDBModel implements IModel {
                 throw new CostManagerException("User not registered");
             }
 
+
+
             // get the generated user id
             ResultSet generatedKeys = registerStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
-                return new User(firstName + " " + lastName, generatedKeys.getInt(1));
+                newUser = new User(firstName + " " + lastName, generatedKeys.getInt(1));
             }
+
+            if (newUser == null) {
+                throw new CostManagerException("User not registered");
+            }
+
+            createCategory("Utilities", newUser);
+            createCategory("Transport", newUser);
+            createCategory("Entertainment", newUser);
+            createCategory("Other", newUser);
 
         }catch (SQLException e){
             throw new CostManagerException("register error!",e);
