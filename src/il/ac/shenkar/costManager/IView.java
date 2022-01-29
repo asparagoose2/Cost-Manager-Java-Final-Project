@@ -42,6 +42,10 @@ public interface IView {
      */
     public void setCategories(Collection<Category> categories);
 
+    /**
+     * The method is used to set the isLoggedIn flag.
+     * @param isLoggedIn the flag to set.
+     */
     public void setIsLoggedIn(Boolean isLoggedIn);
 
     void start();

@@ -1,8 +1,5 @@
 package il.ac.shenkar.costManager;
 
-import com.sun.xml.internal.bind.annotation.XmlLocation;
-
-import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
