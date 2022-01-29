@@ -26,16 +26,6 @@ public class ViewModel implements IViewModel{
     }
 
     @Override
-    public void addItem(String itemName, double itemValue, Date itemDate) {
-//        model.addItem(itemName, itemValue, itemDate);
-    }
-
-    @Override
-    public void addItem(String itemName, double itemValue, Date itemDate, Category itemCategory) {
-
-    }
-
-    @Override
     public void addItem(String name, double amount, Category category, String description, int currency, java.sql.Date date) {
         try {
             model.createItem(name,amount,category,user,description,currency,date);
@@ -45,50 +35,12 @@ public class ViewModel implements IViewModel{
     }
 
     @Override
-    public void addItem(Item item) {
-        try {
-            model.addItem(item);
-        } catch (CostManagerException e) {
-            view.displayError(e.getMessage(),false);
-        }
-    }
-
-    @Override
-    public void removeCostItem(Item item) {
-        try {
-            this.model.deleteItems(item);
-        } catch (CostManagerException e) {
-            view.displayError(e.getMessage(),false);
-        }
-
-    }
-
-    @Override
-    public void updateItem(int itemId, Item item) {
-        try {
-            this.model.updateItem(item);
-        } catch (CostManagerException e) {
-            view.displayError(e.getMessage(),false);
-        }
-
-    }
-
-    @Override
     public void getItems() {
         try {
             this.view.setItems(this.model.getItems(user));
             this.view.displayData("Items");
         } catch (CostManagerException e) {
             view.displayError(e.getMessage(),true);
-        }
-    }
-
-    @Override
-    public void addCategory(Category category) {
-        try {
-            this.model.addCategory(category);
-        } catch (CostManagerException e) {
-            view.displayError(e.getMessage(),false);
         }
     }
 
@@ -128,17 +80,6 @@ public class ViewModel implements IViewModel{
         } catch (CostManagerException e) {
             view.displayError(e.getMessage(),false);
         }
-    }
-
-
-    @Override
-    public void removeCategory(Category category) {
-
-    }
-
-    @Override
-    public void updateCategory(int categoryId, Category category) {
-
     }
 
     @Override

@@ -20,14 +20,6 @@ public interface IModel {
     }
 
     /**
-     * Add an item to the model. The item will be added to the user's list of items.
-     *
-     * @throws CostManagerException the cost item exception
-     * @param item the Item to be added to the database
-     */
-    public void addItem(Item item) throws CostManagerException;
-
-    /**
      * Create new cost item from values.
      *
      * @param name - the name of the item
@@ -38,7 +30,7 @@ public interface IModel {
      * @param currency - the currency of the item
      * @param date - the date of the item
      * @return the newly created item
-     * @throws CostManagerException
+     * @throws CostManagerException the cost item exception
      */
     public Item createItem(String name, double amount, Category category, User owner, String description, int currency, Date date ) throws CostManagerException;
 
@@ -54,25 +46,6 @@ public interface IModel {
     public Collection<Item> getItems(User user) throws CostManagerException;
 
     /**
-     * Delete item.
-     * The item will be deleted from the user's list of items.
-     * @param item the item to be deleted from the user's list of items
-     * @throws CostManagerException the cost item exception
-     */
-    public void deleteItems(Item item) throws CostManagerException;
-
-    /**
-     * Update item.
-     * The item will be updated in the user's list of items.
-     *
-     * @param item the item to be updated in the user's list of items
-     * @throws CostManagerException the cost item exception @link{CostManagerException}
-     */
-    public void updateItem(Item item) throws CostManagerException;
-
-    public void addCategory(Category category) throws CostManagerException;
-
-    /**
      * Gets the categories.
      * The categories will be returned in the form of a collection.
      * The collection will contain all the categories in the user's list.
@@ -82,27 +55,6 @@ public interface IModel {
      * @throws CostManagerException the cost item exception
      */
     public Collection<Category> getCategories(User user) throws CostManagerException;
-
-    /**
-     * Delete category.
-     * The category will be deleted from the user's list of categories.
-     *
-     * @param category the category to be deleted from the user's list of categories
-     * @throws CostManagerException the cost item exception
-     */
-    public void deleteCategory(Category category) throws CostManagerException;
-
-    /**
-     * Update category.
-     * The category will be updated in the user's list of categories.
-     *
-     * @param category the category to be updated in the user's list of categories
-     * @throws CostManagerException the cost item exception
-     */
-    public void updateCategory(Category category) throws CostManagerException;
-
-    // will be included in the future
-    //public void addUser(User user) throws CostItemException;
 
     /**
      * Login.
@@ -125,8 +77,6 @@ public interface IModel {
      * @throws CostManagerException the cost item exception
      */
      public User register(String firstName, String lastName, String email, String password) throws CostManagerException;
-
-    Item createItem(String name, double amount, Category category, User owner, String description, int currency, java.sql.Date date) throws CostManagerException;
 
     Category createCategory(String name, User owner) throws CostManagerException;
 }
