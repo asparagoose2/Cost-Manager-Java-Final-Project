@@ -71,7 +71,7 @@ public class DBModelTest {
     @Test
     @Order(6)
     void createCategoryWithSameName() {
-        CostManagerException thrown = assertThrows(CostManagerException.class, () -> model.createCategory("test_category", user));
+        CostManagerException thrown =   assertThrows(CostManagerException.class, () -> model.createCategory("test_category", user));
         Assertions.assertEquals("Category already exists"   , thrown.getMessage());
     }
     @Test
