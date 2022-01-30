@@ -13,9 +13,10 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            view = new ConsoleView();
+//            view = new ConsoleView();
             model = new SimpleDBModel();
             viewModel = new ViewModel();
+            view = new GUI(viewModel);
         } catch (CostManagerException e) {
             e.printStackTrace();
         }

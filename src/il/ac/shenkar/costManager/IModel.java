@@ -17,6 +17,10 @@ public interface IModel {
         public int getValue() {
             return this.ordinal() + 1;
         }
+        @Override
+        public String toString() {
+            return this.name();
+        }
     }
 
     /**

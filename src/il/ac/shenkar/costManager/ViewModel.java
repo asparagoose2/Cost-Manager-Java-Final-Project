@@ -70,6 +70,9 @@ public class ViewModel implements IViewModel{
     public void login(String email, String password) {
         service.submit(() -> {
             try {
+                System.out.println("login");
+                System.out.println(email);
+                System.out.println(password);
                 setUser(model.login(email,password));
                 view.displayMessage("Login Successful","Login");
                 view.setCategories(model.getCategories(user));
