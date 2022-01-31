@@ -1,16 +1,28 @@
 package il.ac.shenkar.costManager;
 
+import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.components.DatePickerSettings;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import net.sourceforge.jdatepicker.impl.UtilDateModel;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Date;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
+
+
+
 
 public class GUI implements IView {
     // data
@@ -18,7 +30,6 @@ public class GUI implements IView {
     private LinkedList<Item> items;
     private ArrayList<Category> categories;
     private boolean isLoggedIn = false;
-
 
     // control
     final private IViewModel viewModel;
@@ -175,32 +186,43 @@ public class GUI implements IView {
         // left side input new item form
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
+//        leftPanel.setLayout(new GridLayout(7, 1));
         JLabel newItem = new JLabel("New Item");
         newItem.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         newItem.setFont(new Font("ariel", Font.BOLD, 30));
 
         JPanel newItemPanel = new JPanel();
-        newItemPanel.setLayout(new GridLayout(1, 2));
+//        newItemPanel.setLayout(new GridLayout(1, 2));
         JLabel newItemName = new JLabel("Name :");
 //        newItemName.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         newItemName.setFont(new Font("ariel", Font.BOLD, 20));
         JTextField newItemName_text = new JTextField();
         newItemName_text.setPreferredSize(new Dimension(200, 30));
-        newItemName_text.setFont(new Font("ariel", Font.BOLD, 20));
+        newItemName_text.setFont(new Font("ariel", Font.PLAIN, 20));
         newItemPanel.add(newItemName);
         newItemPanel.add(newItemName_text);
         newItemPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         newItemPanel.setPreferredSize(new Dimension(400, 30));
 
         // date picker
+        DatePickerSettings dateSettings = new DatePickerSettings();
+        dateSettings.setAllowEmptyDates(false);
+        dateSettings.setDefaultYearMonth(YearMonth.from(LocalDate.now()));
+        dateSettings.setFirstDayOfWeek(DayOfWeek.SUNDAY);
+        dateSettings.setFontCalendarDateLabels(new Font("ariel", Font.BOLD, 20));
+        dateSettings.setFontCalendarWeekdayLabels(new Font("ariel", Font.BOLD, 20));
+        dateSettings.setFontCalendarWeekNumberLabels(new Font("ariel", Font.BOLD, 20));
+        dateSettings.setFontMonthAndYearMenuLabels(new Font("ariel", Font.BOLD, 20));
+        DatePicker datePicker = new DatePicker(dateSettings);
+        datePicker.setFont(new Font("ariel", Font.BOLD, 30));
         JPanel datePanel = new JPanel();
-        datePanel.setLayout(new GridLayout(1, 2));
+//        datePanel.setLayout(new GridLayout(1, 2));
         JLabel date = new JLabel("Date :");
-        date.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+//        date.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         date.setFont(new Font("ariel", Font.BOLD, 20));
-        JDatePickerImpl datePicker = new JDatePickerImpl(new JDatePanelImpl(new UtilDateModel()));
-        datePicker.setPreferredSize(new Dimension(200, 30));
-        datePicker.setFont(new Font("ariel", Font.BOLD, 20));
+//        JDatePickerImpl datePicker = new JDatePickerImpl(new JDatePanelImpl(new UtilDateModel()));
+//        datePicker.setPreferredSize(new Dimension(200, 30));
+//        datePicker.setFont(new Font("ariel", Font.BOLD, 20));
         datePanel.add(date);
         datePanel.add(datePicker);
 
@@ -208,7 +230,7 @@ public class GUI implements IView {
 
 
         JPanel newItemPricePanel = new JPanel();
-        newItemPricePanel.setLayout(new GridLayout(1, 2));
+//        newItemPricePanel.setLayout(new GridLayout(1, 2));
         JLabel newItemPrice = new JLabel("Price :");
 //        newItemPrice.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         newItemPrice.setFont(new Font("ariel", Font.BOLD, 20));
@@ -220,7 +242,7 @@ public class GUI implements IView {
         newItemPricePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JPanel newItemDescriptionPanel = new JPanel();
-        newItemDescriptionPanel.setLayout(new GridLayout(2, 1));
+//        newItemDescriptionPanel.setLayout(new GridLayout(2, 1));
         JLabel newItemDescription = new JLabel("Description :");
 //        newItemDescription.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         newItemDescription.setFont(new Font("ariel", Font.BOLD, 20));
@@ -234,24 +256,38 @@ public class GUI implements IView {
 
         // select category
         JPanel newItemCategoryPanel = new JPanel();
-        newItemCategoryPanel.setLayout(new GridLayout(1, 2));
+//        newItemCategoryPanel.setLayout(new GridLayout(1, 2));
         JLabel newItemCategory = new JLabel("Category :");
         newItemCategory.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         newItemCategory.setFont(new Font("ariel", Font.BOLD, 20));
-        JComboBox<String> newItemCategory_combo = new JComboBox<String>();
+        JComboBox<Category> newItemCategory_combo = new JComboBox<Category>();
         newItemCategory_combo.setPreferredSize(new Dimension(200, 30));
         newItemCategory_combo.setFont(new Font("ariel", Font.BOLD, 20));
         if (categories != null) {
             for (Category category : categories) {
-                newItemCategory_combo.addItem(category.getName());
+                newItemCategory_combo.addItem(category);
             }
         }
+        // add category button
+        JButton addCategoryButton = new JButton("+");
+        addCategoryButton.setPreferredSize(new Dimension(30, 30));
+        addCategoryButton.setFont(new Font("ariel", Font.BOLD, 20));
+        addCategoryButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AddCategoryDialog addCategoryDialog = new AddCategoryDialog(frame, "Add Category", true);
+                addCategoryDialog.setVisible(true);
+            }
+        });
+
+
         newItemCategoryPanel.add(newItemCategory);
         newItemCategoryPanel.add(newItemCategory_combo);
+        newItemCategoryPanel.add(addCategoryButton);
 
         // currency type
         JPanel newItemCurrencyPanel = new JPanel();
-        newItemCurrencyPanel.setLayout(new GridLayout(1, 2));
+//        newItemCurrencyPanel.setLayout(new GridLayout(1, 2));
         JLabel newItemCurrency = new JLabel("Currency :");
         newItemCurrency.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         newItemCurrency.setFont(new Font("ariel", Font.BOLD, 20));
@@ -281,12 +317,14 @@ public class GUI implements IView {
             String price = newItemPrice_text.getText();
             String description = newItemDescription_text.getText();
             String category = newItemCategory_combo.getSelectedItem().toString();
+            System.out.println(datePicker.getDate());
+            Category selectedCategory = newItemCategory_combo.getSelectedItem() == null ? null : (Category) newItemCategory_combo.getSelectedItem();
             int currency = ((IModel.CURRENCY) newItemCurrency_combo.getSelectedItem()).getValue(); //.toString().equals("USD") ? IModel.CURRENCY.USD.getValue() : newItemCurrency_combo.getSelectedItem().toString().equals("EUR") ? IModel.CURRENCY.EUR.getValue() : IModel.CURRENCY.NIS.getValue();
             System.out.println(currency);
             if (name.equals("") || price.equals("") || description.equals("") || category.equals("")) {
                 JOptionPane.showMessageDialog(null, "Please fill all the fields");
             } else {
-                viewModel.addItem(name, Double.parseDouble(price), categories.get(0) ,description, currency, new java.sql.Date(new java.util.Date().getTime()));
+                viewModel.addItem(name, Double.parseDouble(price), selectedCategory ,description, currency, Date.valueOf(datePicker.getDate()));
             }
         } );
 
@@ -294,7 +332,7 @@ public class GUI implements IView {
 
         leftPanel.add(newItemPanel);
         leftPanel.add(newItemPricePanel);
-//        leftPanel.add(datePanel);
+        leftPanel.add(datePanel);
         leftPanel.add(newItemDescriptionPanel);
         leftPanel.add(newItemCategoryPanel);
         leftPanel.add(newItemCurrencyPanel);
@@ -314,7 +352,8 @@ public class GUI implements IView {
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
         if(items != null) {
             for (Item item : items) {
-                String[] row = {item.getDate().toString(), item.getName(), String.valueOf(item.getCost()), item.getCategory().getName()};
+                String currencySymbol = item.getCurrency() == IModel.CURRENCY.USD.getValue() ? "$" : item.getCurrency() == IModel.CURRENCY.EUR.getValue() ? "€" : "₪";
+                String[] row = {item.getDate().toString(), item.getName(), String.valueOf(item.getCost()) + currencySymbol, item.getCategory().getName()};
                 tableModel.addRow(row);
             }
         }
@@ -326,7 +365,7 @@ public class GUI implements IView {
         expensesTable.setFillsViewportHeight(true);
 
         JScrollPane rightScroll = new JScrollPane(expensesTable);
-        rightScroll.setPreferredSize(new Dimension(800, 500));
+        rightScroll.setPreferredSize(new Dimension(1000, 500));
         rightScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         rightScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         rightScroll.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -369,8 +408,6 @@ public class GUI implements IView {
         buttonPanel.add(delete);
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(100, 10, 10, 10));
         panel.add(buttonPanel, BorderLayout.SOUTH);
-
-
 
         frame.add(panel);
         frame.setSize(1600, 1200);
@@ -415,7 +452,9 @@ public class GUI implements IView {
     public void setCategories(Collection<Category> categories) {
         System.out.println("set categories");
         System.out.println(categories.size());
-        this.categories =  new ArrayList<Category>(categories);
+        this.categories = new ArrayList<Category>(categories);
+        frame.dispose();
+        mainPage();
 //        mainPage();
 
     }
@@ -434,4 +473,60 @@ public class GUI implements IView {
 //        GUI g = new GUI();
         loginPage();
     }
+
+    public class AddCategoryDialog extends JDialog {
+        private JTextField categoryName;
+        private JButton add;
+        private JButton cancel;
+        private JPanel buttonPanel;
+        private JPanel mainPanel;
+        private JPanel namePanel;
+        private JLabel nameLabel;
+        private JLabel errorLabel;
+
+        public AddCategoryDialog(JFrame parent, String title, boolean modal) {
+            super(parent, title, modal);
+            this.mainPanel = new JPanel();
+            this.mainPanel.add(new JLabel(title));
+            this.mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+            this.namePanel = new JPanel();
+            this.namePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+            this.nameLabel = new JLabel("Category name:");
+            this.namePanel.add(nameLabel);
+            this.categoryName = new JTextField(20);
+            this.namePanel.add(categoryName);
+            this.mainPanel.add(namePanel);
+            this.errorLabel = new JLabel("");
+            this.errorLabel.setForeground(Color.RED);
+            this.errorLabel.setVisible(false);
+            this.mainPanel.add(errorLabel);
+            this.buttonPanel = new JPanel();
+            this.buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+            this.add = new JButton("Add");
+            this.add.addActionListener(actionEvent -> {
+                if (categoryName.getText().isEmpty()) {
+                    errorLabel.setText("Category name cannot be empty!");
+                } else {
+                    viewModel.addCategory(categoryName.getText());
+                    this.dispose();
+                }
+
+            });
+            this.cancel = new JButton("Cancel");
+            this.cancel.addActionListener(actionEvent -> {
+                this.dispose();
+            });
+            this.buttonPanel.add(add);
+            this.buttonPanel.add(cancel);
+            this.mainPanel.add(buttonPanel);
+
+            this.setContentPane(this.mainPanel);
+            this.setSize(400, 200);
+            this.setResizable(false);
+            this.setLocationRelativeTo(null);
+            this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        }
+    }
+
 }
+
