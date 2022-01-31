@@ -30,6 +30,8 @@ public class GUI implements IView {
     private LinkedList<Item> items;
     private ArrayList<Category> categories;
     private boolean isLoggedIn = false;
+    String[] columnNames = {"Date", "Name", "Amount", "Category"};
+
 
     // control
     final private IViewModel viewModel;
@@ -37,6 +39,7 @@ public class GUI implements IView {
     // UI components
     private JFrame frame;
     private Font font = new Font("ariel", Font.PLAIN, 22);
+    JTable expensesTable;
 
     // Login
     JPanel panel;
@@ -325,6 +328,13 @@ public class GUI implements IView {
                 JOptionPane.showMessageDialog(null, "Please fill all the fields");
             } else {
                 viewModel.addItem(name, Double.parseDouble(price), selectedCategory ,description, currency, Date.valueOf(datePicker.getDate()));
+                newItemName_text.setText("");
+                newItemPrice_text.setText("");
+                newItemDescription_text.setText("");
+                newItemCategory_combo.setSelectedIndex(0);
+                newItemCurrency_combo.setSelectedIndex(0);
+                datePicker.setDate(null);
+
             }
         } );
 
@@ -343,12 +353,25 @@ public class GUI implements IView {
         //scrollable table
         JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
-        JLabel right = new JLabel("Your income");
+        JLabel right = new JLabel("Your Expenses");
         right.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         right.setFont(new Font("ariel", Font.BOLD, 30));
         rightPanel.add(right);
-        String[] columnNames = {"Date", "Name", "Amount", "Category"};
-        JTable expensesTable = new JTable();
+
+        JToggleButton showCurrentMonth = new JToggleButton("Current Month");
+        showCurrentMonth.setPreferredSize(new Dimension(200, 30));
+        showCurrentMonth.setFont(new Font("ariel", Font.BOLD, 20));
+        showCurrentMonth.addActionListener(actionEvent -> {
+            if (showCurrentMonth.isSelected()) {
+                viewModel.showCurrentMonth();
+            } else {
+                viewModel.getItems();
+            }
+                } );
+        rightPanel.add(showCurrentMonth);
+
+
+        expensesTable = new JTable();
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
         if(items != null) {
             for (Item item : items) {
@@ -419,8 +442,19 @@ public class GUI implements IView {
 
     @Override
     public void displayData(String data) {
-        frame.dispose();
-        mainPage();
+        if(expensesTable != null) {
+            DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
+            if (items != null) {
+                for (Item item : items) {
+                    String currencySymbol = item.getCurrency() == IModel.CURRENCY.USD.getValue() ? "$" : item.getCurrency() == IModel.CURRENCY.EUR.getValue() ? "€" : "₪";
+                    String[] row = {item.getDate().toString(), item.getName(), String.valueOf(item.getCost()) + currencySymbol, item.getCategory().getName()};
+                    tableModel.addRow(row);
+                }
+            }
+            expensesTable.setModel(tableModel);
+        }
+//        frame.dispose();
+//        mainPage();
     }
 
     @Override
@@ -429,6 +463,7 @@ public class GUI implements IView {
         if (shouldExit) {
             System.exit(0);
         }
+
     }
 
     @Override

@@ -1,5 +1,9 @@
 package il.ac.shenkar.costManager;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -108,6 +112,33 @@ public class ViewModel implements IViewModel{
                 view.setCategories(model.getCategories(user));
             } catch (CostManagerException e) {
                 view.displayError(e.getMessage(),true);
+            }
+        });
+    }
+
+    @Override
+    public void showCurrentMonth() {
+        service.submit(() -> {
+            try {
+                LinkedList<Item> allItems = (LinkedList<Item>) model.getItems(user);
+                LinkedList<Item> filteredItems = new LinkedList<>();
+                Iterator<Item> iterator = allItems.iterator();
+                Calendar cal = Calendar.getInstance();
+
+                while (iterator.hasNext()) {
+                    Item item = iterator.next();
+                    cal.setTime(item.getDate());
+                    boolean m = cal.get(Calendar.MONTH) == Calendar.getInstance().get(Calendar.MONTH);
+                    boolean y = cal.get(Calendar.YEAR) == Calendar.getInstance().get(Calendar.YEAR);
+                    if(m && y) {
+                        filteredItems.add(item);
+                    }
+                }
+
+                view.setItems(filteredItems);
+                view.displayData("Items");
+            } catch (CostManagerException e) {
+                view.displayError(e.getMessage(),false);
             }
         });
     }
