@@ -141,9 +141,12 @@ public class GUI implements IView {
             }
         });
 
-        cancel = new JButton("Cancel");
+        cancel = new JButton("Register");
         cancel.setFont(font);
         cancel.setPreferredSize(new Dimension(150, 30));
+        cancel.addActionListener(actionEvent -> {
+            register();
+        });
         buttonPanel.add(cancel);
         buttonPanel.add(submit);
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(100, 10, 10, 10));
@@ -158,6 +161,138 @@ public class GUI implements IView {
         frame.setSize(500, 600);
         frame.setResizable(false);
         frame.setVisible(true);
+    }
+
+    public void register() {
+        frame.dispose();
+        frame = new JFrame();
+        panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+
+        // header
+        JPanel headerPanel = new JPanel();
+        headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
+        JLabel header = new JLabel("Cost Manager");
+        header.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        JLabel subHeader = new JLabel("Register");
+        subHeader.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+        header.setFont(new Font("ariel", Font.BOLD, 40));
+        subHeader.setFont(new Font("ariel", Font.BOLD, 30));
+        headerPanel.add(header);
+        headerPanel.add(subHeader);
+        panel.add(headerPanel, BorderLayout.NORTH);
+
+        // First Name Label
+        JPanel firstNamePanel = new JPanel();
+        firstNamePanel.setLayout(new GridLayout(1, 2));
+        JLabel firstNameLabel = new JLabel();
+        firstNameLabel.setText("First Name :");
+        firstNameLabel.setFont(font);
+        JTextField firstNameInput = new JTextField();
+        firstNameInput.setFont(font);
+        firstNameInput.setPreferredSize(new Dimension(400, 30));
+        firstNamePanel.add(firstNameLabel);
+        firstNamePanel.add(firstNameInput);
+        firstNamePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        // Last Name Label
+        JPanel lastNamePanel = new JPanel();
+        lastNamePanel.setLayout(new GridLayout(1, 2));
+        JLabel lastNameLabel = new JLabel();
+        lastNameLabel.setText("Last Name :");
+        lastNameLabel.setFont(font);
+        JTextField lastNameInput = new JTextField();
+        lastNameInput.setFont(font);
+        lastNameInput.setPreferredSize(new Dimension(400, 30));
+        lastNamePanel.add(lastNameLabel);
+        lastNamePanel.add(lastNameInput);
+        lastNamePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        // Email Label
+        JPanel userLabelPanel = new JPanel();
+        userLabelPanel.setLayout(new GridLayout(1, 2));
+        user_label = new JLabel();
+        user_label.setText("Email :");
+        user_label.setFont(font);
+        userName_text = new JTextField();
+        userName_text.setFont(font);
+        userName_text.setPreferredSize(new Dimension(400, 30));
+        userLabelPanel.add(user_label);
+        userLabelPanel.add(userName_text);
+        userLabelPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        // Password
+        JPanel passwordPanel = new JPanel();
+        passwordPanel.setLayout(new GridLayout(1, 2));
+        password_label = new JLabel();
+        password_label.setText("Password :");
+        password_label.setFont(font);
+        password_text = new JPasswordField();
+        password_text.setFont(font);
+        password_text.setPreferredSize(new Dimension(400, 30));
+        passwordPanel.add(password_label);
+        passwordPanel.add(password_text);
+        passwordPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        //input panel
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.Y_AXIS));
+        inputPanel.add(firstNamePanel);
+        inputPanel.add(lastNamePanel);
+        inputPanel.add(userLabelPanel);
+        inputPanel.add(passwordPanel);
+
+        //button panel
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+        JButton registerButton = new JButton("Register");
+        registerButton.setFont(font);
+        registerButton.setPreferredSize(new Dimension(200, 30));
+        registerButton.addActionListener(e -> {
+            String firstName = firstNameInput.getText();
+            String lastName = lastNameInput.getText();
+            String userName = userName_text.getText();
+            String password = String.valueOf(password_text.getPassword());
+            if (firstName.equals("") || lastName.equals("") || userName.equals("") || password.equals("")) {
+                JOptionPane.showMessageDialog(null, "Please fill all the fields");
+            } else {
+                if (userName.contains("@")) {
+                    if (userName.contains(".")) {
+                        if (password.length() >= 8) {
+                            viewModel.register(firstName, lastName, userName, password);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Password must be at least 8 characters long");
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Please enter a valid email");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please enter a valid email");
+                }
+            }
+        });
+        // cancel button
+        JButton cancelButton = new JButton("Cancel");
+        cancelButton.setFont(font);
+        cancelButton.setPreferredSize(new Dimension(200, 30));
+        cancelButton.addActionListener(e -> {
+            frame.dispose();
+            loginPage();
+        });
+        buttonPanel.add(cancelButton);
+        buttonPanel.add(registerButton);
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        panel.add(inputPanel, BorderLayout.CENTER);
+        panel.add(buttonPanel, BorderLayout.SOUTH);
+        frame.add(panel);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        frame.setSize(500, 600);
+        frame.setResizable(false);
+        frame.setVisible(true);
+
+
     }
 
     public void mainPage() {
