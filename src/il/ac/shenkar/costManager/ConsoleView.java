@@ -49,6 +49,11 @@ public class ConsoleView implements IView{
         this.isLoggedIn = isLoggedIn;
     }
 
+    @Override
+    public void setUser(User user) {
+
+    }
+
 
     @Override
     public void start() {

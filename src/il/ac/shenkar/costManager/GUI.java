@@ -28,7 +28,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class GUI implements IView {
     // data
-    User user;
+    private User user;
     private LinkedList<Item> items;
     private ArrayList<Category> categories;
     private boolean isLoggedIn = false;
@@ -307,9 +307,14 @@ public class GUI implements IView {
         JLabel header = new JLabel("Cost Manager");
         header.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         header.setFont(new Font("ariel", Font.BOLD, 40));
-        JLabel subHeader = new JLabel("Welcome to Cost Manager");
-        subHeader.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        JLabel subHeader;
+        if(user != null) {
+            subHeader = new JLabel("Welcome " + user.getName());
+        } else {
+            subHeader = new JLabel("Welcome to Cost Manager");
+        }
         subHeader.setFont(new Font("ariel", Font.BOLD, 30));
+        subHeader.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         headerPanel.add(header);
         headerPanel.add(subHeader);
         panel.add(headerPanel, BorderLayout.NORTH);
@@ -325,24 +330,39 @@ public class GUI implements IView {
 
         // left side input new item form
         JPanel leftPanel = new JPanel();
+        JLabel leftHeader = new JLabel("Add New Item", SwingConstants.LEFT);
+        leftHeader.setFont(new Font("ariel", Font.BOLD, 30));
+        leftHeader.setBorder(BorderFactory.createEmptyBorder(40, 10, 20, 10));
+
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
-//        leftPanel.setLayout(new GridLayout(7, 1));
+
+        GridBagConstraints c = new GridBagConstraints();
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 0;
+        c.gridy = 0;
+        c.weightx = 0.5;
+        c.weighty = 0.5;
+        c.insets = new Insets(10, 10, 10, 10);
+
         JLabel newItem = new JLabel("New Item");
         newItem.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         newItem.setFont(new Font("ariel", Font.BOLD, 30));
 
         JPanel newItemPanel = new JPanel();
-//        newItemPanel.setLayout(new GridLayout(1, 2));
+        newItemPanel.setLayout(new GridBagLayout());
+
         JLabel newItemName = new JLabel("Name :");
-//        newItemName.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         newItemName.setFont(new Font("ariel", Font.BOLD, 20));
         JTextField newItemName_text = new JTextField();
+        newItemName_text.setMaximumSize(new Dimension(200, 30));
         newItemName_text.setPreferredSize(new Dimension(200, 30));
         newItemName_text.setFont(new Font("ariel", Font.PLAIN, 20));
-        newItemPanel.add(newItemName);
-        newItemPanel.add(newItemName_text);
-        newItemPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        newItemPanel.setPreferredSize(new Dimension(400, 30));
+        newItemName_text.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        newItemPanel.add(newItemName, c);
+        c.gridx = 1;
+        newItemPanel.add(newItemName_text, c);
+        c.gridy = 1;
+        c.gridx = 0;
 
         // date picker
         DatePickerSettings dateSettings = new DatePickerSettings();
@@ -355,50 +375,46 @@ public class GUI implements IView {
         dateSettings.setFontMonthAndYearMenuLabels(new Font("ariel", Font.BOLD, 20));
         DatePicker datePicker = new DatePicker(dateSettings);
         datePicker.setFont(new Font("ariel", Font.BOLD, 30));
-        JPanel datePanel = new JPanel();
-//        datePanel.setLayout(new GridLayout(1, 2));
         JLabel date = new JLabel("Date :");
-//        date.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         date.setFont(new Font("ariel", Font.BOLD, 20));
-//        JDatePickerImpl datePicker = new JDatePickerImpl(new JDatePanelImpl(new UtilDateModel()));
-//        datePicker.setPreferredSize(new Dimension(200, 30));
-//        datePicker.setFont(new Font("ariel", Font.BOLD, 20));
-        datePanel.add(date);
-        datePanel.add(datePicker);
+
+        newItemPanel.add(date, c);
+        c.gridx = 1;
+        newItemPanel.add(datePicker, c);
+        c.gridy = 2;
+        c.gridx = 0;
+
 
 
 
 
 
         JPanel newItemPricePanel = new JPanel();
-//        newItemPricePanel.setLayout(new GridLayout(1, 2));
+        newItemPricePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         JLabel newItemPrice = new JLabel("Price :");
-//        newItemPrice.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         newItemPrice.setFont(new Font("ariel", Font.BOLD, 20));
         NumberFormat priceFormatter = new DecimalFormat("#0.00");
         JFormattedTextField newItemPrice_text = new JFormattedTextField(priceFormatter);
         newItemPrice_text.setPreferredSize(new Dimension(200, 30));
         newItemPrice_text.setFont(new Font("ariel", Font.BOLD, 20));
-        newItemPricePanel.add(newItemPrice);
-        newItemPricePanel.add(newItemPrice_text);
-        newItemPricePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        newItemPanel.add(newItemPrice, c);
+        c.gridx = 1;
+        newItemPanel.add(newItemPrice_text, c);
+        c.gridy = 3;
+        c.gridx = 0;
 
-        JPanel newItemDescriptionPanel = new JPanel();
-//        newItemDescriptionPanel.setLayout(new GridLayout(2, 1));
         JLabel newItemDescription = new JLabel("Description :");
-//        newItemDescription.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         newItemDescription.setFont(new Font("ariel", Font.BOLD, 20));
         JTextArea newItemDescription_text = new JTextArea();
         newItemDescription_text.setPreferredSize(new Dimension(200, 30));
         newItemDescription_text.setFont(new Font("ariel", Font.BOLD, 20));
-//        newItemDescription_text.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        newItemDescriptionPanel.add(newItemDescription);
-        newItemDescriptionPanel.add(newItemDescription_text);
-        newItemDescriptionPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        newItemPanel.add(newItemDescription, c);
+        c.gridx = 1;
+        newItemPanel.add(newItemDescription_text, c);
+        c.gridy = 4;
+        c.gridx = 0;
 
         // select category
-        JPanel newItemCategoryPanel = new JPanel();
-//        newItemCategoryPanel.setLayout(new GridLayout(1, 2));
         JLabel newItemCategory = new JLabel("Category :");
         newItemCategory.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         newItemCategory.setFont(new Font("ariel", Font.BOLD, 20));
@@ -412,8 +428,8 @@ public class GUI implements IView {
         }
         // add category button
         JButton addCategoryButton = new JButton("+");
-        addCategoryButton.setPreferredSize(new Dimension(30, 30));
-        addCategoryButton.setFont(new Font("ariel", Font.BOLD, 20));
+        addCategoryButton.setPreferredSize(new Dimension(50, 50));
+        addCategoryButton.setFont(new Font("ariel", Font.PLAIN, 14));
         addCategoryButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -423,13 +439,19 @@ public class GUI implements IView {
         });
 
 
-        newItemCategoryPanel.add(newItemCategory);
+        JPanel newItemCategoryPanel = new JPanel();
+        newItemCategoryPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         newItemCategoryPanel.add(newItemCategory_combo);
         newItemCategoryPanel.add(addCategoryButton);
 
+
+        newItemPanel.add(newItemCategory, c);
+        c.gridx = 1;
+        newItemPanel.add(newItemCategoryPanel, c);
+        c.gridy = 5;
+        c.gridx = 0;
+
         // currency type
-        JPanel newItemCurrencyPanel = new JPanel();
-//        newItemCurrencyPanel.setLayout(new GridLayout(1, 2));
         JLabel newItemCurrency = new JLabel("Currency :");
         newItemCurrency.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         newItemCurrency.setFont(new Font("ariel", Font.BOLD, 20));
@@ -439,12 +461,12 @@ public class GUI implements IView {
         for(int i = 0; i < IModel.CURRENCY.values().length; i++) {
             newItemCurrency_combo.addItem(IModel.CURRENCY.values()[i]);
         }
-//        newItemCurrency_combo.addItem("USD");
-//        newItemCurrency_combo.addItem("EUR");
-//        newItemCurrency_combo.addItem("NIS");
 
-        newItemCurrencyPanel.add(newItemCurrency);
-        newItemCurrencyPanel.add(newItemCurrency_combo);
+        newItemPanel.add(newItemCurrency, c);
+        c.gridx = 1;
+        newItemPanel.add(newItemCurrency_combo, c);
+        c.gridy = 6;
+        c.gridx = 0;
 
         // save button
         JPanel saveButtonPanel = new JPanel();
@@ -477,15 +499,17 @@ public class GUI implements IView {
             }
         } );
 
+        c.gridx = 1;
+        newItemPanel.add(saveButtonPanel, c);
 
 
+        leftHeader.setAlignmentX(JLabel.LEFT_ALIGNMENT);
+
+        leftPanel.add(leftHeader);
         leftPanel.add(newItemPanel);
-        leftPanel.add(newItemPricePanel);
-        leftPanel.add(datePanel);
-        leftPanel.add(newItemDescriptionPanel);
-        leftPanel.add(newItemCategoryPanel);
-        leftPanel.add(newItemCurrencyPanel);
-        leftPanel.add(saveButtonPanel);
+
+        leftPanel.setPreferredSize(new Dimension(500, 200));
+        leftPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
         panel.add(leftPanel, BorderLayout.WEST);
 
 
@@ -532,44 +556,9 @@ public class GUI implements IView {
         rightScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         rightScroll.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         rightPanel.add(rightScroll);
+        rightPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         panel.add(rightPanel, BorderLayout.EAST);
 
-
-
-
-        // buttons
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        JButton add = new JButton("Add");
-        add.setFont(new Font("ariel", Font.BOLD, 30));
-        add.setPreferredSize(new Dimension(150, 30));
-        add.addActionListener(actionEvent -> {
-//            viewModel.add();
-        });
-        JButton view = new JButton("View");
-        view.setFont(new Font("ariel", Font.BOLD, 30));
-        view.setPreferredSize(new Dimension(150, 30));
-        view.addActionListener(actionEvent -> {
-//            viewModel.view();
-        });
-        JButton edit = new JButton("Edit");
-                edit.setFont(new Font("ariel", Font.BOLD, 30));
-        edit.setPreferredSize(new Dimension(150, 30));
-        edit.addActionListener(actionEvent -> {
-//            viewModel.edit();
-        });
-        JButton delete = new JButton("Delete");
-        delete.setFont(new Font("ariel", Font.BOLD, 30));
-        delete.setPreferredSize(new Dimension(150, 30));
-        delete.addActionListener(actionEvent -> {
-//            viewModel.delete();
-        });
-        buttonPanel.add(add);
-        buttonPanel.add(view);
-        buttonPanel.add(edit);
-        buttonPanel.add(delete);
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(100, 10, 10, 10));
-        panel.add(buttonPanel, BorderLayout.SOUTH);
 
         frame.add(panel);
         frame.setSize(1600, 1200);
@@ -592,8 +581,6 @@ public class GUI implements IView {
             }
             expensesTable.setModel(tableModel);
         }
-//        frame.dispose();
-//        mainPage();
     }
 
     @Override
@@ -614,7 +601,6 @@ public class GUI implements IView {
     public void setViewModel(IViewModel viewModel) {
         System.out.println("set view model");
         System.out.println(viewModel);
-//        this.viewModel = viewModel;
     }
 
     @Override
@@ -644,8 +630,13 @@ public class GUI implements IView {
 
     @Override
     public void start() {
-//        GUI g = new GUI();
+
         loginPage();
+    }
+
+    @Override
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public class AddCategoryDialog extends JDialog {
@@ -700,6 +691,7 @@ public class GUI implements IView {
             this.setLocationRelativeTo(null);
             this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         }
+
     }
 
 }

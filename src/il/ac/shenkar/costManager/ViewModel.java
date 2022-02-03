@@ -81,6 +81,8 @@ public class ViewModel implements IViewModel{
                 view.displayMessage("Login Successful","Login");
                 view.setCategories(model.getCategories(user));
                 view.setItems(model.getItems(user));
+                view.setUser(this.user);
+                System.out.println(this.user);
                 view.setIsLoggedIn(true);
 
             } catch (CostManagerException e) {
@@ -97,6 +99,7 @@ public class ViewModel implements IViewModel{
                 view.displayMessage("Registration Successful","Registration");
                 view.setCategories(model.getCategories(user));
                 view.setItems(model.getItems(user));
+                view.setUser(this.user);
                 view.setIsLoggedIn(true);
             } catch (CostManagerException e) {
                 view.displayError(e.getMessage(),false);

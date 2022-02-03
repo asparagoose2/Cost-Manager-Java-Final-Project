@@ -14,8 +14,8 @@ import java.util.List;
  * @see IModel
  */
 public class SimpleDBModel implements IModel {
-    String driverFullQualifiedName =  Config.DB_DRIVER; // "com.mysql.jdbc.Driver";
-    String connectionString = Config.DB_URL;//"jdbc:mysql://172.19.0.2:3306/CostManager";
+    String driverFullQualifiedName =  Config.DB_DRIVER;
+    String connectionString = Config.DB_URL;
     final static String USER_NAME = Config.DB_USER ;
     final static String PASSWORD = Config.DB_PASSWORD;
 

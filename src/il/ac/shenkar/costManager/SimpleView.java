@@ -202,6 +202,11 @@ public class SimpleView implements IView  {
     }
 
     @Override
+    public void setUser(User user) {
+
+    }
+
+    @Override
     public void start() {
 
     }
