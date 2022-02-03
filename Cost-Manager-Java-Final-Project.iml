@@ -45,5 +45,8 @@
     </orderEntry>
     <orderEntry type="library" name="mysql-connector-java-5.1.13-bin" level="project" />
     <orderEntry type="library" name="mssql-jdbc-10.2.0.jre8" level="project" />
+    <orderEntry type="library" name="looks-1.2.2" level="project" />
+    <orderEntry type="library" name="src" level="project" />
+    <orderEntry type="library" name="DateChooser" level="project" />
   </component>
 </module>
