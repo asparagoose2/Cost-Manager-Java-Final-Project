@@ -15,6 +15,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Date;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -367,12 +369,14 @@ public class GUI implements IView {
 
 
 
+
         JPanel newItemPricePanel = new JPanel();
 //        newItemPricePanel.setLayout(new GridLayout(1, 2));
         JLabel newItemPrice = new JLabel("Price :");
 //        newItemPrice.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         newItemPrice.setFont(new Font("ariel", Font.BOLD, 20));
-        JTextField newItemPrice_text = new JTextField();
+        NumberFormat priceFormatter = new DecimalFormat("#0.00");
+        JFormattedTextField newItemPrice_text = new JFormattedTextField(priceFormatter);
         newItemPrice_text.setPreferredSize(new Dimension(200, 30));
         newItemPrice_text.setFont(new Font("ariel", Font.BOLD, 20));
         newItemPricePanel.add(newItemPrice);
@@ -468,7 +472,7 @@ public class GUI implements IView {
                 newItemDescription_text.setText("");
                 newItemCategory_combo.setSelectedIndex(0);
                 newItemCurrency_combo.setSelectedIndex(0);
-                datePicker.setDate(null);
+                datePicker.setDate(LocalDate.now());
 
             }
         } );
