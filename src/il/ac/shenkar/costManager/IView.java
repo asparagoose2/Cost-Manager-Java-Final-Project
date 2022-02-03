@@ -48,5 +48,7 @@ public interface IView {
      */
     public void setIsLoggedIn(Boolean isLoggedIn);
 
+    public void setUser(User user);
+
     void start();
 }
