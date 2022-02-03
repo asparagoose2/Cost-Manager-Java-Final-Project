@@ -1,5 +1,6 @@
 package il.ac.shenkar.costManager;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
@@ -31,7 +32,7 @@ public class Main {
 //        } catch (CostManagerException e) {
 //            e.printStackTrace();
 //        }
-        view.start();
+        SwingUtilities.invokeLater(() -> view.start());
 
 
 
