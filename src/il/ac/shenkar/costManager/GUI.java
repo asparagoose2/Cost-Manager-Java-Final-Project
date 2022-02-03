@@ -384,11 +384,6 @@ public class GUI implements IView {
         c.gridy = 2;
         c.gridx = 0;
 
-
-
-
-
-
         JPanel newItemPricePanel = new JPanel();
         newItemPricePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         JLabel newItemPrice = new JLabel("Price :");
@@ -430,12 +425,9 @@ public class GUI implements IView {
         JButton addCategoryButton = new JButton("+");
         addCategoryButton.setPreferredSize(new Dimension(50, 50));
         addCategoryButton.setFont(new Font("ariel", Font.PLAIN, 14));
-        addCategoryButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                AddCategoryDialog addCategoryDialog = new AddCategoryDialog(frame, "Add Category", true);
-                addCategoryDialog.setVisible(true);
-            }
+        addCategoryButton.addActionListener(e -> {
+            AddCategoryDialog addCategoryDialog = new AddCategoryDialog(frame, "Add Category", true);
+            addCategoryDialog.setVisible(true);
         });
 
 
@@ -652,13 +644,15 @@ public class GUI implements IView {
         public AddCategoryDialog(JFrame parent, String title, boolean modal) {
             super(parent, title, modal);
             this.mainPanel = new JPanel();
-            this.mainPanel.add(new JLabel(title));
+            mainPanel.setBorder(BorderFactory.createEmptyBorder(60, 10, 10, 10));
             this.mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
             this.namePanel = new JPanel();
             this.namePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
             this.nameLabel = new JLabel("Category name:");
+            nameLabel.setFont(new Font("ariel", Font.BOLD, 24));
             this.namePanel.add(nameLabel);
             this.categoryName = new JTextField(20);
+            categoryName.setFont(new Font("Arial", Font.PLAIN, 24));
             this.namePanel.add(categoryName);
             this.mainPanel.add(namePanel);
             this.errorLabel = new JLabel("");
@@ -677,16 +671,20 @@ public class GUI implements IView {
                 }
 
             });
+            add.setPreferredSize(new Dimension(150, 40));
+            add.setFont(new Font("Arial", Font.PLAIN, 26));
             this.cancel = new JButton("Cancel");
             this.cancel.addActionListener(actionEvent -> {
                 this.dispose();
             });
-            this.buttonPanel.add(add);
+            cancel.setPreferredSize(new Dimension(150, 40));
+            cancel.setFont(new Font("Arial", Font.PLAIN, 26));
             this.buttonPanel.add(cancel);
+            this.buttonPanel.add(add);
             this.mainPanel.add(buttonPanel);
 
             this.setContentPane(this.mainPanel);
-            this.setSize(400, 200);
+            this.setSize(680, 300);
             this.setResizable(false);
             this.setLocationRelativeTo(null);
             this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
