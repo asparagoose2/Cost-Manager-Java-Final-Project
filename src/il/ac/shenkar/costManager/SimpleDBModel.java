@@ -14,10 +14,10 @@ import java.util.List;
  * @see IModel
  */
 public class SimpleDBModel implements IModel {
-    String driverFullQualifiedName = "com.mysql.jdbc.Driver";
-    String connectionString = "jdbc:mysql://172.19.0.2:3306/CostManager";
-    final static String USER_NAME = "root";
-    final static String PASSWORD = "1";
+    String driverFullQualifiedName =  Config.DB_DRIVER; // "com.mysql.jdbc.Driver";
+    String connectionString = Config.DB_URL;//"jdbc:mysql://172.19.0.2:3306/CostManager";
+    final static String USER_NAME = Config.DB_USER ;
+    final static String PASSWORD = Config.DB_PASSWORD;
 
     public SimpleDBModel() throws CostManagerException {
         try {
@@ -208,10 +208,11 @@ public class SimpleDBModel implements IModel {
             createCategory("Entertainment", newUser);
             createCategory("Other", newUser);
 
+            return newUser;
+
         }catch (SQLException e){
             throw new CostManagerException("register error!",e);
         }
-        return null;
     }
 
 

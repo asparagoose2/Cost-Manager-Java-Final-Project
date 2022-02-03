@@ -10,11 +10,7 @@ public class Category {
 
     @Override
     public String toString() {
-        return "Category{" +
-                "owner=" + owner +
-                ", name='" + name + '\'' +
-                ", id=" + id +
-                '}';
+        return name;
     }
 
     /**
