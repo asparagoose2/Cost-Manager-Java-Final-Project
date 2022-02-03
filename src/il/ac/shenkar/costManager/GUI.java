@@ -2,18 +2,14 @@ package il.ac.shenkar.costManager;
 
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
-import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
-import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
-import net.sourceforge.jdatepicker.impl.UtilDateModel;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.security.Key;
 import java.sql.Date;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -80,11 +76,11 @@ public class GUI implements IView {
         headerPanel.add(subHeader);
         panel.add(headerPanel, BorderLayout.NORTH);
 
-        // User Label
+        // Email Label
         JPanel userLabelPanel = new JPanel();
         userLabelPanel.setLayout(new GridLayout(1, 2));
         user_label = new JLabel();
-        user_label.setText("User Name :");
+        user_label.setText("Email: ");
         user_label.setFont(font);
         userName_text = new JTextField();
         userName_text.setFont(font);
@@ -97,7 +93,7 @@ public class GUI implements IView {
         JPanel passwordPanel = new JPanel();
         passwordPanel.setLayout(new GridLayout(1, 2));
         password_label = new JLabel();
-        password_label.setText("Password :");
+        password_label.setText("Password: ");
         password_label.setFont(font);
         password_text = new JPasswordField();
         password_text.setFont(font);
@@ -159,6 +155,18 @@ public class GUI implements IView {
 
         frame.add(panel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // submit on enter
+        KeyListener keyListener = new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    submit.doClick();
+                }
+            }
+        };
+        userName_text.addKeyListener(keyListener);
+        password_text.addKeyListener(keyListener);
 
         frame.setSize(500, 600);
         frame.setResizable(false);
@@ -273,6 +281,7 @@ public class GUI implements IView {
                 }
             }
         });
+
         // cancel button
         JButton cancelButton = new JButton("Cancel");
         cancelButton.setFont(font);
@@ -319,14 +328,6 @@ public class GUI implements IView {
         headerPanel.add(subHeader);
         panel.add(headerPanel, BorderLayout.NORTH);
 
-        // body
-        JPanel bodyPanel = new JPanel();
-        bodyPanel.setLayout(new BoxLayout(bodyPanel, BoxLayout.Y_AXIS));
-        JLabel body = new JLabel("Please select an option");
-        body.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        body.setFont(new Font("ariel", Font.BOLD, 30));
-        bodyPanel.add(body);
-        panel.add(bodyPanel, BorderLayout.EAST);
 
         // left side input new item form
         JPanel leftPanel = new JPanel();
@@ -351,13 +352,9 @@ public class GUI implements IView {
         JPanel newItemPanel = new JPanel();
         newItemPanel.setLayout(new GridBagLayout());
 
-        JLabel newItemName = new JLabel("Name :");
-        newItemName.setFont(new Font("ariel", Font.BOLD, 20));
+        JLabel newItemName = createInputLabel("Name: "); //new JLabel("Name :");
         JTextField newItemName_text = new JTextField();
-        newItemName_text.setMaximumSize(new Dimension(200, 30));
-        newItemName_text.setPreferredSize(new Dimension(200, 30));
         newItemName_text.setFont(new Font("ariel", Font.PLAIN, 20));
-        newItemName_text.setAlignmentX(Component.RIGHT_ALIGNMENT);
         newItemPanel.add(newItemName, c);
         c.gridx = 1;
         newItemPanel.add(newItemName_text, c);
@@ -369,14 +366,17 @@ public class GUI implements IView {
         dateSettings.setAllowEmptyDates(false);
         dateSettings.setDefaultYearMonth(YearMonth.from(LocalDate.now()));
         dateSettings.setFirstDayOfWeek(DayOfWeek.SUNDAY);
-        dateSettings.setFontCalendarDateLabels(new Font("ariel", Font.BOLD, 20));
-        dateSettings.setFontCalendarWeekdayLabels(new Font("ariel", Font.BOLD, 20));
-        dateSettings.setFontCalendarWeekNumberLabels(new Font("ariel", Font.BOLD, 20));
-        dateSettings.setFontMonthAndYearMenuLabels(new Font("ariel", Font.BOLD, 20));
+
+        Font calendarFont = new Font("ariel", Font.PLAIN, 20);
+
+        dateSettings.setFontCalendarDateLabels(calendarFont);
+        dateSettings.setFontCalendarWeekdayLabels(calendarFont);
+        dateSettings.setFontCalendarWeekNumberLabels(calendarFont);
+        dateSettings.setFontMonthAndYearMenuLabels(calendarFont);
+        dateSettings.setFontValidDate(calendarFont);
+        dateSettings.setFontTodayLabel(calendarFont);
         DatePicker datePicker = new DatePicker(dateSettings);
-        datePicker.setFont(new Font("ariel", Font.BOLD, 30));
-        JLabel date = new JLabel("Date :");
-        date.setFont(new Font("ariel", Font.BOLD, 20));
+        JLabel date = createInputLabel("Date: ");
 
         newItemPanel.add(date, c);
         c.gridx = 1;
@@ -384,25 +384,21 @@ public class GUI implements IView {
         c.gridy = 2;
         c.gridx = 0;
 
-        JPanel newItemPricePanel = new JPanel();
-        newItemPricePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        JLabel newItemPrice = new JLabel("Price :");
-        newItemPrice.setFont(new Font("ariel", Font.BOLD, 20));
+        JLabel newItemPrice = createInputLabel("Price: "); //new JLabel("Price :");
         NumberFormat priceFormatter = new DecimalFormat("#0.00");
         JFormattedTextField newItemPrice_text = new JFormattedTextField(priceFormatter);
         newItemPrice_text.setPreferredSize(new Dimension(200, 30));
-        newItemPrice_text.setFont(new Font("ariel", Font.BOLD, 20));
+        newItemPrice_text.setFont(new Font("ariel", Font.PLAIN, 20));
         newItemPanel.add(newItemPrice, c);
         c.gridx = 1;
         newItemPanel.add(newItemPrice_text, c);
         c.gridy = 3;
         c.gridx = 0;
 
-        JLabel newItemDescription = new JLabel("Description :");
-        newItemDescription.setFont(new Font("ariel", Font.BOLD, 20));
+        JLabel newItemDescription = createInputLabel("Description: "); //new JLabel("Description :");
         JTextArea newItemDescription_text = new JTextArea();
         newItemDescription_text.setPreferredSize(new Dimension(200, 30));
-        newItemDescription_text.setFont(new Font("ariel", Font.BOLD, 20));
+        newItemDescription_text.setFont(new Font("ariel", Font.PLAIN, 20));
         newItemPanel.add(newItemDescription, c);
         c.gridx = 1;
         newItemPanel.add(newItemDescription_text, c);
@@ -410,12 +406,10 @@ public class GUI implements IView {
         c.gridx = 0;
 
         // select category
-        JLabel newItemCategory = new JLabel("Category :");
-        newItemCategory.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        newItemCategory.setFont(new Font("ariel", Font.BOLD, 20));
+        JLabel newItemCategory = createInputLabel("Category: ");// new JLabel("Category :");
         JComboBox<Category> newItemCategory_combo = new JComboBox<Category>();
         newItemCategory_combo.setPreferredSize(new Dimension(200, 30));
-        newItemCategory_combo.setFont(new Font("ariel", Font.BOLD, 20));
+        newItemCategory_combo.setFont(new Font("ariel", Font.PLAIN, 20));
         if (categories != null) {
             for (Category category : categories) {
                 newItemCategory_combo.addItem(category);
@@ -444,12 +438,12 @@ public class GUI implements IView {
         c.gridx = 0;
 
         // currency type
-        JLabel newItemCurrency = new JLabel("Currency :");
-        newItemCurrency.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        newItemCurrency.setFont(new Font("ariel", Font.BOLD, 20));
+        JLabel newItemCurrency = createInputLabel("Currency: ");//new JLabel("Currency :");
+//        newItemCurrency.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+//        newItemCurrency.setFont(new Font("ariel", Font.BOLD, 20));
         JComboBox<IModel.CURRENCY> newItemCurrency_combo = new JComboBox<IModel.CURRENCY>();
         newItemCurrency_combo.setPreferredSize(new Dimension(200, 30));
-        newItemCurrency_combo.setFont(new Font("ariel", Font.BOLD, 20));
+        newItemCurrency_combo.setFont(new Font("ariel", Font.PLAIN, 20));
         for(int i = 0; i < IModel.CURRENCY.values().length; i++) {
             newItemCurrency_combo.addItem(IModel.CURRENCY.values()[i]);
         }
@@ -475,7 +469,7 @@ public class GUI implements IView {
             String category = newItemCategory_combo.getSelectedItem().toString();
             System.out.println(datePicker.getDate());
             Category selectedCategory = newItemCategory_combo.getSelectedItem() == null ? null : (Category) newItemCategory_combo.getSelectedItem();
-            int currency = ((IModel.CURRENCY) newItemCurrency_combo.getSelectedItem()).getValue(); //.toString().equals("USD") ? IModel.CURRENCY.USD.getValue() : newItemCurrency_combo.getSelectedItem().toString().equals("EUR") ? IModel.CURRENCY.EUR.getValue() : IModel.CURRENCY.NIS.getValue();
+            int currency = ((IModel.CURRENCY) newItemCurrency_combo.getSelectedItem()).getValue();
             System.out.println(currency);
             if (name.equals("") || price.equals("") || description.equals("") || category.equals("")) {
                 JOptionPane.showMessageDialog(null, "Please fill all the fields");
@@ -487,7 +481,6 @@ public class GUI implements IView {
                 newItemCategory_combo.setSelectedIndex(0);
                 newItemCurrency_combo.setSelectedIndex(0);
                 datePicker.setDate(LocalDate.now());
-
             }
         } );
 
@@ -558,6 +551,15 @@ public class GUI implements IView {
         frame.setResizable(false);
         frame.setVisible(true);
 
+    }
+
+    public JLabel createInputLabel(String text) {
+        JLabel label = new JLabel(text);
+        label.setFont(new Font("ariel", Font.BOLD, 20));
+        label.setPreferredSize(new Dimension(100, 30));
+        label.setAlignmentX(JLabel.LEFT_ALIGNMENT);
+        label.setAlignmentY(JLabel.TOP_ALIGNMENT);
+        return label;
     }
 
     @Override
@@ -649,7 +651,7 @@ public class GUI implements IView {
             this.namePanel = new JPanel();
             this.namePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
             this.nameLabel = new JLabel("Category name:");
-            nameLabel.setFont(new Font("ariel", Font.BOLD, 24));
+            nameLabel.setFont(new Font("ariel", Font.BOLD, 22));
             this.namePanel.add(nameLabel);
             this.categoryName = new JTextField(20);
             categoryName.setFont(new Font("Arial", Font.PLAIN, 24));
