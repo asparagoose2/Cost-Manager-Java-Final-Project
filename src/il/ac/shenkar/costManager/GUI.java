@@ -9,7 +9,6 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.security.Key;
 import java.sql.Date;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -41,22 +40,16 @@ public class GUI implements IView {
 
     // Login
     JPanel panel;
-    JLabel user_label, password_label, message;
-    JTextField userName_text;
-    JPasswordField password_text;
+    JLabel emailLable, passwordLabel, message;
+    JTextField emailInput;
+    JPasswordField passwordInput;
     JButton submit, cancel;
-
-    public static void main(String[] args) {
-//        GUI g = new GUI();
-//        g.mainPage();
-    }
 
     public GUI(IViewModel vm) {
         viewModel = vm;
     }
 
     // login screen
-
     private void loginPage() {
         frame = new JFrame();
         panel = new JPanel();
@@ -79,27 +72,27 @@ public class GUI implements IView {
         // Email Label
         JPanel userLabelPanel = new JPanel();
         userLabelPanel.setLayout(new GridLayout(1, 2));
-        user_label = new JLabel();
-        user_label.setText("Email: ");
-        user_label.setFont(font);
-        userName_text = new JTextField();
-        userName_text.setFont(font);
-        userName_text.setPreferredSize(new Dimension(400, 30));
-        userLabelPanel.add(user_label);
-        userLabelPanel.add(userName_text);
+        emailLable = new JLabel();
+        emailLable.setText("Email: ");
+        emailLable.setFont(font);
+        emailInput = new JTextField();
+        emailInput.setFont(font);
+        emailInput.setPreferredSize(new Dimension(400, 30));
+        userLabelPanel.add(emailLable);
+        userLabelPanel.add(emailInput);
         userLabelPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         // Password
         JPanel passwordPanel = new JPanel();
         passwordPanel.setLayout(new GridLayout(1, 2));
-        password_label = new JLabel();
-        password_label.setText("Password: ");
-        password_label.setFont(font);
-        password_text = new JPasswordField();
-        password_text.setFont(font);
-        password_text.setPreferredSize(new Dimension(400, 30));
-        passwordPanel.add(password_label);
-        passwordPanel.add(password_text);
+        passwordLabel = new JLabel();
+        passwordLabel.setText("Password: ");
+        passwordLabel.setFont(font);
+        passwordInput = new JPasswordField();
+        passwordInput.setFont(font);
+        passwordInput.setPreferredSize(new Dimension(400, 30));
+        passwordPanel.add(passwordLabel);
+        passwordPanel.add(passwordInput);
         passwordPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         // input section
@@ -126,8 +119,8 @@ public class GUI implements IView {
 
         submit.addActionListener(actionEvent -> {
             System.out.println("submit");
-            String userName = userName_text.getText();
-            String password = String.valueOf(password_text.getPassword());
+            String userName = emailInput.getText();
+            String password = String.valueOf(passwordInput.getPassword());
             if (userName.equals("") || password.equals("")) {
                 message.setText("Please enter your user name and password");
             } else {
@@ -165,8 +158,8 @@ public class GUI implements IView {
                 }
             }
         };
-        userName_text.addKeyListener(keyListener);
-        password_text.addKeyListener(keyListener);
+        emailInput.addKeyListener(keyListener);
+        passwordInput.addKeyListener(keyListener);
 
         frame.setSize(500, 600);
         frame.setResizable(false);
@@ -221,27 +214,27 @@ public class GUI implements IView {
         // Email Label
         JPanel userLabelPanel = new JPanel();
         userLabelPanel.setLayout(new GridLayout(1, 2));
-        user_label = new JLabel();
-        user_label.setText("Email :");
-        user_label.setFont(font);
-        userName_text = new JTextField();
-        userName_text.setFont(font);
-        userName_text.setPreferredSize(new Dimension(400, 30));
-        userLabelPanel.add(user_label);
-        userLabelPanel.add(userName_text);
+        emailLable = new JLabel();
+        emailLable.setText("Email :");
+        emailLable.setFont(font);
+        emailInput = new JTextField();
+        emailInput.setFont(font);
+        emailInput.setPreferredSize(new Dimension(400, 30));
+        userLabelPanel.add(emailLable);
+        userLabelPanel.add(emailInput);
         userLabelPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         // Password
         JPanel passwordPanel = new JPanel();
         passwordPanel.setLayout(new GridLayout(1, 2));
-        password_label = new JLabel();
-        password_label.setText("Password :");
-        password_label.setFont(font);
-        password_text = new JPasswordField();
-        password_text.setFont(font);
-        password_text.setPreferredSize(new Dimension(400, 30));
-        passwordPanel.add(password_label);
-        passwordPanel.add(password_text);
+        passwordLabel = new JLabel();
+        passwordLabel.setText("Password :");
+        passwordLabel.setFont(font);
+        passwordInput = new JPasswordField();
+        passwordInput.setFont(font);
+        passwordInput.setPreferredSize(new Dimension(400, 30));
+        passwordPanel.add(passwordLabel);
+        passwordPanel.add(passwordInput);
         passwordPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         //input panel
@@ -261,15 +254,15 @@ public class GUI implements IView {
         registerButton.addActionListener(e -> {
             String firstName = firstNameInput.getText();
             String lastName = lastNameInput.getText();
-            String userName = userName_text.getText();
-            String password = String.valueOf(password_text.getPassword());
-            if (firstName.equals("") || lastName.equals("") || userName.equals("") || password.equals("")) {
+            String email = emailInput.getText();
+            String password = String.valueOf(passwordInput.getPassword());
+            if (firstName.equals("") || lastName.equals("") || email.equals("") || password.equals("")) {
                 JOptionPane.showMessageDialog(null, "Please fill all the fields");
             } else {
-                if (userName.contains("@")) {
-                    if (userName.contains(".")) {
+                if (email.contains("@")) {
+                    if (email.contains(".")) {
                         if (password.length() >= 8) {
-                            viewModel.register(firstName, lastName, userName, password);
+                            viewModel.register(firstName, lastName, email, password);
                         } else {
                             JOptionPane.showMessageDialog(null, "Password must be at least 8 characters long");
                         }
@@ -302,8 +295,6 @@ public class GUI implements IView {
         frame.setSize(500, 600);
         frame.setResizable(false);
         frame.setVisible(true);
-
-
     }
 
     public void mainPage() {
@@ -327,7 +318,6 @@ public class GUI implements IView {
         headerPanel.add(header);
         headerPanel.add(subHeader);
         panel.add(headerPanel, BorderLayout.NORTH);
-
 
         // left side input new item form
         JPanel leftPanel = new JPanel();
@@ -439,8 +429,6 @@ public class GUI implements IView {
 
         // currency type
         JLabel newItemCurrency = createInputLabel("Currency: ");//new JLabel("Currency :");
-//        newItemCurrency.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-//        newItemCurrency.setFont(new Font("ariel", Font.BOLD, 20));
         JComboBox<IModel.CURRENCY> newItemCurrency_combo = new JComboBox<IModel.CURRENCY>();
         newItemCurrency_combo.setPreferredSize(new Dimension(200, 30));
         newItemCurrency_combo.setFont(new Font("ariel", Font.PLAIN, 20));
@@ -487,7 +475,6 @@ public class GUI implements IView {
         c.gridx = 1;
         newItemPanel.add(saveButtonPanel, c);
 
-
         leftHeader.setAlignmentX(JLabel.LEFT_ALIGNMENT);
 
         leftPanel.add(leftHeader);
@@ -496,7 +483,6 @@ public class GUI implements IView {
         leftPanel.setPreferredSize(new Dimension(500, 200));
         leftPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
         panel.add(leftPanel, BorderLayout.WEST);
-
 
         //scrollable table
         JPanel rightPanel = new JPanel();
@@ -517,7 +503,6 @@ public class GUI implements IView {
             }
                 } );
         rightPanel.add(showCurrentMonth);
-
 
         expensesTable = new JTable();
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
@@ -547,10 +532,8 @@ public class GUI implements IView {
 
         frame.add(panel);
         frame.setSize(1600, 1200);
-
         frame.setResizable(false);
         frame.setVisible(true);
-
     }
 
     public JLabel createInputLabel(String text) {
@@ -624,7 +607,6 @@ public class GUI implements IView {
 
     @Override
     public void start() {
-
         loginPage();
     }
 
@@ -671,7 +653,6 @@ public class GUI implements IView {
                     viewModel.addCategory(categoryName.getText());
                     this.dispose();
                 }
-
             });
             add.setPreferredSize(new Dimension(150, 40));
             add.setFont(new Font("Arial", Font.PLAIN, 26));
