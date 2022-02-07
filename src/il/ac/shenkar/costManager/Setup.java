@@ -4,7 +4,15 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+/**
+ * This class is responsible for creating the database and tables.
+ */
 public class Setup {
+    /**
+     * This method initializes the database.
+     * @param args
+     * @throws CostManagerException
+     */
     public static void main(String[] args) throws CostManagerException {
         try {
             Class.forName(Config.DB_DRIVER);
@@ -12,11 +20,13 @@ public class Setup {
             e.printStackTrace();
             throw new CostManagerException("problem with registering driver to the driver manager", e);
         }
-
         createDatabase();
         createTables();
-
     }
+
+    /**
+     * This method creates the database.
+     */
     public static void createDatabase() {
         try (
                 Connection conn = DriverManager.getConnection(Config.DB_ONLY_URL, Config.DB_USER, Config.DB_PASSWORD);
@@ -30,6 +40,9 @@ public class Setup {
         }
     }
 
+    /**
+     * This method creates the tables.
+     */
     public static void createTables() {
 
         try (
