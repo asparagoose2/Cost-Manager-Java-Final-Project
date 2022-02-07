@@ -130,7 +130,6 @@ public class GUI implements IView {
         AtomicReference<IViewModel> vm = new AtomicReference<>(viewModel);
 
         submit.addActionListener(actionEvent -> {
-            System.out.println("submit");
             String userName = emailInput.getText();
             String password = String.valueOf(passwordInput.getPassword());
             if (userName.equals("") || password.equals("")) {
@@ -365,11 +364,11 @@ public class GUI implements IView {
         newItemPanel.setLayout(new GridBagLayout());
 
         JLabel newItemName = createInputLabel("Name: "); //new JLabel("Name :");
-        JTextField newItemName_text = new JTextField();
-        newItemName_text.setFont(new Font("ariel", Font.PLAIN, 20));
+        JTextField newItemNameaText = new JTextField();
+        newItemNameaText.setFont(new Font("ariel", Font.PLAIN, 20));
         newItemPanel.add(newItemName, c);
         c.gridx = 1;
-        newItemPanel.add(newItemName_text, c);
+        newItemPanel.add(newItemNameaText, c);
         c.gridy = 1;
         c.gridx = 0;
 
@@ -400,30 +399,30 @@ public class GUI implements IView {
         c.gridx = 0;
 
         // price
-        JLabel newItemPrice = createInputLabel("Price: "); //new JLabel("Price :");
+        JLabel newItemPrice = createInputLabel("Price: ");
         NumberFormat priceFormatter = new DecimalFormat("#0.00");
-        JFormattedTextField newItemPrice_text = new JFormattedTextField(priceFormatter);
-        newItemPrice_text.setPreferredSize(new Dimension(200, 30));
-        newItemPrice_text.setFont(new Font("ariel", Font.PLAIN, 20));
+        JFormattedTextField newItemPriceText = new JFormattedTextField(priceFormatter);
+        newItemPriceText.setPreferredSize(new Dimension(200, 30));
+        newItemPriceText.setFont(new Font("ariel", Font.PLAIN, 20));
         newItemPanel.add(newItemPrice, c);
         c.gridx = 1;
-        newItemPanel.add(newItemPrice_text, c);
+        newItemPanel.add(newItemPriceText, c);
         c.gridy = 3;
         c.gridx = 0;
 
         // description
-        JLabel newItemDescription = createInputLabel("Description: "); //new JLabel("Description :");
-        JTextArea newItemDescription_text = new JTextArea();
-        newItemDescription_text.setPreferredSize(new Dimension(200, 30));
-        newItemDescription_text.setFont(new Font("ariel", Font.PLAIN, 20));
+        JLabel newItemDescription = createInputLabel("Description: ");
+        JTextArea newItemDescriptionText = new JTextArea();
+        newItemDescriptionText.setPreferredSize(new Dimension(200, 30));
+        newItemDescriptionText.setFont(new Font("ariel", Font.PLAIN, 20));
         newItemPanel.add(newItemDescription, c);
         c.gridx = 1;
-        newItemPanel.add(newItemDescription_text, c);
+        newItemPanel.add(newItemDescriptionText, c);
         c.gridy = 4;
         c.gridx = 0;
 
         // select category
-        JLabel newItemCategory = createInputLabel("Category: ");// new JLabel("Category :");
+        JLabel newItemCategory = createInputLabel("Category: ");
         this.newItemCategoryCombo = this.renderCategories();
         // add category button
         addCategoryButton = new JButton("+");
@@ -451,17 +450,17 @@ public class GUI implements IView {
         c.gridx = 0;
 
         // currency type
-        JLabel newItemCurrency = createInputLabel("Currency: ");//new JLabel("Currency :");
-        JComboBox<IModel.CURRENCY> newItemCurrency_combo = new JComboBox<IModel.CURRENCY>();
-        newItemCurrency_combo.setPreferredSize(new Dimension(200, 30));
-        newItemCurrency_combo.setFont(new Font("ariel", Font.PLAIN, 20));
+        JLabel newItemCurrency = createInputLabel("Currency: ");
+        JComboBox<IModel.CURRENCY> newItemCurrencyCombo = new JComboBox<IModel.CURRENCY>();
+        newItemCurrencyCombo.setPreferredSize(new Dimension(200, 30));
+        newItemCurrencyCombo.setFont(new Font("ariel", Font.PLAIN, 20));
         for(int i = 0; i < IModel.CURRENCY.values().length; i++) {
-            newItemCurrency_combo.addItem(IModel.CURRENCY.values()[i]);
+            newItemCurrencyCombo.addItem(IModel.CURRENCY.values()[i]);
         }
 
         newItemPanel.add(newItemCurrency, c);
         c.gridx = 1;
-        newItemPanel.add(newItemCurrency_combo, c);
+        newItemPanel.add(newItemCurrencyCombo, c);
         c.gridy = 6;
         c.gridx = 0;
 
@@ -474,24 +473,24 @@ public class GUI implements IView {
         saveButtonPanel.add(saveButton);
         saveButtonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         saveButton.addActionListener(actionEvent -> {
-            String name = newItemName_text.getText();
-            String price = newItemPrice_text.getText();
-            String description = newItemDescription_text.getText();
+            String name = newItemNameaText.getText();
+            String price = newItemPriceText.getText();
+            String description = newItemDescriptionText.getText();
             String category = this.newItemCategoryCombo.getSelectedItem().toString();
             System.out.println(datePicker.getDate());
             Category selectedCategory = this.newItemCategoryCombo.getSelectedItem() == null ? null : (Category) this.newItemCategoryCombo.getSelectedItem();
-            int currency = ((IModel.CURRENCY) newItemCurrency_combo.getSelectedItem()).getValue();
+            int currency = ((IModel.CURRENCY) newItemCurrencyCombo.getSelectedItem()).getValue();
             System.out.println(currency);
             if (name.equals("") || price.equals("") || description.equals("") || category.equals("")) {
                 JOptionPane.showMessageDialog(null, "Please fill all the fields");
             } else {
                 viewModel.addItem(name, Double.parseDouble(price), selectedCategory ,description, currency, Date.valueOf(datePicker.getDate()));
                 sortButton.setSelected(false);
-                newItemName_text.setText("");
-                newItemPrice_text.setText("");
-                newItemDescription_text.setText("");
+                newItemNameaText.setText("");
+                newItemPriceText.setText("");
+                newItemDescriptionText.setText("");
                 newItemCategoryCombo.setSelectedIndex(0);
-                newItemCurrency_combo.setSelectedIndex(0);
+                newItemCurrencyCombo.setSelectedIndex(0);
                 datePicker.setDate(LocalDate.now());
             }
         } );
@@ -553,7 +552,6 @@ public class GUI implements IView {
             if(sortButton.isSelected()) {
                 int year = Integer.parseInt(sortYear.getText());
                 Month month = (Month) sortMonth.getSelectedItem();
-                System.out.println(month);
                 if(year > LocalDate.now().getYear()) {
                     JOptionPane.showMessageDialog(null, "Please enter a valid year");
                     sortButton.setSelected(false);
@@ -570,17 +568,6 @@ public class GUI implements IView {
         sortPanel.add(sortYear);
         sortPanel.add(sortButton);
 
-
-        JToggleButton showCurrentMonth = new JToggleButton("Current Month");
-        showCurrentMonth.setPreferredSize(new Dimension(200, 30));
-        showCurrentMonth.setFont(new Font("ariel", Font.BOLD, 20));
-        showCurrentMonth.addActionListener(actionEvent -> {
-            if (showCurrentMonth.isSelected()) {
-                viewModel.showCurrentMonth();
-            } else {
-                viewModel.getItems();
-            }
-                } );
         rightHeader.add(sortPanel, BorderLayout.EAST);
         rightHeader.add(Box.createHorizontalStrut(100), BorderLayout.CENTER );
         rightHeader.setMaximumSize(new Dimension(800,40));
@@ -718,7 +705,6 @@ public class GUI implements IView {
 
     @Override
     public void setCategories(Collection<Category> categories) {
-        System.out.println(Thread.currentThread().getName());
         this.categories = new ArrayList<Category>(categories);
         if(this.newItemCategoryPanel != null) {
             this.newItemCategoryPanel.remove(0);

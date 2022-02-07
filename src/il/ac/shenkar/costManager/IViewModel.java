@@ -82,5 +82,4 @@ public interface IViewModel {
 
     void setUser(User user);
 
-    void showCurrentMonth();
 }
