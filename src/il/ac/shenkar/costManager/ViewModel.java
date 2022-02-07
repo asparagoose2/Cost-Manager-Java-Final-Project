@@ -1,5 +1,7 @@
 package il.ac.shenkar.costManager;
 
+import javax.swing.*;
+import java.time.Month;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
@@ -50,8 +52,34 @@ public class ViewModel implements IViewModel{
     public void getItems() {
         service.submit(() -> {
             try {
-                view.setItems(model.getItems(user));
-                view.displayData("Items");
+                LinkedList<Item> items = (LinkedList<Item>) model.getItems(user);
+                SwingUtilities.invokeLater(() -> view.setItems(items));
+                SwingUtilities.invokeLater(() -> view.displayData("Items"));
+            } catch (CostManagerException e) {
+                view.displayError(e.getMessage(),true);
+            }
+        });
+    }
+
+        @Override
+    public void getItems(Month month, int year) {
+        service.submit(() -> {
+            try {
+                LinkedList<Item> items = (LinkedList<Item>) model.getItems(user);
+                Iterator<Item> iterator = items.iterator();
+                while (iterator.hasNext()) {
+                    Item item = iterator.next();
+                    Calendar calendar = new GregorianCalendar();
+                    calendar.setTime(item.getDate());
+                    if (calendar.get(Calendar.MONTH) + 1 !=  month.getValue() || calendar.get(Calendar.YEAR) != year) {
+
+                        iterator.remove();
+                    }
+                }
+                SwingUtilities.invokeLater(() -> view.setItems(items));
+                SwingUtilities.invokeLater(() -> view.displayData("Items"));
+//                view.setItems(items);
+//                view.displayData("Items");
             } catch (CostManagerException e) {
                 view.displayError(e.getMessage(),false);
             }

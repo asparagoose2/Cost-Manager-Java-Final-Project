@@ -6,17 +6,19 @@ import com.github.lgooddatepicker.components.DatePickerSettings;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.sql.Date;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.YearMonth;
+import java.text.SimpleDateFormat;
+import java.time.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -39,11 +41,14 @@ public class GUI implements IView {
     private JFrame frame;
     private Font font = new Font("ariel", Font.PLAIN, 22);
     JTable expensesTable;
+    JToggleButton sortButton;
 
     // inputs
     JComboBox<Category> newItemCategoryCombo;
     JPanel newItemCategoryPanel;
     JButton addCategoryButton;
+    Dimension inputDimension = new Dimension(200, 30);
+
 
     // Login
     JPanel panel;
@@ -330,7 +335,10 @@ public class GUI implements IView {
         JPanel leftPanel = new JPanel();
         JLabel leftHeader = new JLabel("Add New Item", SwingConstants.LEFT);
         leftHeader.setFont(new Font("ariel", Font.BOLD, 30));
-        leftHeader.setBorder(BorderFactory.createEmptyBorder(40, 10, 20, 10));
+        leftHeader.setBorder(BorderFactory.createEmptyBorder(40, 0, 20, 10));
+        JPanel leftHeaderPanel = new JPanel();
+        leftHeaderPanel.setLayout(new FlowLayout( FlowLayout.LEFT));
+        leftHeaderPanel.add(leftHeader);
 
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
 
@@ -340,7 +348,7 @@ public class GUI implements IView {
         c.gridy = 0;
         c.weightx = 0.5;
         c.weighty = 0.5;
-        c.insets = new Insets(10, 10, 10, 10);
+//        c.insets = new Insets(10, 10, 10, 10);
 
         JLabel newItem = new JLabel("New Item");
         newItem.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -471,6 +479,7 @@ public class GUI implements IView {
                 JOptionPane.showMessageDialog(null, "Please fill all the fields");
             } else {
                 viewModel.addItem(name, Double.parseDouble(price), selectedCategory ,description, currency, Date.valueOf(datePicker.getDate()));
+                sortButton.setSelected(false);
                 newItemName_text.setText("");
                 newItemPrice_text.setText("");
                 newItemDescription_text.setText("");
@@ -483,9 +492,7 @@ public class GUI implements IView {
         c.gridx = 1;
         newItemPanel.add(saveButtonPanel, c);
 
-        leftHeader.setAlignmentX(JLabel.LEFT_ALIGNMENT);
-
-        leftPanel.add(leftHeader);
+        leftPanel.add(leftHeaderPanel);
         leftPanel.add(newItemPanel);
 
         leftPanel.setPreferredSize(new Dimension(500, 200));
@@ -500,9 +507,61 @@ public class GUI implements IView {
         rightHeader.setSize(new Dimension(800,80));
         rightHeader.setMinimumSize(new Dimension(1,1));
         JLabel right = new JLabel("Your Expenses");
-//        right.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         right.setFont(new Font("ariel", Font.BOLD, 30));
         rightHeader.add(right,BorderLayout.WEST);
+
+
+        JPanel sortPanel = new JPanel();
+        sortPanel.setLayout(new GridLayout(1, 3));
+        JComboBox<Month> sortMonth = new JComboBox<Month>(Month.values());
+        sortMonth.addActionListener(actionEvent -> {
+                sortButton.setSelected(false);
+        });
+        DateFormat format = new SimpleDateFormat("Y");
+        JFormattedTextField sortYear = new JFormattedTextField(format);
+        sortYear.setFont(new Font("ariel", Font.PLAIN, 20));
+        sortYear.getDocument().addDocumentListener(new DocumentListener() {
+           @Override
+           public void insertUpdate(DocumentEvent documentEvent) {
+               sortButton.setSelected(false);
+               viewModel.getItems();
+           }
+
+           @Override
+           public void removeUpdate(DocumentEvent documentEvent) {
+                sortButton.setSelected(false);
+                viewModel.getItems();
+           }
+
+           @Override
+            public void changedUpdate(DocumentEvent documentEvent) {
+                sortButton.setSelected(false);
+                viewModel.getItems();
+
+           }
+        });
+
+        sortButton = new JToggleButton("Report");
+        sortButton.addActionListener(actionEvent -> {
+            if(sortButton.isSelected()) {
+                int year = Integer.parseInt(sortYear.getText());
+                Month month = (Month) sortMonth.getSelectedItem();
+                System.out.println(month);
+                if(year > LocalDate.now().getYear()) {
+                    JOptionPane.showMessageDialog(null, "Please enter a valid year");
+                    sortButton.setSelected(false);
+                } else {
+                    viewModel.getItems(month,year);
+                }
+            } else {
+                viewModel.getItems();
+            }
+        });
+
+
+        sortPanel.add(sortMonth);
+        sortPanel.add(sortYear);
+        sortPanel.add(sortButton);
 
 
         JToggleButton showCurrentMonth = new JToggleButton("Current Month");
@@ -515,7 +574,7 @@ public class GUI implements IView {
                 viewModel.getItems();
             }
                 } );
-        rightHeader.add(showCurrentMonth, BorderLayout.EAST);
+        rightHeader.add(sortPanel, BorderLayout.EAST);
         rightHeader.add(Box.createHorizontalStrut(100), BorderLayout.CENTER );
         rightHeader.setMaximumSize(new Dimension(800,40));
         rightPanel.add(rightHeader);
