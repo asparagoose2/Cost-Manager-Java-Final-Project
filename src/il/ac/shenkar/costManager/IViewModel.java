@@ -57,9 +57,8 @@ public interface IViewModel {
      * @param email the email of the user
      * @param password the password of the user
      */
+
     public void register(String firstName, String lastName, String email, String password);
-
-
 
     /**
      * Gets the categories from the model.
@@ -71,4 +70,5 @@ public interface IViewModel {
     void setUser(User user);
 
     void showCurrentMonth();
+    void logOut();
 }

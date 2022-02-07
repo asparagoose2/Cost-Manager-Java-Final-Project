@@ -310,7 +310,8 @@ public class GUI implements IView {
         panel.setLayout(new BorderLayout());
         // header
         JPanel headerPanel = new JPanel();
-        headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
+//        headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.LINE_AXIS));
+        headerPanel.setLayout(new BorderLayout());
         JLabel header = new JLabel("Cost Manager");
         header.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         header.setFont(new Font("ariel", Font.BOLD, 40));
@@ -322,9 +323,28 @@ public class GUI implements IView {
         }
         subHeader.setFont(new Font("ariel", Font.BOLD, 30));
         subHeader.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        headerPanel.add(header);
-        headerPanel.add(subHeader);
+        JPanel headerTextPanel = new JPanel();
+        headerTextPanel.setLayout(new BoxLayout(headerTextPanel,BoxLayout.Y_AXIS));
+        headerTextPanel.add(header);
+        headerTextPanel.add(subHeader);
+
+        headerPanel.add(headerTextPanel, BorderLayout.WEST);
+//        headerPanel.add(subHeader, BorderLayout.CENTER);
         panel.add(headerPanel, BorderLayout.NORTH);
+
+        // logOut button
+        JButton logOutButton = new JButton("log out");
+        logOutButton.setFont(new Font("ariel", Font.BOLD, 20));
+        JPanel logOutButtonPanel = new JPanel();
+        logOutButtonPanel.setLayout(new BoxLayout(logOutButtonPanel, BoxLayout.Y_AXIS));
+        logOutButton.setLayout(new BoxLayout(logOutButton, BoxLayout.Y_AXIS));
+        logOutButtonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        logOutButtonPanel.add(logOutButton);
+        headerPanel.add(logOutButtonPanel, BorderLayout.EAST);
+        logOutButton.addActionListener(actionEvent -> {
+            viewModel.logOut();
+        });
+
 
         // left side input new item form
         JPanel leftPanel = new JPanel();
@@ -637,6 +657,9 @@ public class GUI implements IView {
         if (isLoggedIn) {
             frame.dispose();
             mainPage();
+        } else {
+            frame.dispose();
+            loginPage();
         }
     }
 

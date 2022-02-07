@@ -1,5 +1,6 @@
 package il.ac.shenkar.costManager;
 
+import javax.swing.*;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
@@ -90,6 +91,18 @@ public class ViewModel implements IViewModel{
             }
         });
     }
+
+    @Override
+    public void logOut() {
+        service.submit( () -> {
+            setUser(null);
+            SwingUtilities.invokeLater(()-> {
+                view.setIsLoggedIn(false);
+                view.setUser(null);
+            });
+        });
+    }
+
 
     @Override
     public void register(String firstName, String lastName, String email, String password) {
