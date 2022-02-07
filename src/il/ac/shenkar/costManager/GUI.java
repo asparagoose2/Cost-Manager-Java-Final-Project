@@ -4,6 +4,8 @@ import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
@@ -371,6 +373,9 @@ public class GUI implements IView {
         dateSettings.setFontValidDate(calendarFont);
         dateSettings.setFontTodayLabel(calendarFont);
         DatePicker datePicker = new DatePicker(dateSettings);
+//        JButton calendarButton = datePicker.getComponentToggleCalendarButton();
+//        calendarButton.setMargin(new Insets(0,0,0,0));
+//        calendarButton.setPreferredSize(new Dimension(80,80));
         JLabel date = createInputLabel("Date: ");
 
         newItemPanel.add(date, c);
@@ -407,8 +412,9 @@ public class GUI implements IView {
         this.newItemCategoryCombo = this.renderCategories();
         // add category button
         addCategoryButton = new JButton("+");
-        addCategoryButton.setPreferredSize(new Dimension(50, 50));
-        addCategoryButton.setFont(new Font("ariel", Font.PLAIN, 14));
+        addCategoryButton.setPreferredSize(new Dimension(30, 30));
+        addCategoryButton.setFont(new Font("ariel", Font.PLAIN, 18));
+        addCategoryButton.setMargin(new Insets(0,0,0,0));
         addCategoryButton.addActionListener(e -> {
             AddCategoryDialog addCategoryDialog = new AddCategoryDialog(frame, "Add Category", true);
             addCategoryDialog.setVisible(true);
@@ -416,8 +422,9 @@ public class GUI implements IView {
 
 
         this.newItemCategoryPanel = new JPanel();
-        this.newItemCategoryPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        this.newItemCategoryPanel.setLayout(new BoxLayout(this.newItemCategoryPanel,BoxLayout.X_AXIS));
         this.newItemCategoryPanel.add(this.newItemCategoryCombo);
+        this.newItemCategoryPanel.add(Box.createHorizontalStrut(3)); // empty space
         this.newItemCategoryPanel.add(addCategoryButton);
 
 
@@ -488,10 +495,15 @@ public class GUI implements IView {
         //scrollable table
         JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
+        JPanel rightHeader = new JPanel();
+        rightHeader.setLayout(new BorderLayout());
+        rightHeader.setSize(new Dimension(800,80));
+        rightHeader.setMinimumSize(new Dimension(1,1));
         JLabel right = new JLabel("Your Expenses");
-        right.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+//        right.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         right.setFont(new Font("ariel", Font.BOLD, 30));
-        rightPanel.add(right);
+        rightHeader.add(right,BorderLayout.WEST);
+
 
         JToggleButton showCurrentMonth = new JToggleButton("Current Month");
         showCurrentMonth.setPreferredSize(new Dimension(200, 30));
@@ -503,7 +515,10 @@ public class GUI implements IView {
                 viewModel.getItems();
             }
                 } );
-        rightPanel.add(showCurrentMonth);
+        rightHeader.add(showCurrentMonth, BorderLayout.EAST);
+        rightHeader.add(Box.createHorizontalStrut(100), BorderLayout.CENTER );
+        rightHeader.setMaximumSize(new Dimension(800,40));
+        rightPanel.add(rightHeader);
 
         expensesTable = new JTable();
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
@@ -594,7 +609,7 @@ public class GUI implements IView {
      */
     private JComboBox<Category> renderCategories() {
         JComboBox<Category> newCombo = new JComboBox<Category>();
-        newCombo.setPreferredSize(new Dimension(200, 30));
+        newCombo.setPreferredSize(new Dimension(250, 30));
         newCombo.setFont(new Font("ariel", Font.PLAIN, 20));
         if (categories != null) {
             for (Category category : categories) {
