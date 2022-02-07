@@ -38,6 +38,11 @@ public class GUI implements IView {
     private Font font = new Font("ariel", Font.PLAIN, 22);
     JTable expensesTable;
 
+    // inputs
+    JComboBox<Category> newItemCategoryCombo;
+    JPanel newItemCategoryPanel;
+    JButton addCategoryButton;
+
     // Login
     JPanel panel;
     JLabel emailLable, passwordLabel, message;
@@ -374,6 +379,7 @@ public class GUI implements IView {
         c.gridy = 2;
         c.gridx = 0;
 
+        // price
         JLabel newItemPrice = createInputLabel("Price: "); //new JLabel("Price :");
         NumberFormat priceFormatter = new DecimalFormat("#0.00");
         JFormattedTextField newItemPrice_text = new JFormattedTextField(priceFormatter);
@@ -385,6 +391,7 @@ public class GUI implements IView {
         c.gridy = 3;
         c.gridx = 0;
 
+        // description
         JLabel newItemDescription = createInputLabel("Description: "); //new JLabel("Description :");
         JTextArea newItemDescription_text = new JTextArea();
         newItemDescription_text.setPreferredSize(new Dimension(200, 30));
@@ -397,16 +404,9 @@ public class GUI implements IView {
 
         // select category
         JLabel newItemCategory = createInputLabel("Category: ");// new JLabel("Category :");
-        JComboBox<Category> newItemCategory_combo = new JComboBox<Category>();
-        newItemCategory_combo.setPreferredSize(new Dimension(200, 30));
-        newItemCategory_combo.setFont(new Font("ariel", Font.PLAIN, 20));
-        if (categories != null) {
-            for (Category category : categories) {
-                newItemCategory_combo.addItem(category);
-            }
-        }
+        this.newItemCategoryCombo = this.renderCategories();
         // add category button
-        JButton addCategoryButton = new JButton("+");
+        addCategoryButton = new JButton("+");
         addCategoryButton.setPreferredSize(new Dimension(50, 50));
         addCategoryButton.setFont(new Font("ariel", Font.PLAIN, 14));
         addCategoryButton.addActionListener(e -> {
@@ -415,10 +415,11 @@ public class GUI implements IView {
         });
 
 
-        JPanel newItemCategoryPanel = new JPanel();
-        newItemCategoryPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        newItemCategoryPanel.add(newItemCategory_combo);
-        newItemCategoryPanel.add(addCategoryButton);
+        this.newItemCategoryPanel = new JPanel();
+        this.newItemCategoryPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        this.newItemCategoryPanel.add(this.newItemCategoryCombo);
+        this.newItemCategoryPanel.add(addCategoryButton);
+
 
 
         newItemPanel.add(newItemCategory, c);
@@ -454,9 +455,9 @@ public class GUI implements IView {
             String name = newItemName_text.getText();
             String price = newItemPrice_text.getText();
             String description = newItemDescription_text.getText();
-            String category = newItemCategory_combo.getSelectedItem().toString();
+            String category = this.newItemCategoryCombo.getSelectedItem().toString();
             System.out.println(datePicker.getDate());
-            Category selectedCategory = newItemCategory_combo.getSelectedItem() == null ? null : (Category) newItemCategory_combo.getSelectedItem();
+            Category selectedCategory = this.newItemCategoryCombo.getSelectedItem() == null ? null : (Category) this.newItemCategoryCombo.getSelectedItem();
             int currency = ((IModel.CURRENCY) newItemCurrency_combo.getSelectedItem()).getValue();
             System.out.println(currency);
             if (name.equals("") || price.equals("") || description.equals("") || category.equals("")) {
@@ -466,7 +467,7 @@ public class GUI implements IView {
                 newItemName_text.setText("");
                 newItemPrice_text.setText("");
                 newItemDescription_text.setText("");
-                newItemCategory_combo.setSelectedIndex(0);
+                newItemCategoryCombo.setSelectedIndex(0);
                 newItemCurrency_combo.setSelectedIndex(0);
                 datePicker.setDate(LocalDate.now());
             }
@@ -533,6 +534,7 @@ public class GUI implements IView {
         frame.add(panel);
         frame.setSize(1600, 1200);
         frame.setResizable(false);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }
 
@@ -585,15 +587,33 @@ public class GUI implements IView {
         this.items = (LinkedList<Item>) items;
     }
 
+    /**
+     * Method to build combo box to select categories.
+     * Data is taken from "categories" field.
+     * @return the combobox created
+     */
+    private JComboBox<Category> renderCategories() {
+        JComboBox<Category> newCombo = new JComboBox<Category>();
+        newCombo.setPreferredSize(new Dimension(200, 30));
+        newCombo.setFont(new Font("ariel", Font.PLAIN, 20));
+        if (categories != null) {
+            for (Category category : categories) {
+                newCombo.addItem(category);
+            }
+        }
+        return newCombo;
+    }
+
     @Override
     public void setCategories(Collection<Category> categories) {
         System.out.println("set categories");
         System.out.println(categories.size());
         this.categories = new ArrayList<Category>(categories);
-        frame.dispose();
-        mainPage();
-//        mainPage();
-
+        if(this.newItemCategoryPanel != null) {
+            this.newItemCategoryPanel.remove(0);
+            this.newItemCategoryPanel.add(renderCategories(), 0);
+            this.newItemCategoryPanel.updateUI();
+        }
     }
 
     @Override
