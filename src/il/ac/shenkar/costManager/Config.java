@@ -1,5 +1,8 @@
 package il.ac.shenkar.costManager;
 
+/**
+ * Config class is a class that holds all the application's configuration
+ */
 public class Config {
     static public final String DB_NAME = "CostManager";
     static public final String DB_USER = "root";

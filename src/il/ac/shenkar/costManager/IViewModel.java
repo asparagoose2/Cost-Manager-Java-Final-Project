@@ -80,6 +80,10 @@ public interface IViewModel {
      */
     public void getCategories();
 
+    /**
+     * sets the user in the viewnodel
+     * @param user the user to set
+     */
     void setUser(User user);
 
 }

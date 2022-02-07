@@ -18,20 +18,41 @@ public class ViewModel implements IViewModel{
     }
 
 
+    /**
+     * sets the user
+     * @param user the user to set
+     */
     public void setUser(User user) {
         this.user = user;
     }
 
+    /**
+     * sets the view
+     * @param view the view to set
+     */
     @Override
     public void setView(IView view) {
         this.view = view;
     }
 
+    /**
+     * sets the model
+     * @param model the model to set
+     */
     @Override
     public void setModel(IModel model) {
         this.model = model;
     }
 
+    /**
+     * adds an item to the model and updates the view
+     * @param name the name of the item
+     * @param amount the amount of the item
+     * @param category the category of the item
+     * @param description the description of the item
+     * @param currency the currency of the item - should be an ENUM
+     * @param date the date of the item
+     */
     @Override
     public void addItem(String name, double amount, Category category, String description, int currency, java.sql.Date date) {
         service.submit(() -> {
@@ -48,6 +69,9 @@ public class ViewModel implements IViewModel{
         });
     }
 
+    /**
+     * gets the items from the model and updates the view
+     */
     @Override
     public void getItems() {
         service.submit(() -> {
@@ -61,7 +85,12 @@ public class ViewModel implements IViewModel{
         });
     }
 
-        @Override
+    /**
+     * get only the items of the month and year that the user chose and updates the view
+     * @param month the month to get the expenses from
+     * @param year the year to get the expenses from
+     */
+    @Override
     public void getItems(Month month, int year) {
         service.submit(() -> {
             try {
@@ -72,7 +101,6 @@ public class ViewModel implements IViewModel{
                     Calendar calendar = new GregorianCalendar();
                     calendar.setTime(item.getDate());
                     if (calendar.get(Calendar.MONTH) + 1 !=  month.getValue() || calendar.get(Calendar.YEAR) != year) {
-
                         iterator.remove();
                     }
                 }
@@ -84,6 +112,10 @@ public class ViewModel implements IViewModel{
         });
     }
 
+    /**
+     * adds a category to the model and updates the view
+     * @param categoryName the name of the category
+     */
     @Override
     public void addCategory(String categoryName) {
         service.submit(() -> {
@@ -97,6 +129,11 @@ public class ViewModel implements IViewModel{
         });
     }
 
+    /**
+     * login a user to the system
+     * @param email the email of the user
+     * @param password the password of the user
+     */
     @Override
     public void login(String email, String password) {
         service.submit(() -> {
@@ -114,6 +151,13 @@ public class ViewModel implements IViewModel{
         });
     }
 
+    /**
+     * register a new user and login the user after registration
+     * @param firstName the first name of the user
+     * @param lastName the last name of the user
+     * @param email the email of the user
+     * @param password the password of the user
+     */
     @Override
     public void register(String firstName, String lastName, String email, String password) {
         service.submit(() -> {
@@ -135,6 +179,9 @@ public class ViewModel implements IViewModel{
 
     }
 
+    /**
+     * Sets categories in the view
+     */
     @Override
     public void getCategories() {
         service.submit(() -> {
