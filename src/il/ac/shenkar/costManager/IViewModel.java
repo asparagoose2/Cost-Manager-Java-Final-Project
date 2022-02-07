@@ -1,4 +1,5 @@
 package il.ac.shenkar.costManager;
+import java.time.Month;
 import java.util.Date;
 
 /**
@@ -34,8 +35,20 @@ public interface IViewModel {
      * Gets the expenses from the model.
      * Should be called after the model has been updated.
      * After the expenses are retrieved, the view should be notified.
+     *
      */
     public void getItems();
+
+
+    /**
+     * Gets the expenses from the model.
+     * Should be called after the model has been updated.
+     * After the expenses are retrieved, the view should be notified.
+     * @param month the month to get the expenses from
+     * @param year the year to get the expenses from
+     *
+     */
+    public void getItems(Month month, int year);
 
     /**
      * Adds a new category to the model.
@@ -60,6 +73,8 @@ public interface IViewModel {
 
     public void register(String firstName, String lastName, String email, String password);
 
+
+
     /**
      * Gets the categories from the model.
      * Should be called after the model has been updated.
@@ -67,8 +82,11 @@ public interface IViewModel {
      */
     public void getCategories();
 
+    /**
+     * sets the user in the viewnodel
+     * @param user the user to set
+     */
     void setUser(User user);
 
-    void showCurrentMonth();
     void logOut();
 }

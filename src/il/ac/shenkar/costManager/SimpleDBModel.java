@@ -168,6 +168,16 @@ public class SimpleDBModel implements IModel {
         }
     }
 
+    /**
+     * This method is responsible for registering a new user.
+     *
+     * @param firstName the first name of the user
+     * @param lastName the last name of the user
+     * @param email the email of the user
+     * @param password the password of the user
+     * @return
+     * @throws CostManagerException
+     */
     @Override
     public User register(String firstName, String lastName, String email, String password) throws CostManagerException {
         try (Connection connection = DriverManager.getConnection(connectionString, USER_NAME, PASSWORD);
@@ -216,6 +226,14 @@ public class SimpleDBModel implements IModel {
     }
 
 
+    /**
+     * This method is responsible for creating a new category.
+     *
+     * @param name the name of the category
+     * @param owner the owner of the category
+     * @return the created category
+     * @throws CostManagerException
+     */
     @Override
     public Category createCategory(String name, User owner) throws CostManagerException {
         try (Connection connection = DriverManager.getConnection(connectionString, USER_NAME, PASSWORD);
@@ -251,6 +269,18 @@ public class SimpleDBModel implements IModel {
     }
 
 
+    /**
+     * This method is responsible for creating a new expense item.
+     * @param name - the name of the item
+     * @param amount - the amount of the item
+     * @param category - the category of the item
+     * @param owner - the owner of the item
+     * @param description - the description of the item
+     * @param currency - the currency of the item
+     * @param date - the date of the item
+     * @return the created expense item
+     * @throws CostManagerException
+     */
     @Override
     public Item createItem(String name, double amount, Category category, User owner, String description, int currency, java.util.Date date) throws CostManagerException {
         try (Connection connection = DriverManager.getConnection(connectionString, USER_NAME, PASSWORD);

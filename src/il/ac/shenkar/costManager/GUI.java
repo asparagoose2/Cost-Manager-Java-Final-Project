@@ -4,19 +4,19 @@ import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.sql.Date;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.YearMonth;
+import java.text.SimpleDateFormat;
+import java.time.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -39,15 +39,18 @@ public class GUI implements IView {
     private JFrame frame;
     private Font font = new Font("ariel", Font.PLAIN, 22);
     JTable expensesTable;
+    JToggleButton sortButton;
 
     // inputs
     JComboBox<Category> newItemCategoryCombo;
     JPanel newItemCategoryPanel;
     JButton addCategoryButton;
+    Dimension inputDimension = new Dimension(200, 30);
+
 
     // Login
     JPanel panel;
-    JLabel emailLable, passwordLabel, message;
+    JLabel emailLabel, passwordLabel, message;
     JTextField emailInput;
     JPasswordField passwordInput;
     JButton submit, cancel;
@@ -56,7 +59,9 @@ public class GUI implements IView {
         viewModel = vm;
     }
 
-    // login screen
+    /**
+     * This method is used to create and display the login page.
+     */
     private void loginPage() {
         frame = new JFrame();
         panel = new JPanel();
@@ -79,13 +84,13 @@ public class GUI implements IView {
         // Email Label
         JPanel userLabelPanel = new JPanel();
         userLabelPanel.setLayout(new GridLayout(1, 2));
-        emailLable = new JLabel();
-        emailLable.setText("Email: ");
-        emailLable.setFont(font);
+        emailLabel = new JLabel();
+        emailLabel.setText("Email: ");
+        emailLabel.setFont(font);
         emailInput = new JTextField();
         emailInput.setFont(font);
         emailInput.setPreferredSize(new Dimension(400, 30));
-        userLabelPanel.add(emailLable);
+        userLabelPanel.add(emailLabel);
         userLabelPanel.add(emailInput);
         userLabelPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
@@ -125,7 +130,6 @@ public class GUI implements IView {
         AtomicReference<IViewModel> vm = new AtomicReference<>(viewModel);
 
         submit.addActionListener(actionEvent -> {
-            System.out.println("submit");
             String userName = emailInput.getText();
             String password = String.valueOf(passwordInput.getPassword());
             if (userName.equals("") || password.equals("")) {
@@ -173,6 +177,10 @@ public class GUI implements IView {
         frame.setVisible(true);
     }
 
+    /**
+     * This method is used to display the register view.
+     *
+     */
     public void register() {
         frame.dispose();
         frame = new JFrame();
@@ -221,13 +229,13 @@ public class GUI implements IView {
         // Email Label
         JPanel userLabelPanel = new JPanel();
         userLabelPanel.setLayout(new GridLayout(1, 2));
-        emailLable = new JLabel();
-        emailLable.setText("Email :");
-        emailLable.setFont(font);
+        emailLabel = new JLabel();
+        emailLabel.setText("Email :");
+        emailLabel.setFont(font);
         emailInput = new JTextField();
         emailInput.setFont(font);
         emailInput.setPreferredSize(new Dimension(400, 30));
-        userLabelPanel.add(emailLable);
+        userLabelPanel.add(emailLabel);
         userLabelPanel.add(emailInput);
         userLabelPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
@@ -304,6 +312,9 @@ public class GUI implements IView {
         frame.setVisible(true);
     }
 
+    /**
+     * This method is used to display the main application page.
+     */
     public void mainPage() {
         frame = new JFrame();
         JPanel panel = new JPanel();
@@ -350,7 +361,10 @@ public class GUI implements IView {
         JPanel leftPanel = new JPanel();
         JLabel leftHeader = new JLabel("Add New Item", SwingConstants.LEFT);
         leftHeader.setFont(new Font("ariel", Font.BOLD, 30));
-        leftHeader.setBorder(BorderFactory.createEmptyBorder(40, 10, 20, 10));
+        leftHeader.setBorder(BorderFactory.createEmptyBorder(40, 0, 20, 10));
+        JPanel leftHeaderPanel = new JPanel();
+        leftHeaderPanel.setLayout(new FlowLayout( FlowLayout.LEFT));
+        leftHeaderPanel.add(leftHeader);
 
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
 
@@ -360,7 +374,7 @@ public class GUI implements IView {
         c.gridy = 0;
         c.weightx = 0.5;
         c.weighty = 0.5;
-        c.insets = new Insets(10, 10, 10, 10);
+//        c.insets = new Insets(10, 10, 10, 10);
 
         JLabel newItem = new JLabel("New Item");
         newItem.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -370,11 +384,11 @@ public class GUI implements IView {
         newItemPanel.setLayout(new GridBagLayout());
 
         JLabel newItemName = createInputLabel("Name: "); //new JLabel("Name :");
-        JTextField newItemName_text = new JTextField();
-        newItemName_text.setFont(new Font("ariel", Font.PLAIN, 20));
+        JTextField newItemNameaText = new JTextField();
+        newItemNameaText.setFont(new Font("ariel", Font.PLAIN, 20));
         newItemPanel.add(newItemName, c);
         c.gridx = 1;
-        newItemPanel.add(newItemName_text, c);
+        newItemPanel.add(newItemNameaText, c);
         c.gridy = 1;
         c.gridx = 0;
 
@@ -405,30 +419,30 @@ public class GUI implements IView {
         c.gridx = 0;
 
         // price
-        JLabel newItemPrice = createInputLabel("Price: "); //new JLabel("Price :");
+        JLabel newItemPrice = createInputLabel("Price: ");
         NumberFormat priceFormatter = new DecimalFormat("#0.00");
-        JFormattedTextField newItemPrice_text = new JFormattedTextField(priceFormatter);
-        newItemPrice_text.setPreferredSize(new Dimension(200, 30));
-        newItemPrice_text.setFont(new Font("ariel", Font.PLAIN, 20));
+        JFormattedTextField newItemPriceText = new JFormattedTextField(priceFormatter);
+        newItemPriceText.setPreferredSize(new Dimension(200, 30));
+        newItemPriceText.setFont(new Font("ariel", Font.PLAIN, 20));
         newItemPanel.add(newItemPrice, c);
         c.gridx = 1;
-        newItemPanel.add(newItemPrice_text, c);
+        newItemPanel.add(newItemPriceText, c);
         c.gridy = 3;
         c.gridx = 0;
 
         // description
-        JLabel newItemDescription = createInputLabel("Description: "); //new JLabel("Description :");
-        JTextArea newItemDescription_text = new JTextArea();
-        newItemDescription_text.setPreferredSize(new Dimension(200, 30));
-        newItemDescription_text.setFont(new Font("ariel", Font.PLAIN, 20));
+        JLabel newItemDescription = createInputLabel("Description: ");
+        JTextArea newItemDescriptionText = new JTextArea();
+        newItemDescriptionText.setPreferredSize(new Dimension(200, 30));
+        newItemDescriptionText.setFont(new Font("ariel", Font.PLAIN, 20));
         newItemPanel.add(newItemDescription, c);
         c.gridx = 1;
-        newItemPanel.add(newItemDescription_text, c);
+        newItemPanel.add(newItemDescriptionText, c);
         c.gridy = 4;
         c.gridx = 0;
 
         // select category
-        JLabel newItemCategory = createInputLabel("Category: ");// new JLabel("Category :");
+        JLabel newItemCategory = createInputLabel("Category: ");
         this.newItemCategoryCombo = this.renderCategories();
         // add category button
         addCategoryButton = new JButton("+");
@@ -456,17 +470,17 @@ public class GUI implements IView {
         c.gridx = 0;
 
         // currency type
-        JLabel newItemCurrency = createInputLabel("Currency: ");//new JLabel("Currency :");
-        JComboBox<IModel.CURRENCY> newItemCurrency_combo = new JComboBox<IModel.CURRENCY>();
-        newItemCurrency_combo.setPreferredSize(new Dimension(200, 30));
-        newItemCurrency_combo.setFont(new Font("ariel", Font.PLAIN, 20));
+        JLabel newItemCurrency = createInputLabel("Currency: ");
+        JComboBox<IModel.CURRENCY> newItemCurrencyCombo = new JComboBox<IModel.CURRENCY>();
+        newItemCurrencyCombo.setPreferredSize(new Dimension(200, 30));
+        newItemCurrencyCombo.setFont(new Font("ariel", Font.PLAIN, 20));
         for(int i = 0; i < IModel.CURRENCY.values().length; i++) {
-            newItemCurrency_combo.addItem(IModel.CURRENCY.values()[i]);
+            newItemCurrencyCombo.addItem(IModel.CURRENCY.values()[i]);
         }
 
         newItemPanel.add(newItemCurrency, c);
         c.gridx = 1;
-        newItemPanel.add(newItemCurrency_combo, c);
+        newItemPanel.add(newItemCurrencyCombo, c);
         c.gridy = 6;
         c.gridx = 0;
 
@@ -479,23 +493,24 @@ public class GUI implements IView {
         saveButtonPanel.add(saveButton);
         saveButtonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         saveButton.addActionListener(actionEvent -> {
-            String name = newItemName_text.getText();
-            String price = newItemPrice_text.getText();
-            String description = newItemDescription_text.getText();
+            String name = newItemNameaText.getText();
+            String price = newItemPriceText.getText();
+            String description = newItemDescriptionText.getText();
             String category = this.newItemCategoryCombo.getSelectedItem().toString();
             System.out.println(datePicker.getDate());
             Category selectedCategory = this.newItemCategoryCombo.getSelectedItem() == null ? null : (Category) this.newItemCategoryCombo.getSelectedItem();
-            int currency = ((IModel.CURRENCY) newItemCurrency_combo.getSelectedItem()).getValue();
+            int currency = ((IModel.CURRENCY) newItemCurrencyCombo.getSelectedItem()).getValue();
             System.out.println(currency);
             if (name.equals("") || price.equals("") || description.equals("") || category.equals("")) {
                 JOptionPane.showMessageDialog(null, "Please fill all the fields");
             } else {
                 viewModel.addItem(name, Double.parseDouble(price), selectedCategory ,description, currency, Date.valueOf(datePicker.getDate()));
-                newItemName_text.setText("");
-                newItemPrice_text.setText("");
-                newItemDescription_text.setText("");
+                sortButton.setSelected(false);
+                newItemNameaText.setText("");
+                newItemPriceText.setText("");
+                newItemDescriptionText.setText("");
                 newItemCategoryCombo.setSelectedIndex(0);
-                newItemCurrency_combo.setSelectedIndex(0);
+                newItemCurrencyCombo.setSelectedIndex(0);
                 datePicker.setDate(LocalDate.now());
             }
         } );
@@ -503,9 +518,7 @@ public class GUI implements IView {
         c.gridx = 1;
         newItemPanel.add(saveButtonPanel, c);
 
-        leftHeader.setAlignmentX(JLabel.LEFT_ALIGNMENT);
-
-        leftPanel.add(leftHeader);
+        leftPanel.add(leftHeaderPanel);
         leftPanel.add(newItemPanel);
 
         leftPanel.setPreferredSize(new Dimension(500, 200));
@@ -520,22 +533,62 @@ public class GUI implements IView {
         rightHeader.setSize(new Dimension(800,80));
         rightHeader.setMinimumSize(new Dimension(1,1));
         JLabel right = new JLabel("Your Expenses");
-//        right.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         right.setFont(new Font("ariel", Font.BOLD, 30));
         rightHeader.add(right,BorderLayout.WEST);
 
 
-        JToggleButton showCurrentMonth = new JToggleButton("Current Month");
-        showCurrentMonth.setPreferredSize(new Dimension(200, 30));
-        showCurrentMonth.setFont(new Font("ariel", Font.BOLD, 20));
-        showCurrentMonth.addActionListener(actionEvent -> {
-            if (showCurrentMonth.isSelected()) {
-                viewModel.showCurrentMonth();
+        JPanel sortPanel = new JPanel();
+        sortPanel.setLayout(new GridLayout(1, 3));
+        JComboBox<Month> sortMonth = new JComboBox<Month>(Month.values());
+        sortMonth.addActionListener(actionEvent -> {
+                sortButton.setSelected(false);
+        });
+        DateFormat format = new SimpleDateFormat("Y");
+        JFormattedTextField sortYear = new JFormattedTextField(format);
+        sortYear.setFont(new Font("ariel", Font.PLAIN, 20));
+        sortYear.getDocument().addDocumentListener(new DocumentListener() {
+           @Override
+           public void insertUpdate(DocumentEvent documentEvent) {
+               sortButton.setSelected(false);
+               viewModel.getItems();
+           }
+
+           @Override
+           public void removeUpdate(DocumentEvent documentEvent) {
+                sortButton.setSelected(false);
+                viewModel.getItems();
+           }
+
+           @Override
+            public void changedUpdate(DocumentEvent documentEvent) {
+                sortButton.setSelected(false);
+                viewModel.getItems();
+
+           }
+        });
+
+        sortButton = new JToggleButton("Report");
+        sortButton.addActionListener(actionEvent -> {
+            if(sortButton.isSelected()) {
+                int year = Integer.parseInt(sortYear.getText());
+                Month month = (Month) sortMonth.getSelectedItem();
+                if(year > LocalDate.now().getYear()) {
+                    JOptionPane.showMessageDialog(null, "Please enter a valid year");
+                    sortButton.setSelected(false);
+                } else {
+                    viewModel.getItems(month,year);
+                }
             } else {
                 viewModel.getItems();
             }
-                } );
-        rightHeader.add(showCurrentMonth, BorderLayout.EAST);
+        });
+
+
+        sortPanel.add(sortMonth);
+        sortPanel.add(sortYear);
+        sortPanel.add(sortButton);
+
+        rightHeader.add(sortPanel, BorderLayout.EAST);
         rightHeader.add(Box.createHorizontalStrut(100), BorderLayout.CENTER );
         rightHeader.setMaximumSize(new Dimension(800,40));
         rightPanel.add(rightHeader);
@@ -573,7 +626,12 @@ public class GUI implements IView {
         frame.setVisible(true);
     }
 
-    public JLabel createInputLabel(String text) {
+    /**
+     * This method is used to create an inout label
+     * @param text the text for the lable
+     * @return
+     */
+    private JLabel createInputLabel(String text) {
         JLabel label = new JLabel(text);
         label.setFont(new Font("ariel", Font.BOLD, 20));
         label.setPreferredSize(new Dimension(100, 30));
@@ -582,6 +640,10 @@ public class GUI implements IView {
         return label;
     }
 
+    /**
+     * updates the table with the new items
+     * @param data not used in this implementation
+     */
     @Override
     public void displayData(String data) {
         if(expensesTable != null) {
@@ -597,6 +659,14 @@ public class GUI implements IView {
         }
     }
 
+
+    /**
+     * This method is used to alert the user of an occurred error in the application.
+     * error is displayed in a JOptionPane.
+     *
+     * @param error the error to display.
+     * @param shouldExit if true, the application will exit after the error is displayed.
+     */
     @Override
     public void displayError(String error, Boolean shouldExit) {
         JOptionPane.showMessageDialog(frame,error,"Error!", JOptionPane.ERROR_MESSAGE);
@@ -606,17 +676,31 @@ public class GUI implements IView {
 
     }
 
+    /**
+     * This method is used to display a message to the user.
+     * message is display in a JOptionPane.
+     * @param message the message to display.
+     * @param title the title of the message.
+     */
     @Override
     public void displayMessage(String message, String title) {
-
+        JOptionPane.showMessageDialog(frame, message, title, JOptionPane.INFORMATION_MESSAGE);
     }
 
+    /**
+     * This method is used to set the view model
+     * @param viewModel the ViewModel to set.
+     */
     @Override
     public void setViewModel(IViewModel viewModel) {
         System.out.println("set view model");
         System.out.println(viewModel);
     }
 
+    /**
+     * This method is used to set the items in the view.
+     * @param items the items to display.
+     */
     @Override
     public void setItems(Collection<Item> items) {
         this.items = (LinkedList<Item>) items;
@@ -641,8 +725,6 @@ public class GUI implements IView {
 
     @Override
     public void setCategories(Collection<Category> categories) {
-        System.out.println("set categories");
-        System.out.println(categories.size());
         this.categories = new ArrayList<Category>(categories);
         if(this.newItemCategoryPanel != null) {
             this.newItemCategoryPanel.remove(0);
