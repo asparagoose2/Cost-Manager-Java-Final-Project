@@ -4,8 +4,6 @@ import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
@@ -52,7 +50,7 @@ public class GUI implements IView {
 
     // Login
     JPanel panel;
-    JLabel emailLable, passwordLabel, message;
+    JLabel emailLabel, passwordLabel, message;
     JTextField emailInput;
     JPasswordField passwordInput;
     JButton submit, cancel;
@@ -84,13 +82,13 @@ public class GUI implements IView {
         // Email Label
         JPanel userLabelPanel = new JPanel();
         userLabelPanel.setLayout(new GridLayout(1, 2));
-        emailLable = new JLabel();
-        emailLable.setText("Email: ");
-        emailLable.setFont(font);
+        emailLabel = new JLabel();
+        emailLabel.setText("Email: ");
+        emailLabel.setFont(font);
         emailInput = new JTextField();
         emailInput.setFont(font);
         emailInput.setPreferredSize(new Dimension(400, 30));
-        userLabelPanel.add(emailLable);
+        userLabelPanel.add(emailLabel);
         userLabelPanel.add(emailInput);
         userLabelPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
@@ -226,13 +224,13 @@ public class GUI implements IView {
         // Email Label
         JPanel userLabelPanel = new JPanel();
         userLabelPanel.setLayout(new GridLayout(1, 2));
-        emailLable = new JLabel();
-        emailLable.setText("Email :");
-        emailLable.setFont(font);
+        emailLabel = new JLabel();
+        emailLabel.setText("Email :");
+        emailLabel.setFont(font);
         emailInput = new JTextField();
         emailInput.setFont(font);
         emailInput.setPreferredSize(new Dimension(400, 30));
-        userLabelPanel.add(emailLable);
+        userLabelPanel.add(emailLabel);
         userLabelPanel.add(emailInput);
         userLabelPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
