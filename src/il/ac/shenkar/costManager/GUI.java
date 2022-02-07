@@ -718,8 +718,7 @@ public class GUI implements IView {
 
     @Override
     public void setCategories(Collection<Category> categories) {
-        System.out.println("set categories");
-        System.out.println(categories.size());
+        System.out.println(Thread.currentThread().getName());
         this.categories = new ArrayList<Category>(categories);
         if(this.newItemCategoryPanel != null) {
             this.newItemCategoryPanel.remove(0);

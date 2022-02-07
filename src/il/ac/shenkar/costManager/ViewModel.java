@@ -2,10 +2,7 @@ package il.ac.shenkar.costManager;
 
 import javax.swing.*;
 import java.time.Month;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -40,10 +37,13 @@ public class ViewModel implements IViewModel{
         service.submit(() -> {
             try {
                 model.createItem(name,amount,category,user,description,currency,date);
-                view.setItems(model.getItems(user));
-                view.displayData("Items");
+                LinkedList<Item> items = (LinkedList<Item>) model.getItems(user);
+                SwingUtilities.invokeLater(() -> {
+                    view.setItems(items);
+                    view.displayData("Items");
+                });
             } catch (CostManagerException e) {
-                view.displayError(e.getMessage(),false);
+                SwingUtilities.invokeLater(() -> view.displayError(e.getMessage(),false));
             }
         });
     }
@@ -56,7 +56,7 @@ public class ViewModel implements IViewModel{
                 SwingUtilities.invokeLater(() -> view.setItems(items));
                 SwingUtilities.invokeLater(() -> view.displayData("Items"));
             } catch (CostManagerException e) {
-                view.displayError(e.getMessage(),true);
+                SwingUtilities.invokeLater(() -> view.displayError(e.getMessage(),true));
             }
         });
     }
@@ -78,10 +78,8 @@ public class ViewModel implements IViewModel{
                 }
                 SwingUtilities.invokeLater(() -> view.setItems(items));
                 SwingUtilities.invokeLater(() -> view.displayData("Items"));
-//                view.setItems(items);
-//                view.displayData("Items");
             } catch (CostManagerException e) {
-                view.displayError(e.getMessage(),false);
+                SwingUtilities.invokeLater(() -> view.displayError(e.getMessage(),true));
             }
         });
     }
@@ -91,9 +89,10 @@ public class ViewModel implements IViewModel{
         service.submit(() -> {
             try {
                 model.createCategory(categoryName, user);
-                view.setCategories(model.getCategories(user));
+                LinkedList<Category> categories = (LinkedList<Category>) model.getCategories(user);
+                SwingUtilities.invokeLater(() -> view.setCategories(categories));
             } catch (CostManagerException e) {
-                view.displayError(e.getMessage(), false);
+                SwingUtilities.invokeLater(() -> view.displayError(e.getMessage(),false));
             }
         });
     }
@@ -102,19 +101,15 @@ public class ViewModel implements IViewModel{
     public void login(String email, String password) {
         service.submit(() -> {
             try {
-                System.out.println("login");
-                System.out.println(email);
-                System.out.println(password);
                 setUser(model.login(email,password));
-                view.displayMessage("Login Successful","Login");
-                view.setCategories(model.getCategories(user));
-                view.setItems(model.getItems(user));
-                view.setUser(this.user);
-                System.out.println(this.user);
-                view.setIsLoggedIn(true);
-
+                LinkedList<Category> categories = (LinkedList<Category>) model.getCategories(user);
+                LinkedList<Item> items = (LinkedList<Item>) model.getItems(user);
+                SwingUtilities.invokeLater(() -> view.setCategories(categories));
+                SwingUtilities.invokeLater(() -> view.setItems(items));
+                SwingUtilities.invokeLater(() -> view.setUser(this.user));
+                SwingUtilities.invokeLater(() -> view.setIsLoggedIn(true));
             } catch (CostManagerException e) {
-                view.displayError(e.getMessage(),false);
+                SwingUtilities.invokeLater(() -> view.displayError(e.getMessage(),false));
             }
         });
     }
@@ -124,13 +119,17 @@ public class ViewModel implements IViewModel{
         service.submit(() -> {
             try {
                 setUser(model.register(firstName,lastName,email,password));
-                view.displayMessage("Registration Successful","Registration");
-                view.setCategories(model.getCategories(user));
-                view.setItems(model.getItems(user));
-                view.setUser(this.user);
-                view.setIsLoggedIn(true);
+                LinkedList<Category> categories = (LinkedList<Category>) model.getCategories(user);
+                LinkedList<Item> items = (LinkedList<Item>) model.getItems(user);
+                SwingUtilities.invokeLater(() -> {
+                    view.displayMessage("Registration Successful","Registration");
+                    view.setCategories(categories);
+                    view.setItems(items);
+                    view.setUser(this.user);
+                    view.setIsLoggedIn(true);
+                });
             } catch (CostManagerException e) {
-                view.displayError(e.getMessage(),false);
+                SwingUtilities.invokeLater(() -> view.displayError(e.getMessage(),false));
             }
         });
 
@@ -140,9 +139,10 @@ public class ViewModel implements IViewModel{
     public void getCategories() {
         service.submit(() -> {
             try {
-                view.setCategories(model.getCategories(user));
+                LinkedList<Category> categories = (LinkedList<Category>) model.getCategories(user);
+                SwingUtilities.invokeLater(() -> view.setCategories(categories));
             } catch (CostManagerException e) {
-                view.displayError(e.getMessage(),true);
+                SwingUtilities.invokeLater(() -> view.displayError(e.getMessage(),true));
             }
         });
     }
