@@ -59,7 +59,9 @@ public class GUI implements IView {
         viewModel = vm;
     }
 
-    // login screen
+    /**
+     * This method is used to create and display the login page.
+     */
     private void loginPage() {
         frame = new JFrame();
         panel = new JPanel();
@@ -176,6 +178,10 @@ public class GUI implements IView {
         frame.setVisible(true);
     }
 
+    /**
+     * This method is used to display the register view.
+     *
+     */
     public void register() {
         frame.dispose();
         frame = new JFrame();
@@ -307,6 +313,9 @@ public class GUI implements IView {
         frame.setVisible(true);
     }
 
+    /**
+     * This method is used to display the main application page.
+     */
     public void mainPage() {
         frame = new JFrame();
         JPanel panel = new JPanel();
@@ -610,7 +619,12 @@ public class GUI implements IView {
         frame.setVisible(true);
     }
 
-    public JLabel createInputLabel(String text) {
+    /**
+     * This method is used to create an inout label
+     * @param text the text for the lable
+     * @return
+     */
+    private JLabel createInputLabel(String text) {
         JLabel label = new JLabel(text);
         label.setFont(new Font("ariel", Font.BOLD, 20));
         label.setPreferredSize(new Dimension(100, 30));
@@ -619,6 +633,10 @@ public class GUI implements IView {
         return label;
     }
 
+    /**
+     * updates the table with the new items
+     * @param data not used in this implementation
+     */
     @Override
     public void displayData(String data) {
         if(expensesTable != null) {
@@ -634,6 +652,14 @@ public class GUI implements IView {
         }
     }
 
+
+    /**
+     * This method is used to alert the user of an occurred error in the application.
+     * error is displayed in a JOptionPane.
+     *
+     * @param error the error to display.
+     * @param shouldExit if true, the application will exit after the error is displayed.
+     */
     @Override
     public void displayError(String error, Boolean shouldExit) {
         JOptionPane.showMessageDialog(frame,error,"Error!", JOptionPane.ERROR_MESSAGE);
@@ -643,17 +669,31 @@ public class GUI implements IView {
 
     }
 
+    /**
+     * This method is used to display a message to the user.
+     * message is display in a JOptionPane.
+     * @param message the message to display.
+     * @param title the title of the message.
+     */
     @Override
     public void displayMessage(String message, String title) {
-
+        JOptionPane.showMessageDialog(frame, message, title, JOptionPane.INFORMATION_MESSAGE);
     }
 
+    /**
+     * This method is used to set the view model
+     * @param viewModel the ViewModel to set.
+     */
     @Override
     public void setViewModel(IViewModel viewModel) {
         System.out.println("set view model");
         System.out.println(viewModel);
     }
 
+    /**
+     * This method is used to set the items in the view.
+     * @param items the items to display.
+     */
     @Override
     public void setItems(Collection<Item> items) {
         this.items = (LinkedList<Item>) items;
