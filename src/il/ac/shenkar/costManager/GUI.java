@@ -466,7 +466,6 @@ public class GUI implements IView {
             String price = newItemPriceText.getText();
             String category = Objects.requireNonNull(this.newItemCategoryCombo.getSelectedItem()).toString();
             Category selectedCategory = this.newItemCategoryCombo.getSelectedItem() == null ? null : (Category) this.newItemCategoryCombo.getSelectedItem();
-            System.out.println(selectedCategory.getId());
             int currency = ((IModel.CURRENCY) Objects.requireNonNull(newItemCurrencyCombo.getSelectedItem())).getValue();
             if (description.equals("") || price.equals("") || category.equals("")) {
                 JOptionPane.showMessageDialog(null, "Please fill all the fields");
