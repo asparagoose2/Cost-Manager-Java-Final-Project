@@ -58,6 +58,7 @@ public class Setup {
 
             String alterCategoriesTable = "ALTER TABLE `categories`\n" +
                     "  ADD PRIMARY KEY (`category_id`),\n" +
+                    "ADD UNIQUE KEY `category_name_unique` (`owner_id`,`category_name`),\n" +
                     "  ADD KEY `owner_id` (`owner_id`),\n" +
                     "  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=169;";
 

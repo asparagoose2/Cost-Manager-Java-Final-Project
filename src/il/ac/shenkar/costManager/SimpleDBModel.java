@@ -264,7 +264,7 @@ public class SimpleDBModel implements IModel {
             return new Category(owner, name, categoryID);
 
         }catch (SQLException e){
-            throw new CostManagerException("category error!",e);
+            throw new CostManagerException("Category already exists",e);
         }
     }
 
