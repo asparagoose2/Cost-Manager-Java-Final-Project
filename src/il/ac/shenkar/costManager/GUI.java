@@ -573,7 +573,12 @@ public class GUI implements IView {
         rightPanel.add(rightHeaderPanel);
 
         // Expenses scrollable table
-        expensesTable = new JTable();
+        expensesTable = new JTable() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
         if (items != null) {
             for (Item item : items) {
