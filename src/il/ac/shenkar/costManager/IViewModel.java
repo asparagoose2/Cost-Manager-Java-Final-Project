@@ -1,7 +1,6 @@
 package il.ac.shenkar.costManager;
 
 import java.time.Month;
-import java.util.Date;
 
 /**
  * The interface View model. This interface is used to communicate between the view and the model.
@@ -92,5 +91,8 @@ public interface IViewModel {
      */
     void setUser(User user);
 
-    void logOut();
+    /**
+     * logout the user from the system
+     */
+    void logout();
 }

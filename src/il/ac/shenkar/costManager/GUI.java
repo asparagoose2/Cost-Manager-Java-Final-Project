@@ -350,7 +350,7 @@ public class GUI implements IView {
         logOutButtonPanel.add(logOutButton);
         headerPanel.add(logOutButtonPanel, BorderLayout.EAST);
         logOutButton.addActionListener(actionEvent -> {
-            viewModel.logOut();
+            viewModel.logout();
         });
 
 

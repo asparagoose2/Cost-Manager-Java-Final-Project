@@ -160,8 +160,11 @@ public class ViewModel implements IViewModel {
         });
     }
 
+    /**
+     * logout the user from the system and updates the view
+     */
     @Override
-    public void logOut() {
+    public void logout() {
         service.submit(() -> {
             setUser(null);
             SwingUtilities.invokeLater(() -> {
