@@ -11,12 +11,13 @@ import java.util.List;
  * Implements the IModel interface.
  * This class is responsible for connecting to the database and performing all the operations on the database.
  * This class uses MySQL JDBC driver.
+ *
  * @see IModel
  */
 public class SimpleDBModel implements IModel {
-    String driverFullQualifiedName =  Config.DB_DRIVER;
+    String driverFullQualifiedName = Config.DB_DRIVER;
     String connectionString = Config.DB_URL;
-    final static String USER_NAME = Config.DB_USER ;
+    final static String USER_NAME = Config.DB_USER;
     final static String PASSWORD = Config.DB_PASSWORD;
 
     public SimpleDBModel() throws CostManagerException {
@@ -28,9 +29,9 @@ public class SimpleDBModel implements IModel {
         }
     }
 
-
     /**
      * This method is responsible for getting all the items from the database.
+     *
      * @param user the user whose items will be returned
      * @return a list of items
      * @throws CostManagerException if there is a problem with the database. @link CostManagerException
@@ -53,9 +54,7 @@ public class SimpleDBModel implements IModel {
             rs = getItemsStatement.executeQuery();
             List<Item> items = new LinkedList<>();
             // iterating over the result set and adding the items to the list of items
-            while (rs.next())
-            {
-                String name = rs.getString("name");
+            while (rs.next()) {
                 String description = rs.getString("description");
                 int categoryId = rs.getInt("category_id");
                 String categoryName = rs.getString("category_name");
@@ -64,11 +63,11 @@ public class SimpleDBModel implements IModel {
                 double cost = rs.getDouble("cost");
                 int currency = rs.getInt("currency");
                 Date date = rs.getDate("date");
-                items.add(new Item(id,ownerId,name,description,currency,cost,date,new Category(user,categoryName,categoryId)));
+                items.add(new Item(id, ownerId, description, currency, cost, date, new Category(user, categoryName, categoryId)));
             }
             return items;
-        }catch (SQLException e){
-            throw new CostManagerException("getItems error!",e);
+        } catch (SQLException e) {
+            throw new CostManagerException("getItems error!", e);
         } finally {
             if (rs != null) {
                 try {
@@ -83,6 +82,7 @@ public class SimpleDBModel implements IModel {
 
     /**
      * This method is responsible for getting a list of categories from the database.
+     *
      * @param user the user whose categories will be returned
      * @return a list of categories
      * @throws CostManagerException if there is a problem with the database. @link CostManagerException
@@ -100,7 +100,7 @@ public class SimpleDBModel implements IModel {
             rs = getCategoriesStatement.executeQuery();
 
             // create a list of categories
-            Collection<Category> categories = new LinkedList<>( );
+            Collection<Category> categories = new LinkedList<>();
             while (rs.next()) {
                 // create a category
                 Category category = new Category(user, rs.getString("category_name"), rs.getInt("category_id"));
@@ -108,8 +108,8 @@ public class SimpleDBModel implements IModel {
                 categories.add(category);
             }
             return categories;
-        }catch (SQLException e){
-            throw new CostManagerException("getCategories error!",e);
+        } catch (SQLException e) {
+            throw new CostManagerException("getCategories error!", e);
         } finally {
             if (rs != null) {
                 try {
@@ -124,7 +124,7 @@ public class SimpleDBModel implements IModel {
     /**
      * This method is responsible for logging in a user. It checks if the user exists in the database and if the password is correct.
      *
-     * @param email the email of the user to be logged in
+     * @param email    the email of the user to be logged in
      * @param password the password of the user to be logged in
      * @return the user if the login is successful, null otherwise
      * @throws CostManagerException if there is a problem with the database. @link CostManagerException
@@ -155,8 +155,8 @@ public class SimpleDBModel implements IModel {
                 throw new CostManagerException("User not found");
             }
 
-        }catch (SQLException e){
-            throw new CostManagerException("login error!",e);
+        } catch (SQLException e) {
+            throw new CostManagerException("login error!", e);
         } finally {
             if (rs != null) {
                 try {
@@ -172,9 +172,9 @@ public class SimpleDBModel implements IModel {
      * This method is responsible for registering a new user.
      *
      * @param firstName the first name of the user
-     * @param lastName the last name of the user
-     * @param email the email of the user
-     * @param password the password of the user
+     * @param lastName  the last name of the user
+     * @param email     the email of the user
+     * @param password  the password of the user
      * @return
      * @throws CostManagerException
      */
@@ -185,7 +185,7 @@ public class SimpleDBModel implements IModel {
         ) {
             User newUser = null;
             // hash the password
-            String hashedPassword =  BCrypt.hashpw(password, BCrypt.gensalt());
+            String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
 
             // setting the parameters
             registerStatement.setString(1, firstName);
@@ -200,7 +200,6 @@ public class SimpleDBModel implements IModel {
             if (rs == 0) {
                 throw new CostManagerException("User not registered");
             }
-
 
 
             // get the generated user id
@@ -220,8 +219,8 @@ public class SimpleDBModel implements IModel {
 
             return newUser;
 
-        }catch (SQLException e){
-            throw new CostManagerException("register error!",e);
+        } catch (SQLException e) {
+            throw new CostManagerException("register error!", e);
         }
     }
 
@@ -229,7 +228,7 @@ public class SimpleDBModel implements IModel {
     /**
      * This method is responsible for creating a new category.
      *
-     * @param name the name of the category
+     * @param name  the name of the category
      * @param owner the owner of the category
      * @return the created category
      * @throws CostManagerException
@@ -241,7 +240,7 @@ public class SimpleDBModel implements IModel {
         ) {
             // setting the parameters
             addCategory.setString(1, name);
-            addCategory.setInt(2,owner.getUserId());
+            addCategory.setInt(2, owner.getUserId());
 
             // execute the query
             int rs = addCategory.executeUpdate();
@@ -255,45 +254,43 @@ public class SimpleDBModel implements IModel {
             try (ResultSet generatedKeys = addCategory.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     categoryID = generatedKeys.getInt(1);
-                }
-                else {
+                } else {
                     throw new SQLException("Creating category failed, no ID obtained.");
                 }
             }
 
             return new Category(owner, name, categoryID);
 
-        }catch (SQLException e){
-            throw new CostManagerException("category error!",e);
+        } catch (SQLException e) {
+            throw new CostManagerException("Category already exists", e);
         }
     }
 
 
     /**
      * This method is responsible for creating a new expense item.
-     * @param name - the name of the item
-     * @param amount - the amount of the item
-     * @param category - the category of the item
-     * @param owner - the owner of the item
+     *
+     * @param amount      - the amount of the item
+     * @param category    - the category of the item
+     * @param owner       - the owner of the item
      * @param description - the description of the item
-     * @param currency - the currency of the item
-     * @param date - the date of the item
+     * @param currency    - the currency of the item
+     * @param date        - the date of the item
      * @return the created expense item
      * @throws CostManagerException
      */
     @Override
-    public Item createItem(String name, double amount, Category category, User owner, String description, int currency, java.util.Date date) throws CostManagerException {
+    public Item createItem(String description, double amount, Category category, User owner, int currency, java.util.Date date) throws CostManagerException {
         try (Connection connection = DriverManager.getConnection(connectionString, USER_NAME, PASSWORD);
-             PreparedStatement addItemStatement = connection.prepareStatement("INSERT INTO items (ownerId, name, cost, category, currency, description, date) VALUES (?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS)
+             PreparedStatement addItemStatement = connection.prepareStatement("INSERT INTO items (ownerId, description, cost, category, currency, date) VALUES (?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS)
         ) {
             // setting the parameters
-            addItemStatement.setInt(1,owner.getUserId());
-            addItemStatement.setString(2, name);
-            addItemStatement.setDouble(3,amount);
-            addItemStatement.setInt(4,category.getId());
+            addItemStatement.setInt(1, owner.getUserId());
+            addItemStatement.setString(2, description);
+            addItemStatement.setDouble(3, amount);
+            addItemStatement.setInt(4, category.getId());
             addItemStatement.setInt(5, currency);
-            addItemStatement.setString(6, description);
-            addItemStatement.setDate(7, new Date(date.getTime()));
+            addItemStatement.setDate(6, new Date(date.getTime()));
 
             // execute the query
             int rs = addItemStatement.executeUpdate();
@@ -307,17 +304,16 @@ public class SimpleDBModel implements IModel {
             try (ResultSet generatedKeys = addItemStatement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     userId = generatedKeys.getInt(1);
-                }
-                else {
+                } else {
                     throw new SQLException("Creating user failed, no ID obtained.");
                 }
             }
 
-            return new Item(userId,owner.getUserId(), name, description, currency, amount, date, category);
+            return new Item(userId, owner.getUserId(), description, currency, amount, date, category);
 
-        } catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
-            throw new CostManagerException("Create item error!",e);
+            throw new CostManagerException("Create item error!", e);
         }
     }
 

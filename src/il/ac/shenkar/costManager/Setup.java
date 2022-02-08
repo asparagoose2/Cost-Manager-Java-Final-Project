@@ -1,4 +1,5 @@
 package il.ac.shenkar.costManager;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -10,6 +11,7 @@ import java.sql.Statement;
 public class Setup {
     /**
      * This method initializes the database.
+     *
      * @param args
      * @throws CostManagerException
      */
@@ -44,7 +46,6 @@ public class Setup {
      * This method creates the tables.
      */
     public static void createTables() {
-
         try (
                 Connection conn = DriverManager.getConnection(Config.DB_URL, Config.DB_USER, Config.DB_PASSWORD);
                 Statement stmt = conn.createStatement();
@@ -58,6 +59,7 @@ public class Setup {
 
             String alterCategoriesTable = "ALTER TABLE `categories`\n" +
                     "  ADD PRIMARY KEY (`category_id`),\n" +
+                    "ADD UNIQUE KEY `category_name_unique` (`owner_id`,`category_name`),\n" +
                     "  ADD KEY `owner_id` (`owner_id`),\n" +
                     "  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=169;";
 
@@ -77,11 +79,10 @@ public class Setup {
             String createItemTable = "CREATE TABLE `items` (\n" +
                     "  `id` int(11) NOT NULL,\n" +
                     "  `ownerId` int(11) NOT NULL,\n" +
-                    "  `name` varchar(255) NOT NULL,\n" +
+                    "  `description` varchar(255) NOT NULL,\n" +
                     "  `cost` double NOT NULL,\n" +
                     "  `category` int(11) NOT NULL,\n" +
                     "  `currency` int(11) NOT NULL DEFAULT 1,\n" +
-                    "  `description` text DEFAULT NULL,\n" +
                     "  `date` date NOT NULL DEFAULT current_timestamp()\n" +
                     ") ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
@@ -89,7 +90,7 @@ public class Setup {
                     "  ADD PRIMARY KEY (`id`),\n" +
                     "  ADD KEY `ownerId` (`ownerId`),\n" +
                     "  ADD KEY `category` (`category`),\n" +
-                    "  ADD KEY `currency` (`currency`),\n"+
+                    "  ADD KEY `currency` (`currency`),\n" +
                     " MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;";
 
             stmt.executeUpdate(createUsersTable);

@@ -2,31 +2,35 @@ package il.ac.shenkar.costManager;
 
 import java.util.Date;
 
-/*
-    We can use currency as ENUM, save all amounts in USD and when printing make the conversion.
- */
-
 /**
- *  Item class
- *  @see     SimpleDBModel
+ * Item class represents an item in the cost manager.
  *
+ * @see SimpleDBModel
  */
 public class Item {
     private int id;
     private int owner;
-    private String name;
     private String description;
     private int currency;
     private double cost;
     private Date date;
     private Category category;
 
+    public Item(int id, int owner, String description, int currency, double cost, Date date, Category category) {
+        setId(id);
+        setOwner(owner);
+        setDescription(description);
+        setCurrency(currency);
+        setCost(cost);
+        setDate(date);
+        setCategory(category);
+    }
+
     @Override
     public String toString() {
         return "Item{" +
                 "id=" + id +
                 ", owner=" + owner +
-                ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", currency=" + currency +
                 ", cost=" + cost +
@@ -35,19 +39,12 @@ public class Item {
                 '}';
     }
 
-    public Item(int id, int owner, String name, String description, int currency, double cost, Date date, Category category) {
-        this.id = id;
-        this.owner = owner;
-        this.name = name;
-        this.description = description;
-        this.currency = currency;
-        this.cost = cost;
-        this.date = date;
-        this.category = category;
-    }
-
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getOwner() {
@@ -56,14 +53,6 @@ public class Item {
 
     public void setOwner(int owner) {
         this.owner = owner;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getDescription() {
