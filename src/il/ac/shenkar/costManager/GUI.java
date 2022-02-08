@@ -122,7 +122,7 @@ public class GUI implements IView {
         // buttons
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        submit = new JButton("Submit");
+        submit = new JButton("Login");
         submit.setFont(font);
         submit.setPreferredSize(new Dimension(150, 30));
         AtomicReference<IViewModel> vm = new AtomicReference<>(viewModel);

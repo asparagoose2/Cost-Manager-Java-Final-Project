@@ -10,15 +10,26 @@ import java.util.Date;
 
 public interface IModel {
 
+    /**
+     * Currency ENUM
+     */
     enum CURRENCY {
         USD,
         EUR,
         NIS;
 
+        /**
+         * Gets the currency value as it is stored in the DB.
+         * @return
+         */
         public int getValue() {
             return this.ordinal() + 1;
         }
 
+        /**
+         * Gets the currency value as it is displayed in the UI.
+         * @return
+         */
         @Override
         public String toString() {
             return this.name();
@@ -84,5 +95,14 @@ public interface IModel {
      */
     public User register(String firstName, String lastName, String email, String password) throws CostManagerException;
 
+    /**
+     * This method is used to create a new category.
+     * The category will be created in the user's list.
+     * If the category already exists, the method will throw an exception.
+     * @param name - the name of the category to be created
+     * @param owner - the owner of the new category
+     * @return the newly created category
+     * @throws CostManagerException the cost item exception
+     */
     Category createCategory(String name, User owner) throws CostManagerException;
 }
