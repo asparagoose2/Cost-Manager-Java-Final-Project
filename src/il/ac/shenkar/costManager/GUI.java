@@ -465,10 +465,8 @@ public class GUI implements IView {
             String description = newItemDescriptionText.getText();
             String price = newItemPriceText.getText();
             String category = Objects.requireNonNull(this.newItemCategoryCombo.getSelectedItem()).toString();
-            System.out.println(datePicker.getDate());
             Category selectedCategory = this.newItemCategoryCombo.getSelectedItem() == null ? null : (Category) this.newItemCategoryCombo.getSelectedItem();
             int currency = ((IModel.CURRENCY) Objects.requireNonNull(newItemCurrencyCombo.getSelectedItem())).getValue();
-            System.out.println(currency);
             if (description.equals("") || price.equals("") || category.equals("")) {
                 JOptionPane.showMessageDialog(null, "Please fill all the fields");
             } else {
@@ -671,14 +669,14 @@ public class GUI implements IView {
     }
 
     /**
-     * This method is used to set the view model
+     * This method should not be used in this implementation.
+     * viewmodel is final and cannot be changed.
      *
      * @param viewModel the ViewModel to set.
      */
     @Override
     public void setViewModel(IViewModel viewModel) {
-        System.out.println("set view model");
-        System.out.println(viewModel);
+        return;
     }
 
     /**
