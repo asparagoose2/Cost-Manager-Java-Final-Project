@@ -35,7 +35,7 @@ public class GUI implements IView {
 
     // UI components
     private JFrame frame;
-    private Font font = new Font("ariel", Font.PLAIN, 22);
+    private final Font font = new Font("ariel", Font.PLAIN, 22);
     JTable expensesTable;
     JToggleButton sortButton;
 
@@ -43,7 +43,6 @@ public class GUI implements IView {
     JComboBox<Category> newItemCategoryCombo;
     JPanel newItemCategoryPanel;
     JButton addCategoryButton;
-    Dimension inputDimension = new Dimension(200, 30);
 
 
     // Login
@@ -144,9 +143,7 @@ public class GUI implements IView {
         cancel = new JButton("Register");
         cancel.setFont(font);
         cancel.setPreferredSize(new Dimension(150, 30));
-        cancel.addActionListener(actionEvent -> {
-            register();
-        });
+        cancel.addActionListener(actionEvent -> register());
         buttonPanel.add(cancel);
         buttonPanel.add(submit);
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(100, 10, 10, 10));
@@ -346,9 +343,7 @@ public class GUI implements IView {
         logoutButtonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         logoutButtonPanel.add(logoutButton);
         headerPanel.add(logoutButtonPanel, BorderLayout.EAST);
-        logoutButton.addActionListener(actionEvent -> {
-            viewModel.logout();
-        });
+        logoutButton.addActionListener(actionEvent -> viewModel.logout());
 
         mainPanel.add(headerPanel, BorderLayout.NORTH);
 
@@ -445,7 +440,7 @@ public class GUI implements IView {
 
         // currency
         JLabel newItemCurrency = createInputLabel("Currency: ");
-        JComboBox<IModel.CURRENCY> newItemCurrencyCombo = new JComboBox<IModel.CURRENCY>();
+        JComboBox<IModel.CURRENCY> newItemCurrencyCombo = new JComboBox<>();
         newItemCurrencyCombo.setPreferredSize(new Dimension(200, 30));
         newItemCurrencyCombo.setFont(new Font("ariel", Font.PLAIN, 20));
         for (int i = 0; i < IModel.CURRENCY.values().length; i++) {
@@ -469,10 +464,10 @@ public class GUI implements IView {
         saveButton.addActionListener(actionEvent -> {
             String description = newItemDescriptionText.getText();
             String price = newItemPriceText.getText();
-            String category = this.newItemCategoryCombo.getSelectedItem().toString();
+            String category = Objects.requireNonNull(this.newItemCategoryCombo.getSelectedItem()).toString();
             System.out.println(datePicker.getDate());
             Category selectedCategory = this.newItemCategoryCombo.getSelectedItem() == null ? null : (Category) this.newItemCategoryCombo.getSelectedItem();
-            int currency = ((IModel.CURRENCY) newItemCurrencyCombo.getSelectedItem()).getValue();
+            int currency = ((IModel.CURRENCY) Objects.requireNonNull(newItemCurrencyCombo.getSelectedItem())).getValue();
             System.out.println(currency);
             if (description.equals("") || price.equals("") || category.equals("")) {
                 JOptionPane.showMessageDialog(null, "Please fill all the fields");
@@ -512,7 +507,7 @@ public class GUI implements IView {
         JPanel sortPanel = new JPanel();
         sortPanel.setLayout(new GridLayout(1, 3));
         // month selector
-        JComboBox<Month> sortMonth = new JComboBox<Month>(Month.values());
+        JComboBox<Month> sortMonth = new JComboBox<>(Month.values());
         sortMonth.addActionListener(actionEvent -> {
             sortButton.setSelected(false);
             viewModel.getItems();
@@ -545,7 +540,7 @@ public class GUI implements IView {
         sortButton = new JToggleButton("Report");
         sortButton.addActionListener(actionEvent -> {
             if (sortYear.getText().equals("")) {
-
+                JOptionPane.showMessageDialog(null, "Please enter a year");
             } else {
                 if (sortButton.isSelected()) {
                     int year = Integer.parseInt(sortYear.getText());
@@ -583,7 +578,7 @@ public class GUI implements IView {
         if (items != null) {
             for (Item item : items) {
                 String currencySymbol = item.getCurrency() == IModel.CURRENCY.USD.getValue() ? "$" : item.getCurrency() == IModel.CURRENCY.EUR.getValue() ? "€" : "₪";
-                String[] row = {item.getDate().toString(), item.getDescription(), String.valueOf(item.getCost()) + currencySymbol, item.getCategory().getName()};
+                String[] row = {item.getDate().toString(), item.getDescription(), item.getCost() + currencySymbol, item.getCategory().getName()};
                 tableModel.addRow(row);
             }
         }
@@ -614,8 +609,8 @@ public class GUI implements IView {
     /**
      * This method is used to create an inout label
      *
-     * @param text the text for the lable
-     * @return
+     * @param text the text for the label
+     * @return the label
      */
     private JLabel createInputLabel(String text) {
         JLabel label = new JLabel(text);
@@ -638,7 +633,7 @@ public class GUI implements IView {
             if (items != null) {
                 for (Item item : items) {
                     String currencySymbol = item.getCurrency() == IModel.CURRENCY.USD.getValue() ? "$" : item.getCurrency() == IModel.CURRENCY.EUR.getValue() ? "€" : "₪";
-                    String[] row = {item.getDate().toString(), item.getDescription(), String.valueOf(item.getCost()) + currencySymbol, item.getCategory().getName()};
+                    String[] row = {item.getDate().toString(), item.getDescription(), item.getCost() + currencySymbol, item.getCategory().getName()};
                     tableModel.addRow(row);
                 }
             }
@@ -703,7 +698,7 @@ public class GUI implements IView {
      * @return the combobox created
      */
     private JComboBox<Category> renderCategories() {
-        JComboBox<Category> newCombo = new JComboBox<Category>();
+        JComboBox<Category> newCombo = new JComboBox<>();
         newCombo.setPreferredSize(new Dimension(250, 30));
         newCombo.setFont(new Font("ariel", Font.PLAIN, 20));
         if (categories != null) {
@@ -722,7 +717,7 @@ public class GUI implements IView {
      */
     @Override
     public void setCategories(Collection<Category> categories) {
-        this.categories = new ArrayList<Category>(categories);
+        this.categories = new ArrayList<>(categories);
         if (this.newItemCategoryPanel != null) {
             this.newItemCategoryPanel.remove(0);
             this.newItemCategoryPanel.add(renderCategories(), 0);
@@ -759,7 +754,7 @@ public class GUI implements IView {
 
     /**
      * Method to set logged in user
-     * @param user
+     * @param user the user to set.
      */
     @Override
     public void setUser(User user) {
@@ -770,14 +765,14 @@ public class GUI implements IView {
      * Class to handle the add category dialog
      */
     public class AddCategoryDialog extends JDialog {
-        private JTextField categoryName;
-        private JButton add;
-        private JButton cancel;
-        private JPanel buttonPanel;
-        private JPanel mainPanel;
-        private JPanel namePanel;
-        private JLabel nameLabel;
-        private JLabel errorLabel;
+        private final JTextField categoryName;
+        private final JButton add;
+        private final JButton cancel;
+        private final JPanel buttonPanel;
+        private final JPanel mainPanel;
+        private final JPanel namePanel;
+        private final JLabel nameLabel;
+        private final JLabel errorLabel;
 
         /**
          * Constructor for the add category dialog
@@ -818,9 +813,7 @@ public class GUI implements IView {
             add.setPreferredSize(new Dimension(150, 40));
             add.setFont(new Font("Arial", Font.PLAIN, 26));
             this.cancel = new JButton("Cancel");
-            this.cancel.addActionListener(actionEvent -> {
-                this.dispose();
-            });
+            this.cancel.addActionListener(actionEvent -> this.dispose());
             cancel.setPreferredSize(new Dimension(150, 40));
             cancel.setFont(new Font("Arial", Font.PLAIN, 26));
             this.buttonPanel.add(cancel);
