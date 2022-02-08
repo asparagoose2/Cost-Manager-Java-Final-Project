@@ -569,18 +569,23 @@ public class GUI implements IView {
 
         sortButton = new JToggleButton("Report");
         sortButton.addActionListener(actionEvent -> {
-            if(sortButton.isSelected()) {
-                int year = Integer.parseInt(sortYear.getText());
-                Month month = (Month) sortMonth.getSelectedItem();
-                if(year > LocalDate.now().getYear()) {
-                    JOptionPane.showMessageDialog(null, "Please enter a valid year");
-                    sortButton.setSelected(false);
-                } else {
-                    viewModel.getItems(month,year);
-                }
+            if(sortYear.getText().equals("")){
+
             } else {
-                viewModel.getItems();
+                if(sortButton.isSelected()) {
+                    int year = Integer.parseInt(sortYear.getText());
+                    Month month = (Month) sortMonth.getSelectedItem();
+                    if(year > LocalDate.now().getYear()) {
+                        JOptionPane.showMessageDialog(null, "Please enter a valid year");
+                        sortButton.setSelected(false);
+                    } else {
+                        viewModel.getItems(month,year);
+                    }
+                } else {
+                    viewModel.getItems();
+                }
             }
+
         });
 
 
