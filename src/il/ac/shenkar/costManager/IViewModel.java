@@ -30,6 +30,7 @@ public interface IViewModel {
      */
     public void addItem(String name, double amount, Category category, String description, int currency, java.sql.Date date);
 
+
     /**
      * Gets the expenses from the model.
      * Should be called after the model has been updated.
@@ -69,6 +70,7 @@ public interface IViewModel {
      * @param email the email of the user
      * @param password the password of the user
      */
+
     public void register(String firstName, String lastName, String email, String password);
 
 
@@ -86,4 +88,5 @@ public interface IViewModel {
      */
     void setUser(User user);
 
+    void logOut();
 }

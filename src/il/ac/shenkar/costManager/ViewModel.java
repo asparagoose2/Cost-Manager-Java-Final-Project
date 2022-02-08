@@ -1,8 +1,10 @@
 package il.ac.shenkar.costManager;
-
-import javax.swing.*;
 import java.time.Month;
-import java.util.*;
+import javax.swing.*;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -148,6 +150,17 @@ public class ViewModel implements IViewModel{
             } catch (CostManagerException e) {
                 SwingUtilities.invokeLater(() -> view.displayError(e.getMessage(),false));
             }
+        });
+    }
+
+    @Override
+    public void logOut() {
+        service.submit( () -> {
+            setUser(null);
+            SwingUtilities.invokeLater(()-> {
+                view.setIsLoggedIn(false);
+                view.setUser(null);
+            });
         });
     }
 
