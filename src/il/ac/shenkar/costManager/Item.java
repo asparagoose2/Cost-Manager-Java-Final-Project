@@ -14,7 +14,6 @@ import java.util.Date;
 public class Item {
     private int id;
     private int owner;
-    private String name;
     private String description;
     private int currency;
     private double cost;
@@ -26,7 +25,6 @@ public class Item {
         return "Item{" +
                 "id=" + id +
                 ", owner=" + owner +
-                ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", currency=" + currency +
                 ", cost=" + cost +
@@ -35,10 +33,9 @@ public class Item {
                 '}';
     }
 
-    public Item(int id, int owner, String name, String description, int currency, double cost, Date date, Category category) {
+    public Item(int id, int owner, String description, int currency, double cost, Date date, Category category) {
         this.id = id;
         this.owner = owner;
-        this.name = name;
         this.description = description;
         this.currency = currency;
         this.cost = cost;
@@ -56,14 +53,6 @@ public class Item {
 
     public void setOwner(int owner) {
         this.owner = owner;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getDescription() {

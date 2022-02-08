@@ -14,7 +14,7 @@ public class ConsoleView implements IView{
     public void displayData(String data) {
         System.out.println(data);
         for(Item item : items){
-            System.out.println(item.getName()+" "+item.getCost()+" "+item.getCategory());
+            System.out.println(item.getDescription()+" "+item.getCost()+" "+item.getCategory());
         }
     }
 
@@ -123,7 +123,7 @@ public class ConsoleView implements IView{
                 }
                 String currency = console.nextLine();
 
-                viewModel.addItem(name,Double.parseDouble(cost), categories.get(Integer.parseInt(category)), description ,IModel.CURRENCY.values()[Integer.parseInt(currency)].getValue(), new java.sql.Date(new Date().getTime()));
+                viewModel.addItem(description,Double.parseDouble(cost), categories.get(Integer.parseInt(category)) ,IModel.CURRENCY.values()[Integer.parseInt(currency)].getValue(), new java.sql.Date(new Date().getTime()));
             }
             else if(command.equals("addCategory")){
                 System.out.println("Please enter a name:");
@@ -161,7 +161,7 @@ public class ConsoleView implements IView{
                     // check that date in the current month
                     cal.setTime(item.getDate());
                     if(cal.get(Calendar.MONTH) == Calendar.getInstance().get(Calendar.MONTH) && cal.get(Calendar.YEAR) == Calendar.getInstance().get(Calendar.YEAR)){
-                        System.out.println(item.getName()+" "+item.getCost()+" "+item.getCurrency()+" "+item.getDate());
+                        System.out.println(item.getDescription()+" "+item.getCost()+" "+item.getCurrency()+" "+item.getDate());
                     }
                 }
 

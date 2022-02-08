@@ -48,7 +48,6 @@ public class ViewModel implements IViewModel{
 
     /**
      * adds an item to the model and updates the view
-     * @param name the name of the item
      * @param amount the amount of the item
      * @param category the category of the item
      * @param description the description of the item
@@ -56,10 +55,10 @@ public class ViewModel implements IViewModel{
      * @param date the date of the item
      */
     @Override
-    public void addItem(String name, double amount, Category category, String description, int currency, java.sql.Date date) {
+    public void addItem(String description, double amount, Category category, int currency, java.sql.Date date) {
         service.submit(() -> {
             try {
-                model.createItem(name,amount,category,user,description,currency,date);
+                model.createItem(description,amount,category,user,currency,date);
                 LinkedList<Item> items = (LinkedList<Item>) model.getItems(user);
                 SwingUtilities.invokeLater(() -> {
                     view.setItems(items);

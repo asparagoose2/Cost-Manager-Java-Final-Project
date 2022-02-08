@@ -26,7 +26,6 @@ public interface IModel {
     /**
      * Create new cost item from values.
      *
-     * @param name - the name of the item
      * @param amount - the amount of the item
      * @param category - the category of the item
      * @param owner - the owner of the item
@@ -36,7 +35,7 @@ public interface IModel {
      * @return the newly created item
      * @throws CostManagerException the cost item exception
      */
-    public Item createItem(String name, double amount, Category category, User owner, String description, int currency, Date date ) throws CostManagerException;
+    public Item createItem(String description, double amount, Category category, User owner, int currency, Date date ) throws CostManagerException;
 
 
     /**

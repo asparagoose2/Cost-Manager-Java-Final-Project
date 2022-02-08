@@ -430,17 +430,6 @@ public class GUI implements IView {
         c.gridy = 3;
         c.gridx = 0;
 
-        // description
-        JLabel newItemDescription = createInputLabel("Description: ");
-        JTextArea newItemDescriptionText = new JTextArea();
-        newItemDescriptionText.setPreferredSize(new Dimension(200, 30));
-        newItemDescriptionText.setFont(new Font("ariel", Font.PLAIN, 20));
-        newItemPanel.add(newItemDescription, c);
-        c.gridx = 1;
-        newItemPanel.add(newItemDescriptionText, c);
-        c.gridy = 4;
-        c.gridx = 0;
-
         // select category
         JLabel newItemCategory = createInputLabel("Category: ");
         this.newItemCategoryCombo = this.renderCategories();
@@ -466,7 +455,7 @@ public class GUI implements IView {
         newItemPanel.add(newItemCategory, c);
         c.gridx = 1;
         newItemPanel.add(newItemCategoryPanel, c);
-        c.gridy = 5;
+        c.gridy = 4;
         c.gridx = 0;
 
         // currency type
@@ -481,7 +470,7 @@ public class GUI implements IView {
         newItemPanel.add(newItemCurrency, c);
         c.gridx = 1;
         newItemPanel.add(newItemCurrencyCombo, c);
-        c.gridy = 6;
+        c.gridy = 5;
         c.gridx = 0;
 
         // save button
@@ -493,22 +482,20 @@ public class GUI implements IView {
         saveButtonPanel.add(saveButton);
         saveButtonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         saveButton.addActionListener(actionEvent -> {
-            String name = newItemNameaText.getText();
+            String description = newItemNameaText.getText();
             String price = newItemPriceText.getText();
-            String description = newItemDescriptionText.getText();
             String category = this.newItemCategoryCombo.getSelectedItem().toString();
             System.out.println(datePicker.getDate());
             Category selectedCategory = this.newItemCategoryCombo.getSelectedItem() == null ? null : (Category) this.newItemCategoryCombo.getSelectedItem();
             int currency = ((IModel.CURRENCY) newItemCurrencyCombo.getSelectedItem()).getValue();
             System.out.println(currency);
-            if (name.equals("") || price.equals("") || description.equals("") || category.equals("")) {
+            if (description.equals("") || price.equals("") || category.equals("")) {
                 JOptionPane.showMessageDialog(null, "Please fill all the fields");
             } else {
-                viewModel.addItem(name, Double.parseDouble(price), selectedCategory ,description, currency, Date.valueOf(datePicker.getDate()));
+                viewModel.addItem(description, Double.parseDouble(price), selectedCategory, currency, Date.valueOf(datePicker.getDate()));
                 sortButton.setSelected(false);
                 newItemNameaText.setText("");
                 newItemPriceText.setText("");
-                newItemDescriptionText.setText("");
                 newItemCategoryCombo.setSelectedIndex(0);
                 newItemCurrencyCombo.setSelectedIndex(0);
                 datePicker.setDate(LocalDate.now());
@@ -603,7 +590,7 @@ public class GUI implements IView {
         if(items != null) {
             for (Item item : items) {
                 String currencySymbol = item.getCurrency() == IModel.CURRENCY.USD.getValue() ? "$" : item.getCurrency() == IModel.CURRENCY.EUR.getValue() ? "€" : "₪";
-                String[] row = {item.getDate().toString(), item.getName(), String.valueOf(item.getCost()) + currencySymbol, item.getCategory().getName()};
+                String[] row = {item.getDate().toString(), item.getDescription(), String.valueOf(item.getCost()) + currencySymbol, item.getCategory().getName()};
                 tableModel.addRow(row);
             }
         }
@@ -656,7 +643,7 @@ public class GUI implements IView {
             if (items != null) {
                 for (Item item : items) {
                     String currencySymbol = item.getCurrency() == IModel.CURRENCY.USD.getValue() ? "$" : item.getCurrency() == IModel.CURRENCY.EUR.getValue() ? "€" : "₪";
-                    String[] row = {item.getDate().toString(), item.getName(), String.valueOf(item.getCost()) + currencySymbol, item.getCategory().getName()};
+                    String[] row = {item.getDate().toString(), item.getDescription(), String.valueOf(item.getCost()) + currencySymbol, item.getCategory().getName()};
                     tableModel.addRow(row);
                 }
             }

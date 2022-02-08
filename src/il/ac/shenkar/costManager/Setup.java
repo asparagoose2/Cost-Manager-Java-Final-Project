@@ -44,7 +44,6 @@ public class Setup {
      * This method creates the tables.
      */
     public static void createTables() {
-
         try (
                 Connection conn = DriverManager.getConnection(Config.DB_URL, Config.DB_USER, Config.DB_PASSWORD);
                 Statement stmt = conn.createStatement();
@@ -78,11 +77,10 @@ public class Setup {
             String createItemTable = "CREATE TABLE `items` (\n" +
                     "  `id` int(11) NOT NULL,\n" +
                     "  `ownerId` int(11) NOT NULL,\n" +
-                    "  `name` varchar(255) NOT NULL,\n" +
+                    "  `description` varchar(255) NOT NULL,\n" +
                     "  `cost` double NOT NULL,\n" +
                     "  `category` int(11) NOT NULL,\n" +
                     "  `currency` int(11) NOT NULL DEFAULT 1,\n" +
-                    "  `description` text DEFAULT NULL,\n" +
                     "  `date` date NOT NULL DEFAULT current_timestamp()\n" +
                     ") ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 

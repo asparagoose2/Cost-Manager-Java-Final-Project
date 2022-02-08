@@ -101,9 +101,9 @@ public class DBModelTest {
     @Test
     @Order(8)
     void createItem() throws CostManagerException {
-        item = model.createItem("test_item",1234, category, user, "test_description", IModel.CURRENCY.NIS.getValue(), new Date());
+        item = model.createItem("test_item",1234, category, user,  IModel.CURRENCY.NIS.getValue(), new Date());
         assert (item.getId() != 0);
-        assert (item.getName().equals("test_item"));
+        assert (item.getDescription().equals("test_item"));
         assert (item.getCategory().getId() == category.getId());
     }
     @Test
@@ -111,7 +111,7 @@ public class DBModelTest {
     void testGetItems() throws CostManagerException {
         List<Item> items = (List<Item>) model.getItems(user);
         assert (items.size() == 1);
-        assert (items.get(0).getName().equals("test_item"));
+        assert (items.get(0).getDescription().equals("test_item"));
         assert (items.get(0).getCategory().getId() == category.getId());
     }
     @AfterAll

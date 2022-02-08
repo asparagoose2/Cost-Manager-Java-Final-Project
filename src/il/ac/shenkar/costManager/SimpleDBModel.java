@@ -55,7 +55,6 @@ public class SimpleDBModel implements IModel {
             // iterating over the result set and adding the items to the list of items
             while (rs.next())
             {
-                String name = rs.getString("name");
                 String description = rs.getString("description");
                 int categoryId = rs.getInt("category_id");
                 String categoryName = rs.getString("category_name");
@@ -64,7 +63,7 @@ public class SimpleDBModel implements IModel {
                 double cost = rs.getDouble("cost");
                 int currency = rs.getInt("currency");
                 Date date = rs.getDate("date");
-                items.add(new Item(id,ownerId,name,description,currency,cost,date,new Category(user,categoryName,categoryId)));
+                items.add(new Item(id,ownerId,description,currency,cost,date,new Category(user,categoryName,categoryId)));
             }
             return items;
         }catch (SQLException e){
@@ -271,7 +270,6 @@ public class SimpleDBModel implements IModel {
 
     /**
      * This method is responsible for creating a new expense item.
-     * @param name - the name of the item
      * @param amount - the amount of the item
      * @param category - the category of the item
      * @param owner - the owner of the item
@@ -282,18 +280,17 @@ public class SimpleDBModel implements IModel {
      * @throws CostManagerException
      */
     @Override
-    public Item createItem(String name, double amount, Category category, User owner, String description, int currency, java.util.Date date) throws CostManagerException {
+    public Item createItem(String description, double amount, Category category, User owner, int currency, java.util.Date date) throws CostManagerException {
         try (Connection connection = DriverManager.getConnection(connectionString, USER_NAME, PASSWORD);
-             PreparedStatement addItemStatement = connection.prepareStatement("INSERT INTO items (ownerId, name, cost, category, currency, description, date) VALUES (?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS)
+             PreparedStatement addItemStatement = connection.prepareStatement("INSERT INTO items (ownerId, description, cost, category, currency, date) VALUES (?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS)
         ) {
             // setting the parameters
             addItemStatement.setInt(1,owner.getUserId());
-            addItemStatement.setString(2, name);
+            addItemStatement.setString(2, description);
             addItemStatement.setDouble(3,amount);
             addItemStatement.setInt(4,category.getId());
             addItemStatement.setInt(5, currency);
-            addItemStatement.setString(6, description);
-            addItemStatement.setDate(7, new Date(date.getTime()));
+            addItemStatement.setDate(6, new Date(date.getTime()));
 
             // execute the query
             int rs = addItemStatement.executeUpdate();
@@ -313,7 +310,7 @@ public class SimpleDBModel implements IModel {
                 }
             }
 
-            return new Item(userId,owner.getUserId(), name, description, currency, amount, date, category);
+            return new Item(userId,owner.getUserId(), description, currency, amount, date, category);
 
         } catch (SQLException e){
             System.out.println(e.getMessage());

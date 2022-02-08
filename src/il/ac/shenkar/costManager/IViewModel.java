@@ -21,14 +21,13 @@ public interface IViewModel {
 
     /**
      * Adds a new item to the user items in the model.
-     * @param name the name of the item
      * @param amount the amount of the item
      * @param category the category of the item
      * @param description the description of the item
      * @param currency the currency of the item - should be an ENUM
      * @param date the date of the item
      */
-    public void addItem(String name, double amount, Category category, String description, int currency, java.sql.Date date);
+    public void addItem(String description, double amount, Category category, int currency, java.sql.Date date);
 
 
     /**
