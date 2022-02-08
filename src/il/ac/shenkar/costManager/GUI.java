@@ -466,6 +466,7 @@ public class GUI implements IView {
             String price = newItemPriceText.getText();
             String category = Objects.requireNonNull(this.newItemCategoryCombo.getSelectedItem()).toString();
             Category selectedCategory = this.newItemCategoryCombo.getSelectedItem() == null ? null : (Category) this.newItemCategoryCombo.getSelectedItem();
+            System.out.println(selectedCategory.getId());
             int currency = ((IModel.CURRENCY) Objects.requireNonNull(newItemCurrencyCombo.getSelectedItem())).getValue();
             if (description.equals("") || price.equals("") || category.equals("")) {
                 JOptionPane.showMessageDialog(null, "Please fill all the fields");
@@ -679,7 +680,7 @@ public class GUI implements IView {
         return;
     }
 
-    /**
+    /**x
      * This method is used to set the items in the view.
      *
      * @param items the items to display.
@@ -717,9 +718,10 @@ public class GUI implements IView {
     public void setCategories(Collection<Category> categories) {
         this.categories = new ArrayList<>(categories);
         if (this.newItemCategoryPanel != null) {
-            this.newItemCategoryPanel.remove(0);
-            this.newItemCategoryPanel.add(renderCategories(), 0);
-            this.newItemCategoryPanel.updateUI();
+            newItemCategoryCombo.removeAllItems();
+            for (Category category : categories) {
+                newItemCategoryCombo.addItem(category);
+            }
         }
     }
 
