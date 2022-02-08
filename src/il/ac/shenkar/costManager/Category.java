@@ -8,11 +8,6 @@ public class Category {
     private String name;
     private int id;
 
-    @Override
-    public String toString() {
-        return name;
-    }
-
     /**
      * Constructor for the category.
      *
@@ -21,9 +16,14 @@ public class Category {
      * @param id    the id of the category - new categories will receive a new id by the application.
      */
     public Category(User owner, String name, int id) {
-        this.owner = owner;
-        this.name = name;
-        this.id = id;
+        setId(id);
+        setName(name);
+        setOwner(owner);
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 
     /**

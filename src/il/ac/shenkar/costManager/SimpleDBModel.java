@@ -29,7 +29,6 @@ public class SimpleDBModel implements IModel {
         }
     }
 
-
     /**
      * This method is responsible for getting all the items from the database.
      *

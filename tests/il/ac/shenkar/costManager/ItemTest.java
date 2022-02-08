@@ -14,7 +14,7 @@ class ItemTest {
 
     @BeforeEach
     void setUp() {
-        item = new Item(1,1,"test",1,12.2,new Date(),new Category(new User("user",1),"food",1));
+        item = new Item(1, 1, "test", 1, 12.2, new Date(), new Category(new User("user", 1), "food", 1));
     }
 
     @AfterEach
@@ -26,7 +26,7 @@ class ItemTest {
     void getDescription() {
         String expected = "test";
         String actual = item.getDescription();
-        assertEquals(expected,actual);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -34,14 +34,14 @@ class ItemTest {
         item.setDescription("new name");
         String expected = "new name";
         String actual = item.getDescription();
-        assertEquals(expected,actual);
+        assertEquals(expected, actual);
     }
 
     @Test
     void getAmount() {
         double expected = 12.2;
         double actual = item.getCost();
-        assertEquals(expected,actual,0.0);
+        assertEquals(expected, actual, 0.0);
     }
 
     @Test
@@ -49,6 +49,6 @@ class ItemTest {
         item.setCost(100);
         double expected = 100;
         double actual = item.getCost();
-        assertEquals(expected,actual,0.0);
+        assertEquals(expected, actual, 0.0);
     }
 }

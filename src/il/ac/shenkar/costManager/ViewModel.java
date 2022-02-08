@@ -20,7 +20,6 @@ public class ViewModel implements IViewModel {
         this.service = Executors.newFixedThreadPool(3);
     }
 
-
     /**
      * sets the user
      *

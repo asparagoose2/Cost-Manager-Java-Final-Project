@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 public class CategoryTest {
     private Category category;
-    private static  User user;
+    private static User user;
 
     @BeforeAll
     public static void setUpBeforeClass() {
@@ -15,22 +15,23 @@ public class CategoryTest {
 
     @BeforeEach
     public void setUp() {
-        category = new Category(user,"Test",1);
+        category = new Category(user, "Test", 1);
     }
+
     @Test
     void getName() {
-        assert(category.getName().equals("Test"));
+        assert (category.getName().equals("Test"));
     }
+
     @Test
     void getId() {
-        assert(category.getId()==1);
+        assert (category.getId() == 1);
     }
+
     @Test
     void getOwner() {
-        assert(category.getOwner().equals(user));
+        assert (category.getOwner().equals(user));
     }
-
-
 
 
 }

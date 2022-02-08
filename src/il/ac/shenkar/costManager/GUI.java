@@ -54,7 +54,7 @@ public class GUI implements IView {
     JButton submit, cancel;
 
     public GUI(IViewModel vm) {
-        viewModel = vm;
+        this.viewModel = vm; //cannot use this.setViewModel(vm) because it is final
     }
 
     /**
@@ -314,11 +314,11 @@ public class GUI implements IView {
      */
     public void mainPage() {
         frame = new JFrame();
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout());
         // header
+        // Text part
         JPanel headerPanel = new JPanel();
-//        headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.LINE_AXIS));
         headerPanel.setLayout(new BorderLayout());
         JLabel header = new JLabel("Cost Manager");
         header.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -335,35 +335,34 @@ public class GUI implements IView {
         headerTextPanel.setLayout(new BoxLayout(headerTextPanel, BoxLayout.Y_AXIS));
         headerTextPanel.add(header);
         headerTextPanel.add(subHeader);
-
         headerPanel.add(headerTextPanel, BorderLayout.WEST);
-//        headerPanel.add(subHeader, BorderLayout.CENTER);
-        panel.add(headerPanel, BorderLayout.NORTH);
 
-        // logOut button
-        JButton logOutButton = new JButton("log out");
-        logOutButton.setFont(new Font("ariel", Font.BOLD, 20));
-        JPanel logOutButtonPanel = new JPanel();
-        logOutButtonPanel.setLayout(new BoxLayout(logOutButtonPanel, BoxLayout.Y_AXIS));
-        logOutButton.setLayout(new BoxLayout(logOutButton, BoxLayout.Y_AXIS));
-        logOutButtonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        logOutButtonPanel.add(logOutButton);
-        headerPanel.add(logOutButtonPanel, BorderLayout.EAST);
-        logOutButton.addActionListener(actionEvent -> {
+        // logout button
+        JButton logoutButton = new JButton("logout");
+        logoutButton.setFont(new Font("ariel", Font.BOLD, 20));
+        JPanel logoutButtonPanel = new JPanel();
+        logoutButtonPanel.setLayout(new BoxLayout(logoutButtonPanel, BoxLayout.Y_AXIS));
+        logoutButton.setLayout(new BoxLayout(logoutButton, BoxLayout.Y_AXIS));
+        logoutButtonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        logoutButtonPanel.add(logoutButton);
+        headerPanel.add(logoutButtonPanel, BorderLayout.EAST);
+        logoutButton.addActionListener(actionEvent -> {
             viewModel.logout();
         });
 
+        mainPanel.add(headerPanel, BorderLayout.NORTH);
 
-        // left side input new item form
+
+        // Left side
         JPanel leftPanel = new JPanel();
+        leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
+        // Title
         JLabel leftHeader = new JLabel("Add New Item", SwingConstants.LEFT);
         leftHeader.setFont(new Font("ariel", Font.BOLD, 30));
         leftHeader.setBorder(BorderFactory.createEmptyBorder(40, 0, 20, 10));
         JPanel leftHeaderPanel = new JPanel();
         leftHeaderPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         leftHeaderPanel.add(leftHeader);
-
-        leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
 
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -372,19 +371,17 @@ public class GUI implements IView {
         c.weightx = 0.5;
         c.weighty = 0.5;
 
-        JLabel newItem = new JLabel("New Item");
-        newItem.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        newItem.setFont(new Font("ariel", Font.BOLD, 30));
+        JPanel itemInputPanel = new JPanel();
+        itemInputPanel.setLayout(new GridBagLayout());
 
-        JPanel newItemPanel = new JPanel();
-        newItemPanel.setLayout(new GridBagLayout());
-
+        // Input new item form
+        //Description
         JLabel newItemDescription = createInputLabel("Description: "); //new JLabel("Name :");
         JTextField newItemDescriptionText = new JTextField();
         newItemDescriptionText.setFont(new Font("ariel", Font.PLAIN, 20));
-        newItemPanel.add(newItemDescription, c);
+        itemInputPanel.add(newItemDescription, c);
         c.gridx = 1;
-        newItemPanel.add(newItemDescriptionText, c);
+        itemInputPanel.add(newItemDescriptionText, c);
         c.gridy = 1;
         c.gridx = 0;
 
@@ -403,9 +400,9 @@ public class GUI implements IView {
         DatePicker datePicker = new DatePicker(dateSettings);
         JLabel date = createInputLabel("Date: ");
 
-        newItemPanel.add(date, c);
+        itemInputPanel.add(date, c);
         c.gridx = 1;
-        newItemPanel.add(datePicker, c);
+        itemInputPanel.add(datePicker, c);
         c.gridy = 2;
         c.gridx = 0;
 
@@ -415,16 +412,16 @@ public class GUI implements IView {
         JFormattedTextField newItemPriceText = new JFormattedTextField(priceFormatter);
         newItemPriceText.setPreferredSize(new Dimension(200, 30));
         newItemPriceText.setFont(new Font("ariel", Font.PLAIN, 20));
-        newItemPanel.add(newItemPrice, c);
+        itemInputPanel.add(newItemPrice, c);
         c.gridx = 1;
-        newItemPanel.add(newItemPriceText, c);
+        itemInputPanel.add(newItemPriceText, c);
         c.gridy = 3;
         c.gridx = 0;
 
         // select category
         JLabel newItemCategory = createInputLabel("Category: ");
         this.newItemCategoryCombo = this.renderCategories();
-        // add category button
+        // add new category button
         addCategoryButton = new JButton("+");
         addCategoryButton.setPreferredSize(new Dimension(30, 30));
         addCategoryButton.setFont(new Font("ariel", Font.PLAIN, 18));
@@ -434,21 +431,19 @@ public class GUI implements IView {
             addCategoryDialog.setVisible(true);
         });
 
-
         this.newItemCategoryPanel = new JPanel();
         this.newItemCategoryPanel.setLayout(new BoxLayout(this.newItemCategoryPanel, BoxLayout.X_AXIS));
         this.newItemCategoryPanel.add(this.newItemCategoryCombo);
         this.newItemCategoryPanel.add(Box.createHorizontalStrut(3)); // empty space
         this.newItemCategoryPanel.add(addCategoryButton);
 
-
-        newItemPanel.add(newItemCategory, c);
+        itemInputPanel.add(newItemCategory, c);
         c.gridx = 1;
-        newItemPanel.add(newItemCategoryPanel, c);
+        itemInputPanel.add(newItemCategoryPanel, c);
         c.gridy = 4;
         c.gridx = 0;
 
-        // currency type
+        // currency
         JLabel newItemCurrency = createInputLabel("Currency: ");
         JComboBox<IModel.CURRENCY> newItemCurrencyCombo = new JComboBox<IModel.CURRENCY>();
         newItemCurrencyCombo.setPreferredSize(new Dimension(200, 30));
@@ -457,9 +452,9 @@ public class GUI implements IView {
             newItemCurrencyCombo.addItem(IModel.CURRENCY.values()[i]);
         }
 
-        newItemPanel.add(newItemCurrency, c);
+        itemInputPanel.add(newItemCurrency, c);
         c.gridx = 1;
-        newItemPanel.add(newItemCurrencyCombo, c);
+        itemInputPanel.add(newItemCurrencyCombo, c);
         c.gridy = 5;
         c.gridx = 0;
 
@@ -493,33 +488,36 @@ public class GUI implements IView {
         });
 
         c.gridx = 1;
-        newItemPanel.add(saveButtonPanel, c);
+        itemInputPanel.add(saveButtonPanel, c);
 
         leftPanel.add(leftHeaderPanel);
-        leftPanel.add(newItemPanel);
-
+        leftPanel.add(itemInputPanel);
         leftPanel.setPreferredSize(new Dimension(500, 200));
         leftPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
-        panel.add(leftPanel, BorderLayout.WEST);
+        mainPanel.add(leftPanel, BorderLayout.WEST);
 
-        //scrollable table
+        // Right side
         JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
-        JPanel rightHeader = new JPanel();
-        rightHeader.setLayout(new BorderLayout());
-        rightHeader.setSize(new Dimension(800, 80));
-        rightHeader.setMinimumSize(new Dimension(1, 1));
-        JLabel right = new JLabel("Your Expenses");
-        right.setFont(new Font("ariel", Font.BOLD, 30));
-        rightHeader.add(right, BorderLayout.WEST);
+        // Right title
+        JPanel rightHeaderPanel = new JPanel();
+        rightHeaderPanel.setLayout(new BorderLayout());
+        rightHeaderPanel.setSize(new Dimension(800, 80));
+        rightHeaderPanel.setMinimumSize(new Dimension(1, 1));
+        JLabel rightTitle = new JLabel("Your Expenses");
+        rightTitle.setFont(new Font("ariel", Font.BOLD, 30));
+        rightHeaderPanel.add(rightTitle, BorderLayout.WEST);
 
-
+        // Sort/Report controls
         JPanel sortPanel = new JPanel();
         sortPanel.setLayout(new GridLayout(1, 3));
+        // month selector
         JComboBox<Month> sortMonth = new JComboBox<Month>(Month.values());
         sortMonth.addActionListener(actionEvent -> {
             sortButton.setSelected(false);
+            viewModel.getItems();
         });
+        // year input filed
         DateFormat format = new SimpleDateFormat("Y");
         JFormattedTextField sortYear = new JFormattedTextField(format);
         sortYear.setFont(new Font("ariel", Font.PLAIN, 20));
@@ -543,7 +541,7 @@ public class GUI implements IView {
 
             }
         });
-
+        // sort button
         sortButton = new JToggleButton("Report");
         sortButton.addActionListener(actionEvent -> {
             if (sortYear.getText().equals("")) {
@@ -565,16 +563,16 @@ public class GUI implements IView {
 
         });
 
-
         sortPanel.add(sortMonth);
         sortPanel.add(sortYear);
         sortPanel.add(sortButton);
 
-        rightHeader.add(sortPanel, BorderLayout.EAST);
-        rightHeader.add(Box.createHorizontalStrut(100), BorderLayout.CENTER);
-        rightHeader.setMaximumSize(new Dimension(800, 40));
-        rightPanel.add(rightHeader);
+        rightHeaderPanel.add(sortPanel, BorderLayout.EAST);
+        rightHeaderPanel.add(Box.createHorizontalStrut(100), BorderLayout.CENTER);
+        rightHeaderPanel.setMaximumSize(new Dimension(800, 40));
+        rightPanel.add(rightHeaderPanel);
 
+        // Expenses scrollable table
         expensesTable = new JTable();
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
         if (items != null) {
@@ -598,10 +596,10 @@ public class GUI implements IView {
         rightScroll.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         rightPanel.add(rightScroll);
         rightPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        panel.add(rightPanel, BorderLayout.EAST);
+        mainPanel.add(rightPanel, BorderLayout.EAST);
 
 
-        frame.add(panel);
+        frame.add(mainPanel);
         frame.setSize(1600, 1200);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -711,6 +709,12 @@ public class GUI implements IView {
         return newCombo;
     }
 
+    /**
+     * Method to set the categories in the view.
+     * Combo box is updated with the new categories.
+     *
+     * @param categories the categories to display.
+     */
     @Override
     public void setCategories(Collection<Category> categories) {
         this.categories = new ArrayList<Category>(categories);
@@ -721,6 +725,13 @@ public class GUI implements IView {
         }
     }
 
+    /**
+     * Method to set the isLoggedIn field.
+     * If true, the main page is displayed.
+     * If false, the login page is displayed.
+     *
+     * @param isLoggedIn the flag to set.
+     */
     @Override
     public void setIsLoggedIn(Boolean isLoggedIn) {
         this.isLoggedIn = isLoggedIn;
@@ -733,16 +744,26 @@ public class GUI implements IView {
         }
     }
 
+    /**
+     * Method to start the application.
+     */
     @Override
     public void start() {
         loginPage();
     }
 
+    /**
+     * Method to set logged in user
+     * @param user
+     */
     @Override
     public void setUser(User user) {
         this.user = user;
     }
 
+    /**
+     * Class to handle the add category dialog
+     */
     public class AddCategoryDialog extends JDialog {
         private JTextField categoryName;
         private JButton add;
@@ -753,6 +774,13 @@ public class GUI implements IView {
         private JLabel nameLabel;
         private JLabel errorLabel;
 
+        /**
+         * Constructor for the add category dialog
+         *
+         * @param parent the Frame from which the dialog is displayed
+         * @param title  the String to display in the dialog's title bar
+         * @param modal specifies whether dialog blocks user input to other top-level windows when shown. If true, the modality type property is set to DEFAULT_MODALITY_TYPE otherwise the dialog is modeless
+         */
         public AddCategoryDialog(JFrame parent, String title, boolean modal) {
             super(parent, title, modal);
             this.mainPanel = new JPanel();
