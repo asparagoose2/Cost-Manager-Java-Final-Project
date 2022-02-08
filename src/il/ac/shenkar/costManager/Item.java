@@ -7,9 +7,9 @@ import java.util.Date;
  */
 
 /**
- *  Item class
- *  @see     SimpleDBModel
+ * Item class
  *
+ * @see SimpleDBModel
  */
 public class Item {
     private int id;

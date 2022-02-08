@@ -1,4 +1,5 @@
 package il.ac.shenkar.costManager;
+
 import javax.swing.*;
 
 public class Main {

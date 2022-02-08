@@ -21,15 +21,13 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 
-
-
 public class GUI implements IView {
     // data
     private User user;
     private LinkedList<Item> items;
     private ArrayList<Category> categories;
     private boolean isLoggedIn = false;
-    String[] columnNames = {"Date", "Name", "Amount", "Category"};
+    String[] columnNames = {"Date", "Description", "Amount", "Category"};
 
 
     // control
@@ -135,7 +133,7 @@ public class GUI implements IView {
             if (userName.equals("") || password.equals("")) {
                 message.setText("Please enter your user name and password");
             } else {
-                if(vm != null) {
+                if (vm != null) {
                     vm.get().login(userName, password);
                 } else {
                     message.setText("Please login first");
@@ -164,7 +162,7 @@ public class GUI implements IView {
         KeyListener keyListener = new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                     submit.doClick();
                 }
             }
@@ -179,7 +177,6 @@ public class GUI implements IView {
 
     /**
      * This method is used to display the register view.
-     *
      */
     public void register() {
         frame.dispose();
@@ -327,7 +324,7 @@ public class GUI implements IView {
         header.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         header.setFont(new Font("ariel", Font.BOLD, 40));
         JLabel subHeader;
-        if(user != null) {
+        if (user != null) {
             subHeader = new JLabel("Welcome " + user.getName());
         } else {
             subHeader = new JLabel("Welcome to Cost Manager");
@@ -335,7 +332,7 @@ public class GUI implements IView {
         subHeader.setFont(new Font("ariel", Font.BOLD, 30));
         subHeader.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         JPanel headerTextPanel = new JPanel();
-        headerTextPanel.setLayout(new BoxLayout(headerTextPanel,BoxLayout.Y_AXIS));
+        headerTextPanel.setLayout(new BoxLayout(headerTextPanel, BoxLayout.Y_AXIS));
         headerTextPanel.add(header);
         headerTextPanel.add(subHeader);
 
@@ -363,7 +360,7 @@ public class GUI implements IView {
         leftHeader.setFont(new Font("ariel", Font.BOLD, 30));
         leftHeader.setBorder(BorderFactory.createEmptyBorder(40, 0, 20, 10));
         JPanel leftHeaderPanel = new JPanel();
-        leftHeaderPanel.setLayout(new FlowLayout( FlowLayout.LEFT));
+        leftHeaderPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         leftHeaderPanel.add(leftHeader);
 
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
@@ -374,7 +371,6 @@ public class GUI implements IView {
         c.gridy = 0;
         c.weightx = 0.5;
         c.weighty = 0.5;
-//        c.insets = new Insets(10, 10, 10, 10);
 
         JLabel newItem = new JLabel("New Item");
         newItem.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -383,12 +379,12 @@ public class GUI implements IView {
         JPanel newItemPanel = new JPanel();
         newItemPanel.setLayout(new GridBagLayout());
 
-        JLabel newItemName = createInputLabel("Name: "); //new JLabel("Name :");
-        JTextField newItemNameaText = new JTextField();
-        newItemNameaText.setFont(new Font("ariel", Font.PLAIN, 20));
-        newItemPanel.add(newItemName, c);
+        JLabel newItemDescription = createInputLabel("Description: "); //new JLabel("Name :");
+        JTextField newItemDescriptionText = new JTextField();
+        newItemDescriptionText.setFont(new Font("ariel", Font.PLAIN, 20));
+        newItemPanel.add(newItemDescription, c);
         c.gridx = 1;
-        newItemPanel.add(newItemNameaText, c);
+        newItemPanel.add(newItemDescriptionText, c);
         c.gridy = 1;
         c.gridx = 0;
 
@@ -397,9 +393,7 @@ public class GUI implements IView {
         dateSettings.setAllowEmptyDates(false);
         dateSettings.setDefaultYearMonth(YearMonth.from(LocalDate.now()));
         dateSettings.setFirstDayOfWeek(DayOfWeek.SUNDAY);
-
         Font calendarFont = new Font("ariel", Font.PLAIN, 20);
-
         dateSettings.setFontCalendarDateLabels(calendarFont);
         dateSettings.setFontCalendarWeekdayLabels(calendarFont);
         dateSettings.setFontCalendarWeekNumberLabels(calendarFont);
@@ -407,9 +401,6 @@ public class GUI implements IView {
         dateSettings.setFontValidDate(calendarFont);
         dateSettings.setFontTodayLabel(calendarFont);
         DatePicker datePicker = new DatePicker(dateSettings);
-//        JButton calendarButton = datePicker.getComponentToggleCalendarButton();
-//        calendarButton.setMargin(new Insets(0,0,0,0));
-//        calendarButton.setPreferredSize(new Dimension(80,80));
         JLabel date = createInputLabel("Date: ");
 
         newItemPanel.add(date, c);
@@ -437,7 +428,7 @@ public class GUI implements IView {
         addCategoryButton = new JButton("+");
         addCategoryButton.setPreferredSize(new Dimension(30, 30));
         addCategoryButton.setFont(new Font("ariel", Font.PLAIN, 18));
-        addCategoryButton.setMargin(new Insets(0,0,0,0));
+        addCategoryButton.setMargin(new Insets(0, 0, 0, 0));
         addCategoryButton.addActionListener(e -> {
             AddCategoryDialog addCategoryDialog = new AddCategoryDialog(frame, "Add Category", true);
             addCategoryDialog.setVisible(true);
@@ -445,11 +436,10 @@ public class GUI implements IView {
 
 
         this.newItemCategoryPanel = new JPanel();
-        this.newItemCategoryPanel.setLayout(new BoxLayout(this.newItemCategoryPanel,BoxLayout.X_AXIS));
+        this.newItemCategoryPanel.setLayout(new BoxLayout(this.newItemCategoryPanel, BoxLayout.X_AXIS));
         this.newItemCategoryPanel.add(this.newItemCategoryCombo);
         this.newItemCategoryPanel.add(Box.createHorizontalStrut(3)); // empty space
         this.newItemCategoryPanel.add(addCategoryButton);
-
 
 
         newItemPanel.add(newItemCategory, c);
@@ -463,7 +453,7 @@ public class GUI implements IView {
         JComboBox<IModel.CURRENCY> newItemCurrencyCombo = new JComboBox<IModel.CURRENCY>();
         newItemCurrencyCombo.setPreferredSize(new Dimension(200, 30));
         newItemCurrencyCombo.setFont(new Font("ariel", Font.PLAIN, 20));
-        for(int i = 0; i < IModel.CURRENCY.values().length; i++) {
+        for (int i = 0; i < IModel.CURRENCY.values().length; i++) {
             newItemCurrencyCombo.addItem(IModel.CURRENCY.values()[i]);
         }
 
@@ -482,7 +472,7 @@ public class GUI implements IView {
         saveButtonPanel.add(saveButton);
         saveButtonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         saveButton.addActionListener(actionEvent -> {
-            String description = newItemNameaText.getText();
+            String description = newItemDescriptionText.getText();
             String price = newItemPriceText.getText();
             String category = this.newItemCategoryCombo.getSelectedItem().toString();
             System.out.println(datePicker.getDate());
@@ -494,13 +484,13 @@ public class GUI implements IView {
             } else {
                 viewModel.addItem(description, Double.parseDouble(price), selectedCategory, currency, Date.valueOf(datePicker.getDate()));
                 sortButton.setSelected(false);
-                newItemNameaText.setText("");
+                newItemDescriptionText.setText("");
                 newItemPriceText.setText("");
                 newItemCategoryCombo.setSelectedIndex(0);
                 newItemCurrencyCombo.setSelectedIndex(0);
                 datePicker.setDate(LocalDate.now());
             }
-        } );
+        });
 
         c.gridx = 1;
         newItemPanel.add(saveButtonPanel, c);
@@ -517,56 +507,56 @@ public class GUI implements IView {
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
         JPanel rightHeader = new JPanel();
         rightHeader.setLayout(new BorderLayout());
-        rightHeader.setSize(new Dimension(800,80));
-        rightHeader.setMinimumSize(new Dimension(1,1));
+        rightHeader.setSize(new Dimension(800, 80));
+        rightHeader.setMinimumSize(new Dimension(1, 1));
         JLabel right = new JLabel("Your Expenses");
         right.setFont(new Font("ariel", Font.BOLD, 30));
-        rightHeader.add(right,BorderLayout.WEST);
+        rightHeader.add(right, BorderLayout.WEST);
 
 
         JPanel sortPanel = new JPanel();
         sortPanel.setLayout(new GridLayout(1, 3));
         JComboBox<Month> sortMonth = new JComboBox<Month>(Month.values());
         sortMonth.addActionListener(actionEvent -> {
-                sortButton.setSelected(false);
+            sortButton.setSelected(false);
         });
         DateFormat format = new SimpleDateFormat("Y");
         JFormattedTextField sortYear = new JFormattedTextField(format);
         sortYear.setFont(new Font("ariel", Font.PLAIN, 20));
         sortYear.getDocument().addDocumentListener(new DocumentListener() {
-           @Override
-           public void insertUpdate(DocumentEvent documentEvent) {
-               sortButton.setSelected(false);
-               viewModel.getItems();
-           }
-
-           @Override
-           public void removeUpdate(DocumentEvent documentEvent) {
+            @Override
+            public void insertUpdate(DocumentEvent documentEvent) {
                 sortButton.setSelected(false);
                 viewModel.getItems();
-           }
+            }
 
-           @Override
+            @Override
+            public void removeUpdate(DocumentEvent documentEvent) {
+                sortButton.setSelected(false);
+                viewModel.getItems();
+            }
+
+            @Override
             public void changedUpdate(DocumentEvent documentEvent) {
                 sortButton.setSelected(false);
                 viewModel.getItems();
 
-           }
+            }
         });
 
         sortButton = new JToggleButton("Report");
         sortButton.addActionListener(actionEvent -> {
-            if(sortYear.getText().equals("")){
+            if (sortYear.getText().equals("")) {
 
             } else {
-                if(sortButton.isSelected()) {
+                if (sortButton.isSelected()) {
                     int year = Integer.parseInt(sortYear.getText());
                     Month month = (Month) sortMonth.getSelectedItem();
-                    if(year > LocalDate.now().getYear()) {
+                    if (year > LocalDate.now().getYear()) {
                         JOptionPane.showMessageDialog(null, "Please enter a valid year");
                         sortButton.setSelected(false);
                     } else {
-                        viewModel.getItems(month,year);
+                        viewModel.getItems(month, year);
                     }
                 } else {
                     viewModel.getItems();
@@ -581,13 +571,13 @@ public class GUI implements IView {
         sortPanel.add(sortButton);
 
         rightHeader.add(sortPanel, BorderLayout.EAST);
-        rightHeader.add(Box.createHorizontalStrut(100), BorderLayout.CENTER );
-        rightHeader.setMaximumSize(new Dimension(800,40));
+        rightHeader.add(Box.createHorizontalStrut(100), BorderLayout.CENTER);
+        rightHeader.setMaximumSize(new Dimension(800, 40));
         rightPanel.add(rightHeader);
 
         expensesTable = new JTable();
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
-        if(items != null) {
+        if (items != null) {
             for (Item item : items) {
                 String currencySymbol = item.getCurrency() == IModel.CURRENCY.USD.getValue() ? "$" : item.getCurrency() == IModel.CURRENCY.EUR.getValue() ? "€" : "₪";
                 String[] row = {item.getDate().toString(), item.getDescription(), String.valueOf(item.getCost()) + currencySymbol, item.getCategory().getName()};
@@ -620,6 +610,7 @@ public class GUI implements IView {
 
     /**
      * This method is used to create an inout label
+     *
      * @param text the text for the lable
      * @return
      */
@@ -634,11 +625,12 @@ public class GUI implements IView {
 
     /**
      * updates the table with the new items
+     *
      * @param data not used in this implementation
      */
     @Override
     public void displayData(String data) {
-        if(expensesTable != null) {
+        if (expensesTable != null) {
             DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
             if (items != null) {
                 for (Item item : items) {
@@ -656,12 +648,12 @@ public class GUI implements IView {
      * This method is used to alert the user of an occurred error in the application.
      * error is displayed in a JOptionPane.
      *
-     * @param error the error to display.
+     * @param error      the error to display.
      * @param shouldExit if true, the application will exit after the error is displayed.
      */
     @Override
     public void displayError(String error, Boolean shouldExit) {
-        JOptionPane.showMessageDialog(frame,error,"Error!", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(frame, error, "Error!", JOptionPane.ERROR_MESSAGE);
         if (shouldExit) {
             System.exit(0);
         }
@@ -671,8 +663,9 @@ public class GUI implements IView {
     /**
      * This method is used to display a message to the user.
      * message is display in a JOptionPane.
+     *
      * @param message the message to display.
-     * @param title the title of the message.
+     * @param title   the title of the message.
      */
     @Override
     public void displayMessage(String message, String title) {
@@ -681,6 +674,7 @@ public class GUI implements IView {
 
     /**
      * This method is used to set the view model
+     *
      * @param viewModel the ViewModel to set.
      */
     @Override
@@ -691,6 +685,7 @@ public class GUI implements IView {
 
     /**
      * This method is used to set the items in the view.
+     *
      * @param items the items to display.
      */
     @Override
@@ -701,6 +696,7 @@ public class GUI implements IView {
     /**
      * Method to build combo box to select categories.
      * Data is taken from "categories" field.
+     *
      * @return the combobox created
      */
     private JComboBox<Category> renderCategories() {
@@ -718,7 +714,7 @@ public class GUI implements IView {
     @Override
     public void setCategories(Collection<Category> categories) {
         this.categories = new ArrayList<Category>(categories);
-        if(this.newItemCategoryPanel != null) {
+        if (this.newItemCategoryPanel != null) {
             this.newItemCategoryPanel.remove(0);
             this.newItemCategoryPanel.add(renderCategories(), 0);
             this.newItemCategoryPanel.updateUI();
@@ -727,7 +723,7 @@ public class GUI implements IView {
 
     @Override
     public void setIsLoggedIn(Boolean isLoggedIn) {
-        this.isLoggedIn=isLoggedIn;
+        this.isLoggedIn = isLoggedIn;
         if (isLoggedIn) {
             frame.dispose();
             mainPage();

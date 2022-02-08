@@ -1,4 +1,5 @@
 package il.ac.shenkar.costManager;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -10,6 +11,7 @@ import java.sql.Statement;
 public class Setup {
     /**
      * This method initializes the database.
+     *
      * @param args
      * @throws CostManagerException
      */
@@ -88,7 +90,7 @@ public class Setup {
                     "  ADD PRIMARY KEY (`id`),\n" +
                     "  ADD KEY `ownerId` (`ownerId`),\n" +
                     "  ADD KEY `category` (`category`),\n" +
-                    "  ADD KEY `currency` (`currency`),\n"+
+                    "  ADD KEY `currency` (`currency`),\n" +
                     " MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;";
 
             stmt.executeUpdate(createUsersTable);
